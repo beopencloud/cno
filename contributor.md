@@ -1,6 +1,6 @@
 
 # Contributor's Guide
-Welcome to CNO.
+Welcome to CNO.  
 The following is a set of guidelines for contributing to CNO.
 These are mostly guidline, not rules. Use your best judgment, and feel to propose changes to this document in a pull request. 
 
