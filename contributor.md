@@ -25,3 +25,6 @@ git commit -m "Brief Description message"
 8. Push your commits to your GitHub Fork.
 
 ## Submitting a Pull Request
+*Send a Github Pull Request with a clear list of what you've done.  
+For more informations see [pull requests](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).  
+Always write a clear log message for your commits. One-lie messages are fine for changes. 
