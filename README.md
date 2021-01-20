@@ -33,7 +33,7 @@
 ## Get Started
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 ## Architecture
-
+For more visibilty on CNO project, look at the ![Architecture](/image/architecture.png)
 ## Component
 CNO is an open source project mainly composed of 7 modules.
 1. cno UI
@@ -270,6 +270,6 @@ kubectl apply -f clusterRole.yaml -f clusterRoleBinding.yaml -f service_account.
 kubectl apply -f ./files/onboarding-api/templates/onboarding-api.yaml
 ``` 
 ## Contributing
-To Contribute to the CNO project, please follow the [Contributor's Guide](https://github.com/beopencloud/cno/tree/main/contributor_guide)
+To Contribute to the CNO project, please follow this [Contributor's Guide](https://github.com/beopencloud/cno/tree/main/contributor_guide)
 
 
