@@ -270,6 +270,6 @@ kubectl apply -f clusterRole.yaml -f clusterRoleBinding.yaml -f service_account.
 kubectl apply -f ./files/onboarding-api/templates/onboarding-api.yaml
 ``` 
 ## Contributing
-To Contribute to the CNO project, please follow the Contributor's Guide
+To Contribute to the CNO project, please follow the [Contributor's Guide]()
 
 
