@@ -17,12 +17,13 @@ Click it and wait a few moments while GitHub takes care of cloning this reposito
     - Install golang 1.3
     - Configure GOPATH and GOROOT
 * Run Application
-``` go run .
 ```
+ go run .
+``` 
 * Best practice Git
-1. Check the README file to install dependancies.
-2. Create a branch specific to the issue you are working on.
-3. Commit Messages 
+    - Check the README file to install dependancies.
+    - Create a branch specific to the issue you are working on.
+    - Commit Messages 
 Treat commit messages as an email message that describes what you changed and why.  
 The commit message describe the details of the commit.  
 4. Push your commits to your GitHub Fork.
