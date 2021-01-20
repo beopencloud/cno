@@ -40,7 +40,7 @@ kubectl create namespace kafka
 kubectl apply -f ./files/kafkaOperator.yaml -n kafka
 ```
 ### Deploying Kafka Cluster
-```json
+```yaml
 cat <<EOF | kubectl -n kafka apply -f -
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
