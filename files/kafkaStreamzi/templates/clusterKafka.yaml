@@ -1,8 +1,10 @@
-cat <<EOF | kubectl -n kafka apply -f -
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
   name: my-cluster
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
 spec:
   kafka:
     version: 2.5.0
@@ -10,18 +12,16 @@ spec:
     listeners:
       external:
         type: loadbalancer
-        authentication:
-          type: tls
         overrides:
           bootstrap:
             address: bootstrap.kafka.cloud.beopenit.com
           brokers:
-          - broker: 0
-            advertisedHost: broker-0.kafka.cloud.beopenit.com
-          - broker: 1
-            advertisedHost: broker-1.kafka.cloud.beopenit.com
-          - broker: 2
-            advertisedHost: broker-2.kafka.cloud.beopenit.com
+            - broker: 0
+              advertisedHost: broker-0.kafka.cloud.beopenit.com
+            - broker: 1
+              advertisedHost: broker-1.kafka.cloud.beopenit.com
+            - broker: 2
+              advertisedHost: broker-2.kafka.cloud.beopenit.com
       tls:
         authentication:
           type: tls
@@ -43,4 +43,19 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
-EOF
+---
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: onboarding
+  labels:
+    strimzi.io/cluster: my-cluster
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls: []

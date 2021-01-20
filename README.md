@@ -10,6 +10,8 @@
 * [Installing](#Installing)
     - [Kind Installation]()
     - [Installing CNO via Helm]()
+        * [Installation]()
+        * [Checks]()
     - [Manual Installation]()
         * [Installing Kafka]()
             - [Installing Kafka Operator]()
@@ -24,8 +26,8 @@
         * [Installing cno operator]()
             - [Deploying using the cno operator image]()
             - [Creating cluster role(+binding)]()
-        * [Installing cno api]()
         * [Installing cno agent]()
+        * [Installing cno api]()
 
 * [Contributing](#Contributing)
 ## Get Started
@@ -43,7 +45,25 @@ CNO is an open source project mainly composed of 4 modules.
 7. CLI
 ## Installing
 1. Kind Installation
+* Clone the operator repository
+```bash
+git clone https://gitlab.beopenit.com/cloud/cno-operator.git
+```
+* Install the operator
+```
+make install
+```
+make deploy
+```
 2. Installing CNO via Helm
+## Installation
+```bash
+helm install cno .
+```
+## Checks
+```bash
+helm get manifest cno
+```
 3. Manual Installation
 ## Installing kafka
 ### Installing kafka Operator
@@ -145,8 +165,109 @@ Another method
 ```
 kubectl apply -f ./files/keycloak/templates/clusterkeycloak.yaml
 ```
-  
+## Installing Mysql DB
+### Create the Database and the Service
+```yaml
+cat <<EOF | kubectl apply -n keycloak -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: mysql
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
 
+EOF
+```
+### Create the PV/PVC that will associated
+```yaml
+cat <<EOF | kubectl apply -n keycloak -f -
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": hook-succeded
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1"
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+EOF
+``` 
+## Installing cno Operator
+### Deploying using the cno operator image
+```bash
+kubectl apply -f ./files/cnoOperator/crds/
+``` 
+### Creating Cluster role(+binding)
+```bash
+kubectl apply -f clusterRole.yaml -f clusterRoleBinding.yaml -f service_account.yaml
+```
+## Installing cno Agent 
+## Installing cno Api
+```
+kubectl apply -f ./files/onboarding-api/templates/onboarding-api.yaml
+``` 
 ## Contributing
 
 

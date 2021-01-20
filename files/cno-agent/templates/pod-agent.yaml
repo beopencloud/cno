@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: onboarding-agent
+  namespace: cno
+spec:
+  containers:
+    - image: beopenit/kubectl-agent
+      imagePullPolicy: Always
+      name: agent
+  imagePullSecrets:
+    - name: regcred

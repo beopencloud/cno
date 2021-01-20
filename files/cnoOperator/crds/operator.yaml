@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: cno
+spec: {}
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onboarding-operator-kubernetes
+  namespace: cno
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: onboarding-operator-kubernetes
+  template:
+    metadata:
+      labels:
+        name: onboarding-operator-kubernetes
+    spec:
+      serviceAccountName: onboarding-operator-kubernetes
+      containers:
+        - name: onboarding-operator-kubernetes
+          image: beopenit/onboarding-operator-kubernetes
+          command:
+            - onboarding-operator-kubernetes
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "onboarding-operator-kubernetes"

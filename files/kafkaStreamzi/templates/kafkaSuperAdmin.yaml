@@ -1,0 +1,15 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: onboarding
+  labels:
+    strimzi.io/cluster: my-cluster
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls: []
