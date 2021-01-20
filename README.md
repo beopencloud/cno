@@ -15,6 +15,18 @@
             - [Installing Kafka Operator]()
             - [Deploying a Kafka Operator]()
             - [Creating the Onbording super-admin]()
+        * [Installing keycloak]()
+            - [Installing keycloak operator]()
+            - [deploiying keycloak cluster]()
+        * [Installing mysql DB]()
+            - [Create the database and the service]()
+            - [Create the PV/PVC that will associated]()
+        * [Installing cno operator]()
+            - [Deploying using the cno operator image]()
+            - [Creating cluster role(+binding)]()
+        * [Installing cno api]()
+        * [Installing cno agent]()
+
 * [Contributing](#Contributing)
 ## Get Started
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
@@ -89,7 +101,7 @@ spec:
 EOF
 ```
 ### Creating the Onboarding super-admin
-```
+```yaml
 cat <<EOF | kubectl -n kafka apply -f -
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
@@ -105,8 +117,36 @@ spec:
     acls: []
 EOF
 ```
-
+## Installing keycloak
+### Installing keycloak operator
+```
+kubectl apply -f ./files/keycloak/crds/ -n keycloak
+```
+### deploying keycloak cluster
+```yaml
+cat <<EOF | kubectl apply -n keycloak -f -
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: cloud-keycloak
+  labels:
+    app: sso
+spec:
+  instances: 3
+  extensions:
+    - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
+  externalAccess:
+    enabled: false
+  podDisruptionBudget:
+    enabled: True
+EOF
+```
+Another method
+```
+kubectl apply -f ./files/keycloak/templates/clusterkeycloak.yaml
+```
   
+
 ## Contributing
 
 
