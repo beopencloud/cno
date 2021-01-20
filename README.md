@@ -1,7 +1,7 @@
 * [Get Started]()
 * [ Architecture](#Architecture)
 * [Component](#Component)
-    - [cno UI](#cno"%20"UI)
+    - [cno UI]()
     - [cno API]()
     - [cno Agent]()
     - [cno Openshift-operator]()
