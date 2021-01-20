@@ -35,7 +35,7 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 ## Architecture
 
 ## Component
-CNO is an open source project mainly composed of 4 modules.
+CNO is an open source project mainly composed of 7 modules.
 1. cno UI
 2. cno API
 3. cno Agent
@@ -270,5 +270,6 @@ kubectl apply -f clusterRole.yaml -f clusterRoleBinding.yaml -f service_account.
 kubectl apply -f ./files/onboarding-api/templates/onboarding-api.yaml
 ``` 
 ## Contributing
+To Contribute to the CNO project, please follow the Contributor's Guide
 
 
