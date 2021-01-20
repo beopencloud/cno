@@ -53,6 +53,7 @@ git clone https://gitlab.beopenit.com/cloud/cno-operator.git
 ```
 make install
 ```
+```
 make deploy
 ```
 2. Installing CNO via Helm
