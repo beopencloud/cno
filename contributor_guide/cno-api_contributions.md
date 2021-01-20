@@ -10,17 +10,17 @@ To participate in this process you only need an account Github.com.
 If you don't have an account yet, here is the link to register on [Github.com](https://github.com/).
 
 ### Process
-* Fork the project  
+#### Fork the project  
 At the top right, you will find the "Fork" button.  
 Click it and wait a few moments while GitHub takes care of cloning this repository into your repositories.
-* Requirements
+#### Requirements
     - Install golang 1.3
     - Configure GOPATH and GOROOT
-* Run Application
+#### Run Application
 ```
  go run .
 ``` 
-* Best practice Git
+#### Best practice Git
     - Check the README file to install dependancies.
     - Create a branch specific to the issue you are working on.
     - Commit Messages 
