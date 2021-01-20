@@ -13,7 +13,13 @@ If you don't have an account yet, here is the link to register on [Github.com](h
 * Fork the project  
 At the top right, you will find the "Fork" button.  
 Click it and wait a few moments while GitHub takes care of cloning this repository into your repositories.
-* Prerequiste
+* Requirements
+    - Install golang 1.3
+    - Configure GOPATH and GOROOT
+* Run Application
+``` go run .
+```
+* Best practice Git
 1. Check the README file to install dependancies.
 2. Create a branch specific to the issue you are working on.
 3. Commit Messages 
