@@ -89,6 +89,7 @@ spec:
 EOF
 ```
 ### Creating the Onboarding super-admin
+```
 cat <<EOF | kubectl -n kafka apply -f -
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
