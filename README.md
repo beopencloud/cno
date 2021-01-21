@@ -9,13 +9,13 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 CNO Architecture ![Architecture](/image/architecture.png)
 ## Component
 CNO is an open source project mainly composed of 7 modules.
-1. cno UI
-2. cno API
-3. cno Agent
-4. cno Openshift-operator
-5. cno CD-operator
-6. cno K8s-operator
-7. CLI
+1. [cno UI](https://gitlab.beopenit.com/cloud/onboarding-ui)
+2. [cno API](https://gitlab.beopenit.com/cloud/onboarding-api)
+3. [cno Agent](https://gitlab.beopenit.com/cloud/cno-agent)
+4. [cno Openshift-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-openshift)
+5. [cno CD-operator](https://gitlab.beopenit.com/cloud/cno-cd)
+6. [cno K8s-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-kubernetes)
+7. [CLI]()
 ## Installing
 ### Automatique Installation: Kind
 * Clone the operator repository
