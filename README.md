@@ -17,7 +17,7 @@ CNO is an open source project mainly composed of 7 modules.
 6. cno K8s-operator
 7. CLI
 ## Installing
-1. Automatique Installation: Kind
+### Automatique Installation: Kind
 * Clone the operator repository
 ```bash
 git clone https://gitlab.beopenit.com/cloud/cno-operator.git
@@ -29,12 +29,12 @@ make install
 ```
 make deploy
 ```
-2. Installing CNO via Helm
-## Installation
+### Installing CNO via Helm
+1. Installation
 ```bash
 helm install cno .
 ```
-## Checks
+2. Checks
 ```bash
 helm get manifest cno
 ```
