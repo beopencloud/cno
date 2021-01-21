@@ -15,7 +15,7 @@ CNO is an open source project mainly composed of 7 modules.
 4. [cno Openshift-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-openshift)
 5. [cno CD-operator](https://gitlab.beopenit.com/cloud/cno-cd)
 6. [cno K8s-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-kubernetes)
-7. [CLI]()
+7. CLI
 ## Installing
 ### Automatique Installation: Kind
 * Clone the operator repository
