@@ -38,20 +38,7 @@ helm install cno .
 ```bash
 helm get manifest cno
 ```
-## Installing cno Operator
-### Deploying using the cno operator image
-```bash
-kubectl apply -f ./files/cnoOperator/crds/
-``` 
-### Creating Cluster role(+binding)
-```bash
-kubectl apply -f clusterRole.yaml -f clusterRoleBinding.yaml -f service_account.yaml
-```
-## Installing cno Agent 
-## Installing cno Api
-```
-kubectl apply -f ./files/onboarding-api/templates/onboarding-api.yaml
-``` 
+
 ## Contributing
 To Contribute to the CNO project, please follow this [Contributor's Guide](https://github.com/beopencloud/cno/tree/main/contributor_guide)
 
