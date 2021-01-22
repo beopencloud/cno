@@ -24,7 +24,7 @@ CNO is an open source project mainly composed of 7 modules.
 ## Installing
 ### Installation Community Mode
 #### 1. Installing kafka
-##### Installing kafka operator
+#####   - Installing kafka operator
 ```
 kubectl create namespace kafka
 kubectl apply -f ./files/kafkaStrimzi/crds/kafkaOperator.yaml -n kafka
