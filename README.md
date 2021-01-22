@@ -40,7 +40,7 @@ kubectl apply -f ./deploy/kafka/onboardingSuperAdmin.yaml
 #### 2. Installing Keycloak
 ##### Installing keycloak Operator 
 ``` 
-kubectl apply -f ./files/keycloak/crds/ -n keycloak
+kubectl apply -f ./deploy/keycloak/crds/ -n keycloak
 ```
 ##### Deploying keycloak Cluster
 ```
@@ -54,6 +54,15 @@ kubectl apply -f ./deploy/mysqlDB/mysqlDB.yaml
 ##### Create PVC that will associated
 ```
 kubectl apply -f ./deploy/mysqlDB/pvc.yaml
+```
+#### 4. Installing CNO Operator
+##### Deploying using the cno operator image
+```
+kubectl apply -f ./deploy/operator/cnoOperator/crds/
+```
+##### Creating a Cluster Role(+binding)
+```
+kubectl apply -f ./deploy/operator/templates/
 ```
 #### Installing CNO API
 ```
