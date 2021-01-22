@@ -24,7 +24,7 @@ CNO is an open source project mainly composed of 7 modules.
 ## Installing
 ### Installation Community Mode
 #### 1. Installing kafka
-#####   - Installing kafka operator
+#####   Installing kafka operator
 ```
 kubectl create namespace kafka
 kubectl apply -f ./files/kafkaStrimzi/crds/kafkaOperator.yaml -n kafka
@@ -37,14 +37,14 @@ kubectl apply -f ./deploy/kafka/kafka.yaml
 ```
 kubectl apply -f ./deploy/kafka/onboardingSuperAdmin.yaml
 ```
-#### Installing Keycloak
+#### 2. Installing Keycloak
 ##### Installing keycloak Operator 
 kubectl apply -f ./files/keycloak/crds/ -n keycloak
 ##### Deploying keycloak Cluster
 ```
 kubectl apply -f ./deploy/keycloak/keycloak.yaml
 ```
-#### Installing MysqlDB
+#### 3. Installing MysqlDB
 ##### Create the DataBase and the Service
 ```
 kubectl apply -f ./deploy/mysqlDB/mysqlDB.yaml
