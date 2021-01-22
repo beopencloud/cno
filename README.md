@@ -17,18 +17,53 @@ CNO is an open source project mainly composed of 7 modules.
 6. [cno K8s-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-kubernetes)
 7. CLI
 ## Installing
-### Automatique Installation: Kind
-* Clone the operator repository
-```bash
-git clone https://gitlab.beopenit.com/cloud/cno-operator.git
+### Installation Community Mode
+#### Installing kafka
+##### Installing kafka operator
 ```
-* Install the operator
+kubectl create namespace kafka
+kubectl apply -f ./files/kafkaStrimzi/crds/kafkaOperator.yaml -n kafka
 ```
-make install
+##### Deploying a kafka cluster
 ```
+kubectl apply -f ./deploy/kafka/kafka.yaml
 ```
-make deploy
+##### Creating the onboarding super-admin
 ```
+kubectl apply -f ./deploy/kafka/onboardingSuperAdmin.yaml
+```
+#### Installing Keycloak
+##### Installing keycloak Operator 
+kubectl apply -f ./files/keycloak/crds/ -n keycloak
+##### Deploying keycloak Cluster
+```
+kubectl apply -f ./deploy/keycloak/keycloak.yaml
+```
+#### Installing MysqlDB
+##### Create the DataBase and the Service
+```
+kubectl apply -f ./deploy/mysqlDB/mysqlDB.yaml
+``` 
+##### Create PVC that will associated
+```
+kubectl apply -f ./deploy/mysqlDB/pvc.yaml
+```
+#### Installing CNO API
+```
+
+```
+#### Installing CNO UI
+```
+
+```
+#### Installing CNO Notification
+```
+
+```
+
+
+
+
 ### Installing CNO via Helm
 1. Installation
 ```bash

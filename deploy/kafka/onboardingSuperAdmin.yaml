@@ -1,0 +1,14 @@
+cat <<EOF | kubectl -n kafka apply -f -
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: onboarding
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls: []
+EOF
