@@ -39,7 +39,9 @@ kubectl apply -f ./deploy/kafka/onboardingSuperAdmin.yaml
 ```
 #### 2. Installing Keycloak
 ##### Installing keycloak Operator 
+``` 
 kubectl apply -f ./files/keycloak/crds/ -n keycloak
+```
 ##### Deploying keycloak Cluster
 ```
 kubectl apply -f ./deploy/keycloak/keycloak.yaml
@@ -55,11 +57,11 @@ kubectl apply -f ./deploy/mysqlDB/pvc.yaml
 ```
 #### Installing CNO API
 ```
-
+kubectl apply -f ./deploy/onboarding-api/onboarding-api.yaml
 ```
 #### Installing CNO UI
 ```
-
+kubectl apply -f ./deploy/onboarding-ui/onboarding-ui.yaml
 ```
 #### Installing CNO Notification
 ```
@@ -70,11 +72,11 @@ kubectl apply -f ./deploy/mysqlDB/pvc.yaml
 
 
 ### Installing CNO via Helm
-1. Installation
+##### 1. Installation
 ```bash
 helm install cno .
 ```
-2. Checks
+##### 2. Checks
 ```bash
 helm get manifest cno
 ```
