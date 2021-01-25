@@ -11,6 +11,7 @@ apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
   name: cloud-keycloak
+  namespace: cno
   labels:
     app: sso
 spec:

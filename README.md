@@ -4,7 +4,7 @@ Onboard, Deploy, Manage and Secure microservices on Kubernetes.
 * [Get Started]()
 * [ Architecture](#Architecture)
 * [Component](#Component)
-* [Installing](#Installing)
+* [Installation](#Installation)
 * [Contributing](#Contributing)
 ## Get Started
 

@@ -1,7 +1,17 @@
+# create namespace for mysql template
+apiVersion: v1
+kind: Namespace
+metadata:
+    creationTimestamp: null
+    name: cno
+spec: {}
+status: {}
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
+  namespace: cno
 spec:
   accessModes:
     - ReadWriteOnce

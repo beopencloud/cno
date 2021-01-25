@@ -10,7 +10,8 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: cno-mysql
+  namespace: cno
 spec:
   ports:
     - port: 3306
@@ -21,7 +22,8 @@ spec:
 apiVersion: apps/v1 
 kind: Deployment
 metadata:
-  name: mysql
+  name: cno-mysql
+  namespace: cno
 spec:
   selector:
     matchLabels:
