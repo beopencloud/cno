@@ -1,3 +1,12 @@
+# create namespace for mysql template
+apiVersion: v1
+kind: Namespace
+metadata:
+    creationTimestamp: null
+    name: cno
+spec: {}
+status: {}
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -29,8 +38,10 @@ spec:
           name: mysql
           env:
             # Use secret in real usage
-            - name: MYSQL_ROOT_PASSWORD
-              value: password
+            # modify dimanche
+            #- name: MYSQL_ROOT_PASSWORD
+            # - name: DB_PASSWORD
+            #  value: password
           ports:
             - containerPort: 3306
               name: mysql
@@ -41,3 +52,8 @@ spec:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-pv-claim
+        # mount secret volume
+        - name: secretMysql
+          secret:
+            secretName: secretMysql
+

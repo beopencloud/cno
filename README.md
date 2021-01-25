@@ -21,13 +21,13 @@ CNO is an open source project mainly composed of 7 modules.
 5. [cno CD-operator](https://gitlab.beopenit.com/cloud/cno-cd)
 6. [cno K8s-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-kubernetes)
 7. CLI
-## Installing
+## Installation
 ### Installation Community Mode
 #### 1. Installing kafka
 #####   Installing kafka operator
 ```
-kubectl create namespace kafka
-kubectl apply -f ./files/kafkaStrimzi/crds/kafkaOperator.yaml -n kafka
+kubectl create namespace cno
+kubectl apply -f ./files/kafkaStrimzi/crds/kafkaOperator.yaml -n cno
 ```
 ##### Deploying a kafka cluster
 ```
@@ -40,7 +40,7 @@ kubectl apply -f ./deploy/kafka/onboardingSuperAdmin.yaml
 #### 2. Installing Keycloak
 ##### Installing keycloak Operator 
 ``` 
-kubectl apply -f ./deploy/keycloak/crds/ -n keycloak
+kubectl apply -f ./deploy/keycloak/crds/ -n cno
 ```
 ##### Deploying keycloak Cluster
 ```
