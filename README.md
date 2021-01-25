@@ -14,13 +14,14 @@ CNO (Cloud Native Onboarding) is an open source platform to onboard easily and s
 CNO Architecture ![Architecture](/image/architecture.png)
 ## Component
 CNO is an open source project mainly composed of 7 modules.
-1. [cno UI](https://gitlab.beopenit.com/cloud/onboarding-ui)
-2. [cno API](https://gitlab.beopenit.com/cloud/onboarding-api)
-3. [cno Agent](https://gitlab.beopenit.com/cloud/cno-agent)
-4. [cno Openshift-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-openshift)
-5. [cno CD-operator](https://gitlab.beopenit.com/cloud/cno-cd)
-6. [cno K8s-operator](https://gitlab.beopenit.com/cloud/onboarding-operator-kubernetes)
-7. CLI
+1. [cno UI](https://github.com/beopencloud/cno-ui-template)
+2. [cno API](https://github.com/beopencloud/cno-api)
+3. [cno Agent](https://github.com/beopencloud/cno-agent)
+4. [cno Openshift-operator](https://github.com/beopencloud/cno-openshift-operator)
+5. [cno CD-operator](https://github.com/beopencloud/cno-cd)
+6. [cno K8s-operator](https://github.com/beopencloud/cno-kubernetes-operator)
+7. [cno Notification](https://github.com/beopencloud/cno-notification)
+7. [cno Client](https://github.com/beopencloud/cnoctl)
 ## Installation
 ### Installation Community Mode
 #### 1. Installing kafka
@@ -58,7 +59,7 @@ kubectl apply -f ./deploy/mysqlDB/pvc.yaml
 #### 4. Installing CNO Operator
 ##### Deploying using the cno operator image
 ```
-kubectl apply -f ./deploy/operator/cnoOperator/crds/
+kubectl apply -f ./deploy/operator/cnoOperator/
 ```
 ##### Creating a Cluster Role(+binding)
 ```
