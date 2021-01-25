@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak-operator
-  namespace: keycloak
+  namespace: cno
 spec:
   replicas: 1
   selector:
