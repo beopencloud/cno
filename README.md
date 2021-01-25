@@ -2,13 +2,20 @@
 Onboard, Deploy, Manage and Secure microservices on Kubernetes.
 
 * [Get Started]()
-* [ Architecture](#Architecture)
+* [Prerequistes](#Prerequistes)
+* [Architecture](#Architecture)
 * [Component](#Component)
 * [Installation](#Installation)
 * [Contributing](#Contributing)
 ## Get Started
 
 CNO (Cloud Native Onboarding) is an open source platform to onboard easily and securely development teams on multi-cloud Kubernetes clusters from a single console.
+
+## Prerequistes
+1. [Install Helm](https://helm.sh/docs/intro/install/)
+2. [Install go](https://golang.org/doc/install) v1.14+
+3. [Install docker](https://docs.docker.com/engine/install/ubuntu/)v17.03+
+4. [Install kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/) v1.14.1+
 
 ## Architecture
 CNO Architecture ![Architecture](/image/architecture.png)
