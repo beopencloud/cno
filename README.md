@@ -73,15 +73,11 @@ kubectl apply -f ./deploy/onboarding-api/onboarding-api.yaml
 ```
 kubectl apply -f ./deploy/onboarding-ui/onboarding-ui.yaml
 ```
-#### Installing CNO Notification
-```
-
-```
 
 
 
 
-### Installing CNO via Helm
+### Installation CNO via Helm
 ##### 1. Installation
 ```bash
 helm install cno .
@@ -89,6 +85,11 @@ helm install cno .
 ##### 2. Checks
 ```bash
 helm get manifest cno
+```
+### Installation via CNO Operator
+1. Execute this commande
+```
+curl -L https://raw.githubusercontent.com/beopencloud/releases/v0.0.0/release0.sh | sh -
 ```
 
 ## Contributing
