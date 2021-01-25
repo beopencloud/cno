@@ -8245,11 +8245,11 @@ metadata:
   name: strimzi-cluster-operator-entity-operator-delegation
   labels:
     app: strimzi
-  namespace: kafka
+  namespace: cno
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: kafka
+    namespace: cno
 roleRef:
   kind: ClusterRole
   name: strimzi-entity-operator
@@ -8265,7 +8265,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: kafka
+    namespace: cno
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-global
@@ -8278,11 +8278,11 @@ metadata:
   name: strimzi-cluster-operator-topic-operator-delegation
   labels:
     app: strimzi
-  namespace: kafka
+  namespace: cno
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: kafka
+    namespace: cno
 roleRef:
   kind: ClusterRole
   name: strimzi-topic-operator
@@ -8713,7 +8713,7 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: kafka
+  namespace: cno
 spec:
   replicas: 1
   selector:
@@ -10421,7 +10421,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: kafka
+    namespace: cno
 roleRef:
   kind: ClusterRole
   name: strimzi-kafka-broker
@@ -10434,11 +10434,11 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: kafka
+  namespace: cno
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: kafka
+    namespace: cno
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-namespaced
@@ -10682,7 +10682,7 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: kafka
+  namespace: cno
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -16166,7 +16166,7 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: kafka
+  namespace: cno
 data:
   log4j2.properties: >
     name = COConfig

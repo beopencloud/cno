@@ -10,7 +10,7 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
-  name: cno-mysql
+  name: mysql
   namespace: cno
 spec:
   ports:
@@ -22,7 +22,7 @@ spec:
 apiVersion: apps/v1 
 kind: Deployment
 metadata:
-  name: cno-mysql
+  name: mysql
   namespace: cno
 spec:
   selector:
@@ -40,10 +40,8 @@ spec:
           name: mysql
           env:
             # Use secret in real usage
-            # modify dimanche
-            #- name: MYSQL_ROOT_PASSWORD
-            # - name: DB_PASSWORD
-            #  value: password
+            - name: ROOT_PASSWORD
+              value: password
           ports:
             - containerPort: 3306
               name: mysql
@@ -54,8 +52,4 @@ spec:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-pv-claim
-        # mount secret volume
-        - name: secretMysql
-          secret:
-            secretName: secretMysql
 

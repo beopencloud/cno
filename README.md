@@ -22,6 +22,11 @@ CNO is an open source project mainly composed of 7 modules.
 6. [cno K8s-operator](https://github.com/beopencloud/cno-kubernetes-operator)
 7. [cno Notification](https://github.com/beopencloud/cno-notification)
 7. [cno Client](https://github.com/beopencloud/cnoctl)
+## Clone this project
+```
+git clone https://github.com/beopencloud/cno.git
+cd cno
+```
 ## Installation
 ### Installation Community Mode
 #### 1. Installing kafka
@@ -87,7 +92,7 @@ helm install cno .
 helm get manifest cno
 ```
 ### Installation via CNO Operator
-1. Execute this commande
+1. Execute this command
 ```
 curl -L https://raw.githubusercontent.com/beopencloud/releases/v0.0.0/release0.sh | sh -
 ```
