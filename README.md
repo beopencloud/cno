@@ -18,7 +18,7 @@ CNO (Cloud Native Onboarding) is an open source platform to onboard easily and s
 4. [Install kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/) v1.14.1+
 
 ## Architecture
-CNO Architecture ![Architecture](/image/architecture.png)
+CNO Architecture ![Architecture](/image/externals.png)
 ## Component
 CNO is an open source project mainly composed of 7 modules.
 1. [cno UI](https://github.com/beopencloud/cno-ui-template)

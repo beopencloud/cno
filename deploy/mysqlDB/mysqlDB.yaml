@@ -39,7 +39,7 @@ spec:
         - image: mysql:5.6
           name: mysql
           env:
-            # Use secret in real usage
+            # Use secret 
             - name: ROOT_PASSWORD
               value: password
           ports:
