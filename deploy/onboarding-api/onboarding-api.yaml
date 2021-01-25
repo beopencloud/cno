@@ -132,22 +132,6 @@ spec:
     - api-cno-demo.beopenit.com
     secretName: beopenit-cert
 
----
-
-apiVersion: mysql.presslabs.org/v1alpha1
-kind: MysqlCluster
-metadata:
-  name: cno-api
-  namespace: cno
-spec:
-  replicas: 1
-  secretName: cno-api-db-secret
-  volumeSpec:
-    persistentVolumeClaim:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi
 
 ---
 
