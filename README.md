@@ -80,7 +80,7 @@ kubectl apply -f ./deploy/operator/templates/
 #### Installing Mysql Operator
 ```
 helm repo add presslabs https://presslabs.github.io/charts
-helm install presslabs/mysql-operator --name mysql-operator
+helm install --name mysql-operator presslabs/mysql-operator 
 ```
 #### Installing CNO API
 ```

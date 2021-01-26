@@ -1,0 +1,79 @@
+-architectdure
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-secret-db
+-deploy
+-deploy
+-deploy
+-deploy
+-deploy
+-deploy
+-Merge branch 'main' of https://github.com/beopencloud/cno into main
+-deploy
+-Update README.md
+-automatique installation king
+-automatique installation king
+-automatique installation king
+-automatique installation king
+-automatique installation king
+-automatique installation king
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-readme file
+-Merge branch 'main' of https://github.com/beopencloud/cno into main
+-readme file
+-Create kafka.yaml
+-Delete kafka_cluster.yaml
+-Create kafka_cluster.yaml
+-readme file
+-readme file
+-readme file
+-readme file
+-readme
+-readme
+-Merge branch 'main' of https://github.com/beopencloud/cno into main
+-readme
+-Create CONTRIBUTING.md
+-Delete docs
+-Create docs
+-Merge branch 'main' of https://github.com/beopencloud/cno into main
+-readme
+-Rename contributor.md to CONTRIBUTING.md
+-Create README.md
+-thirty commit contributor guide
+-second commit contributor guide
+-second commit contributor guide
+-first commit contributor guide
+-Update contributor.md
+-Create contributor.md
