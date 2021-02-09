@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cno-api
-  namespace: cno
+  namespace: cno-system
 
 ---
 
@@ -13,7 +13,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cno-api
-  namespace: cno
+  namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: cluster-admin
@@ -29,7 +29,7 @@ metadata:
   labels:
     run: cno-api
   name: cno-api
-  namespace: cno
+  namespace: cno-system
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -95,7 +95,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cno-api
-  namespace: cno
+  namespace: cno-system
 spec:
   ports:
   - protocol: TCP
@@ -118,7 +118,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   name: cno-api
-  namespace: cno
+  namespace: cno-system
 spec:
   rules:
   - host: api-cno-demo.beopenit.com
@@ -138,7 +138,7 @@ apiVersion: mysql.presslabs.org/v1alpha1
 kind: MysqlCluster
 metadata:
   name: cno-api
-  namespace: cno
+  namespace: cno-system
 spec:
   replicas: 1
   secretName: cno-api-db-secret
@@ -155,7 +155,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cno-api-mysql-master-external
-  namespace: cno
+  namespace: cno-system
 spec:
   ports:
   - name: mysql

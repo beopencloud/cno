@@ -1,17 +1,9 @@
 # create namespace for keycloak template
-apiVersion: v1
-kind: Namespace
-metadata:
-    creationTimestamp: null
-    name: cno
-spec: {}
-status: {}
----
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
   name: cloud-keycloak
-  namespace: cno
+  namespace: cno-system
   labels:
     app: sso
 spec:

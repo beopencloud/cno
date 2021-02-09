@@ -1,15 +1,15 @@
 # CNO, Cloud Native Onboarding.
 Onboard, Deploy, Manage and Secure microservices on Kubernetes.
+CNO (Cloud Native Onboarding) is an open source platform to onboard easily and securely development teams on multi-cloud Kubernetes clusters from a single console.
 
-* [Get Started](#Get-Started)
-* [Prerequistes](#Prerequistes)
+* [Get Started](#Installation)
 * [Architecture](#Architecture)
 * [Component](#Component)
 * [Installation](#Installation)
 * [Contributing](#Contributing)
-# Get Started
+# Why CNO ?
 
-CNO (Cloud Native Onboarding) is an open source platform to onboard easily and securely development teams on multi-cloud Kubernetes clusters from a single console.
+
 
 # Architecture overview
 ![Architecture](image/externals.png)

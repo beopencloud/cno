@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: onboarding-ui
-  namespace: cno
+  namespace: cno-system
 spec:
   containers:
     - image: beopenit/onboarding-ui-prod:latest

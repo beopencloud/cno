@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="main"
+VERSION="feature/mysql-operator"
 
 hasKubectl() {
     hasKubectl=$(which kubectl)

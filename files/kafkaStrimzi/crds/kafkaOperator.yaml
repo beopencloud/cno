@@ -1,11 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  creationTimestamp: null
-  name: cno
-spec: {}
-status: {}
----
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -8245,11 +8237,11 @@ metadata:
   name: strimzi-cluster-operator-entity-operator-delegation
   labels:
     app: strimzi
-  namespace: cno
+  namespace: cno-system
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: cno
+    namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: strimzi-entity-operator
@@ -8265,7 +8257,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: cno
+    namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-global
@@ -8278,11 +8270,11 @@ metadata:
   name: strimzi-cluster-operator-topic-operator-delegation
   labels:
     app: strimzi
-  namespace: cno
+  namespace: cno-system
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: cno
+    namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: strimzi-topic-operator
@@ -8713,7 +8705,7 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: cno
+  namespace: cno-system
 spec:
   replicas: 1
   selector:
@@ -10421,7 +10413,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: cno
+    namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: strimzi-kafka-broker
@@ -10434,11 +10426,11 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: cno
+  namespace: cno-system
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: cno
+    namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-namespaced
@@ -10682,7 +10674,7 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: cno
+  namespace: cno-system
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -16166,7 +16158,7 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
-  namespace: cno
+  namespace: cno-system
 data:
   log4j2.properties: >
     name = COConfig
