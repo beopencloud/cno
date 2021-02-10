@@ -5,7 +5,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: onboarding-operator-kubernetes
-    namespace: cno
+    namespace: cno-system
 roleRef:
   kind: ClusterRole
   name: cluster-admin

@@ -1143,16 +1143,11 @@ spec:
     served: true
     storage: true
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name:  cno
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak-operator
-  namespace: cno
+  namespace: cno-system
 spec:
   replicas: 1
   selector:

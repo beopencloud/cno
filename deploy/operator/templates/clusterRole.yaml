@@ -4,7 +4,7 @@ metadata:
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
   name: cno-admin-cluster-role
-  namespace: cno
+  namespace: cno-system
 rules:
   - apiGroups:
       - ""

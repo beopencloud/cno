@@ -2,7 +2,7 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: cno-kafka-superadmin
-  namespace: cno
+  namespace: cno-system
   labels:
     strimzi.io/cluster: my-cluster
 spec:
