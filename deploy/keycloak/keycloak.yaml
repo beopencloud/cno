@@ -11,27 +11,32 @@ spec:
   extensions:
     - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
   externalAccess:
-    enabled: true
+    enabled: false
+    tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True
-#---
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#   name: cloud-keycloak
-#   namespace: cno-system
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-#     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-#     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-# spec:
-#   rules:
-#   - http:
-#       paths:
-#       - path: /cno-sso
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: keycloak
-#             port:
-#               number: 8443
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/rewrite-target: /cno-sso
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+  labels:
+    app: keycloak
+  name: keycloak
+  namespace: cno-system
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: keycloak
+          servicePort: 8443
+        path: /
+        pathType: ImplementationSpecific
+status:
+  loadBalancer:
+    ingress:
+    - hostname: localhost
