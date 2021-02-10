@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   creationTimestamp: null
-  name: cno
+  name: cno-system
 spec: {}
 status: {}
 ---
@@ -10,7 +10,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: onboarding-operator-kubernetes
-  namespace: cno
+  namespace: cno-system
 spec:
   replicas: 1
   selector:

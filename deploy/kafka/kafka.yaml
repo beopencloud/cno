@@ -1,8 +1,8 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
-  name: my-cluster
-  namespace: cno
+  name: kafka-cluster
+  namespace: cno-system
 spec:
   kafka:
     version: 2.5.0
