@@ -4,7 +4,7 @@ VERSION="feature/mysql-operator"
 
 
 # Delete kafka operator
-kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/files/kafkaStrimzi/crds/kafkaOperator.yaml
+kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml
 
 # Delete a kafka cluster
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml
@@ -25,13 +25,14 @@ kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cn
 # Delete CNO service account, role and binding
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/templates/cno-rbac.yaml
 
-# Installing Mysql Operator
-kubectl -n cno-system delete secret  mysql-secret
 # Delete CNO API
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/onboarding-api.yaml
 
 # Delete CNO UI
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/onboarding-ui.yaml
+
+#Delete remaining resources
+kubectl -n cno-system delete --all  all
 
 # Delete cno namespace
 kubectl delete namespace cno-system

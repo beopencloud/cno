@@ -41,7 +41,7 @@ installCno() {
 
     # Install Mysql cluster 
     MYSQL_PWD=$(openssl rand -base64 14)
-    kubectl -n cno-system create secret generic mysql-secret  --from-literal=ROOT_PASSWORD="${MYSQL_PWD}"
+    kubectl -n cno-system create secret generic cno-api-db-secret  --from-literal=ROOT_PASSWORD="${MYSQL_PWD}"
 
     # Install CNO API
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/onboarding-api.yaml
@@ -49,12 +49,10 @@ installCno() {
     # Install CNO UI
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/onboarding-ui.yaml
 
-    #Fetch  NodePort  services ports
-    API_PORT = $(kubectl get svc cno-api-nport  -o jsonpath='{.spec.ports[0].nodePort}')
     echo
     echo "============================================================"
     echo "  CNO installation success."
-    echo "  Mysql cluster root password : ${MYSQL_PWD}"
+    echo "  Mysql Cluster root password : ${MYSQL_PWD}"
     echo "  UI url : "
     echo "============================================================"
     echo
