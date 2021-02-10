@@ -15,41 +15,42 @@ installCno() {
     kubectl create namespace cno-system
 
     # Install kafka operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/files/kafkaStrimzi/crds/kafkaOperator.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml
 
     # Deploy a kafka cluster
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/kafka/kafka.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml
 
     # Create the onboarding super-admin
-    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/kafka/onboardingSuperAdmin.yaml
+    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/onboardingSuperAdmin.yaml
 
     # Install keycloak Operator
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/keycloak/crds/keycloak-all.yaml
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/crds/keycloak-all.yaml
 
 
     # Deploy keycloak Cluster
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/keycloak/keycloak.yaml
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
 
     # Deploy CNO operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/operator/cnoOperator/cno-operator-all.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/cno-operator/cno-operator-all.yaml
 
     # Create CNO service account, role and binding
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/operator/templates/cno-rbac.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/templates/cno-rbac.yaml
 
     # Install Mysql Operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/operator/mysql-operator/mysql-operator.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/mysql-operator/mysql-operator.yaml
 
-    # Install mysql cluster
+    # Install Mysql cluster 
     MYSQL_PWD=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic mysql-secret  --from-literal=ROOT_PASSWORD="${MYSQL_PWD}"
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/mysql/cluster.yaml
 
     # Install CNO API
-    kubectl apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/onboarding-api/onboarding-api.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/onboarding-api.yaml
 
     # Install CNO UI
-    kubectl apply -f https://raw.githubusercontent.com/beopencloud/cno/${VERSION}/deploy/onboarding-ui/onboarding-ui.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/onboarding-ui.yaml
 
+    #Fetch  NodePort  services ports
+    API_PORT = $(kubectl get svc cno-api-nport  -o jsonpath='{.spec.ports[0].nodePort}')
     echo
     echo "============================================================"
     echo "  CNO installation success."
