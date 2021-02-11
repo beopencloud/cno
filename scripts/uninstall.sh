@@ -34,7 +34,7 @@ kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cn
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/onboarding-ui.yaml
 
 #Delete remaining resources
-kubectl -n cno-system delete --all  all
+kubectl -n cno-system delete --all  all,ing
 
 # Delete cno namespace
 kubectl delete namespace cno-system
