@@ -8,11 +8,21 @@ spec:
     version: 2.5.0
     replicas: 3
     listeners:
-      external:
-        type: loadbalancer
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
         authentication:
           type: tls
-      tls:
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: true
+    tls:
         authentication:
           type: tls
     authorization:
