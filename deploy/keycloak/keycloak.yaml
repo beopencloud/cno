@@ -7,10 +7,11 @@ metadata:
   labels:
     app: sso
 spec:
-  instances: 3
+  instances: 1
   extensions:
     - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
   externalAccess:
     enabled: false
+    tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True

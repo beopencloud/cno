@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  labels:
+    app: keycloak
+  name: keycloak
+  namespace: cno-system
+spec:
+  rules:
+  - host: cno-login.cluster.beopenit.com
+    http:
+      paths:
+      - backend:
+          serviceName: keycloak
+          servicePort: 8443
+        path: /
