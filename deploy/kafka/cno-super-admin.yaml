@@ -4,7 +4,7 @@ metadata:
   name: cno-kafka-superadmin
   namespace: cno-system
   labels:
-    strimzi.io/cluster: my-cluster
+    strimzi.io/cluster: kafka-cluster
 spec:
   authentication:
     type: tls
