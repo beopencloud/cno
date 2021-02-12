@@ -22,7 +22,7 @@ metadata:
     heritage: Helm
 data:
   TOPOLOGY_USER: "b3JjaGVzdHJhdG9y"
-  TOPOLOGY_PASSWORD: "NDZDQk9ydEsyRA=="
+  TOPOLOGY_PASSWORD: "RTZZQzFTZDAyMA=="
 ---
 # Source: mysql-operator/templates/orc-config.yaml
 apiVersion: v1
@@ -145,7 +145,7 @@ rules:
   - delete
 ---
 # Source: mysql-operator/templates/clusterrolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: mysql-operator
@@ -232,7 +232,7 @@ spec:
         release: mysql-operator
       annotations:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
-        checksum/secret: d092fcb102ac505fef7dd73302d9ff9529957a737469e9ba1a22e731b6349e42
+        checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
       serviceAccountName: mysql-operator
       containers:
@@ -298,9 +298,6 @@ spec:
             httpGet:
               path: /api/raft-health
               port: 3000
-          resources:
-            null
-
       volumes:
         - name: config
           configMap:
@@ -309,8 +306,6 @@ spec:
       # security context to mount corectly the volume for orc
       securityContext:
         fsGroup: 777
-
-      affinity:
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -319,7 +314,6 @@ spec:
         resources:
           requests:
             storage: 1Gi
----
-# Source: mysql-operator/templates/servicemonitor.yaml
-# This is a ServicMonitor for the MySQL clusters, not the operator itself.
-# To scrape the operator, we need https://github.com/presslabs/mysql-operator/issues/151 first.
+
+
+
