@@ -3,21 +3,20 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   labels:
-    app: keycloak
-  name: keycloak
+    app: kafka-bootstrap
+  name: kafka-bootstrap
   namespace: cno-system
 spec:
   rules:
-  - host: cno-auth.cluster.beopenit.com
+  - host: cno-broker.cluster.beopenit.com
     http:
       paths:
       - backend:
-          serviceName: keycloak
-          servicePort: 8443
+          serviceName: kafka-cluster-kafka-external-bootstrap
+          servicePort: 9094
         path: /

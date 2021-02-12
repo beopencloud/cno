@@ -8,21 +8,21 @@ spec:
     version: 2.5.0
     replicas: 3
     listeners:
-      external:
-        type: loadbalancer
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
         authentication:
           type: tls
-        overrides:
-          bootstrap:
-            address: bootstrap.kafka.cloud.beopenit.com
-          brokers:
-          - broker: 0
-            advertisedHost: broker-0.kafka.cloud.beopenit.com
-          - broker: 1
-            advertisedHost: broker-1.kafka.cloud.beopenit.com
-          - broker: 2
-            advertisedHost: broker-2.kafka.cloud.beopenit.com
-      tls:
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: true
+    tls:
         authentication:
           type: tls
     authorization:
