@@ -30,11 +30,15 @@ kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cn
 # Delete CNO API
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml
 
+# Delete Mysql Operator and cluster
+kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api-mysql.yaml
+kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/mysql-operator/mysql-operator.yaml
+
 # Delete CNO UI
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/onboarding-ui.yaml
 
 #Delete remaining resources
-kubectl -n cno-system delete --all  all,ing
+kubectl -n cno-system delete --all  all,ing,secret,cm
 
 # Delete cno namespace
 kubectl delete namespace cno-system
