@@ -36,10 +36,14 @@ installCno() {
     kubectl create namespace cno-system
 
     # Install kafka operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml    
+    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
-    # Deploy a kafka cluster
+    #Deploy a kafka cluster
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml
+    sleep 5s
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-zookeeper-2 --for=condition=ready pod --timeout=-1s
+    kubectl  -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-kafka-2 --for=condition=ready pod --timeout=-1s
 
     # Create the onboarding super-admin
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
