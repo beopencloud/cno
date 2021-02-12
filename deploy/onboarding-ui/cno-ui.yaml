@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+  namespace: cno-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cno-ui
+  template:
+    metadata:
+      labels:
+        app: cno-ui
+    spec:
+      containers:
+      - image: beopenit/onboarding-ui-prod:latest
+        name: onboarding-ui-prod
+        ports:
+          - containerPort: 8080
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: cno-ui
+  type: LoadBalancer
+status:
+  loadBalancer: {}
