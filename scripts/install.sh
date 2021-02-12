@@ -74,6 +74,7 @@ installCno() {
     # Install Mysql cluster 
     MYSQL_PWD=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic cno-api-db-secret  --from-literal=ROOT_PASSWORD="${MYSQL_PWD}"
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api-mysql.yaml
 
     # Install CNO API
     kubectl -n cno-system get secret/kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
