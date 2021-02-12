@@ -106,36 +106,6 @@ spec:
   type: LoadBalancer
 ---
 
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-  name: cno-api
-  namespace: cno-system
-spec:
-  rules:
-  - host: api-cno-demo.beopenit.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: cno-api
-            port: 
-              number: 80
-  tls:
-  - hosts:
-    - api-cno-demo.beopenit.com
-    secretName: beopenit-cert
-
----
-
 apiVersion: mysql.presslabs.org/v1alpha1
 kind: MysqlCluster
 metadata:
