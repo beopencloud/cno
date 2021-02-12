@@ -50,7 +50,7 @@ installCno() {
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml
     kubectl -n cno-system patch ing/kafka-bootstrap --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-broker.$INGRESS_DOMAIN'}]"
 
-    # Create the onboarding super-admin
+    # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
 
     # Install keycloak Operator
@@ -77,6 +77,10 @@ installCno() {
 
     # Install CNO API
     kubectl -n cno-system get secret/kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
+    kubectl -n cno-system get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
+    kubectl -n cno-system  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
+    kubectl  -n cno-system create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
+    rm -rf /tmp/cno-*
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/onboarding-api.yaml
 
     # Install CNO UI
