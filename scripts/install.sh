@@ -39,11 +39,16 @@ installCno() {
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml    
     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
-    #Deploy a kafka cluster
+    # Deploy a kafka cluster
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml
     sleep 5s
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-zookeeper-2 --for=condition=ready pod --timeout=-1s
-    kubectl  -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-kafka-2 --for=condition=ready pod --timeout=-1s
+    sleep 5s
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-kafka-2 --for=condition=ready pod --timeout=-1s
+    
+    # Create Kafka ingress and patch it with right domain prefix
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml
+    kubectl -n cno-system patch ing/kafka-bootstrap --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-broker.$INGRESS_DOMAIN'}]"
 
     # Create the onboarding super-admin
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
@@ -54,7 +59,7 @@ installCno() {
     # Deploy keycloak Cluster and patch the ingress
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/keycloak-ingress.yaml
-    kubectl -n cno-system patch ing/keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-login.$INGRESS_DOMAIN'}]"
+    kubectl -n cno-system patch ing/keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
 
 
     # Deploy CNO operator
