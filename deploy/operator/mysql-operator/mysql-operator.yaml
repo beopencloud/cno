@@ -207,6 +207,112 @@ spec:
     protocol: TCP
     targetPort: 3000
 ---
+# crds
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app: mysql-operator
+    controller-tools.k8s.io: "1.0"
+  name: mysqlbackups.mysql.presslabs.org
+spec:
+  conversion:
+    strategy: None
+  group: mysql.presslabs.org
+  names:
+    kind: MysqlBackup
+    listKind: MysqlBackupList
+    plural: mysqlbackups
+    singular: mysqlbackup
+  preserveUnknownFields: true
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: MysqlBackup
+    listKind: MysqlBackupList
+    plural: mysqlbackups
+    singular: mysqlbackup
+  conditions:
+  - lastTransitionTime: "2021-02-18T09:04:29Z"
+    message: no conflicts found
+    reason: NoConflicts
+    status: "True"
+    type: NamesAccepted
+  - lastTransitionTime: "2021-02-18T09:04:29Z"
+    message: the initial names have been accepted
+    reason: InitialNamesAccepted
+    status: "True"
+    type: Established
+  storedVersions:
+  - v1alpha1
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app: mysql-operator
+    controller-tools.k8s.io: "1.0"
+  name: mysqlclusters.mysql.presslabs.org
+spec:
+  conversion:
+    strategy: None
+  group: mysql.presslabs.org
+  names:
+    kind: MysqlCluster
+    listKind: MysqlClusterList
+    plural: mysqlclusters
+    shortNames:
+    - mysql
+    singular: mysqlcluster
+  preserveUnknownFields: true
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: The cluster status
+      jsonPath: .status.conditions[?(@.type == "Ready")].status
+      name: Ready
+      type: string
+    - description: The number of desired nodes
+      jsonPath: .spec.replicas
+      name: Replicas
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    served: true
+    storage: true
+    subresources:
+      scale:
+        specReplicasPath: .spec.replicas
+        statusReplicasPath: .status.readyNodes
+      status: {}
+status:
+  acceptedNames:
+    kind: MysqlCluster
+    listKind: MysqlClusterList
+    plural: mysqlclusters
+    shortNames:
+    - mysql
+    singular: mysqlcluster
+  conditions:
+  - lastTransitionTime: "2021-02-18T09:04:29Z"
+    message: no conflicts found
+    reason: NoConflicts
+    status: "True"
+    type: NamesAccepted
+  - lastTransitionTime: "2021-02-18T09:04:29Z"
+    message: the initial names have been accepted
+    reason: InitialNamesAccepted
+    status: "True"
+    type: Established
+  storedVersions:
+  - v1alpha1
+---
 # Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
