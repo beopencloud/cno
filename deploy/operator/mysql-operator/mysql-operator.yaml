@@ -250,7 +250,7 @@ status:
   storedVersions:
   - v1alpha1
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   labels:
@@ -268,10 +268,12 @@ spec:
     shortNames:
     - mysql
     singular: mysqlcluster
-  preserveUnknownFields: true
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
+  - schema:
+      openAPIV3Schema:
+        type: object
+    additionalPrinterColumns:
     - description: The cluster status
       jsonPath: .status.conditions[?(@.type == "Ready")].status
       name: Ready
