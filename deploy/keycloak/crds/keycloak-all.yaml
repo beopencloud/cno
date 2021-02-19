@@ -14,7 +14,7 @@ spec:
     status: {}
   validation:
     openAPIV3Schema:
-      description: KeycloakBackup is the Schema for the keycloakbackups API
+      description: KeycloakBackup is the Schema for the keycloakbackups API.
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -29,7 +29,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: KeycloakBackupSpec defines the desired state of KeycloakBackup
+          description: KeycloakBackupSpec defines the desired state of KeycloakBackup.
           properties:
             aws:
               description: If provided, an automatic database backup will be created
@@ -57,7 +57,7 @@ spec:
                   type: string
                 schedule:
                   description: If specified, it will be used as a schedule for creating
-                    a CronJob
+                    a CronJob.
                   type: string
               type: object
             instanceSelector:
@@ -112,9 +112,13 @@ spec:
                 flag to true. Potentially, it will be possible to restore a single
                 backup multiple times."
               type: boolean
+            storageClassName:
+              description: Name of the StorageClass for Postgresql Backup Persistent
+                Volume Claim
+              type: string
           type: object
         status:
-          description: KeycloakBackupStatus defines the observed state of KeycloakBackup
+          description: KeycloakBackupStatus defines the observed state of KeycloakBackup.
           properties:
             message:
               description: Human-readable message indicating details about current
@@ -164,7 +168,7 @@ spec:
     status: {}
   validation:
     openAPIV3Schema:
-      description: KeycloakClient is the Schema for the keycloakclients API
+      description: KeycloakClient is the Schema for the keycloakclients API.
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -179,7 +183,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: KeycloakClientSpec defines the desired state of KeycloakClient
+          description: KeycloakClientSpec defines the desired state of KeycloakClient.
           properties:
             client:
               description: Keycloak Client REST object.
@@ -212,6 +216,13 @@ spec:
                 consentRequired:
                   description: True if Consent Screen is required.
                   type: boolean
+                defaultClientScopes:
+                  description: A list of default client scopes. Default client scopes
+                    are always applied when issuing OpenID Connect tokens or SAML
+                    assertions for this client.
+                  items:
+                    type: string
+                  type: array
                 defaultRoles:
                   description: Default Client roles.
                   items:
@@ -247,6 +258,14 @@ spec:
                 notBefore:
                   description: Not Before setting.
                   type: integer
+                optionalClientScopes:
+                  description: A list of optional client scopes. Optional client scopes
+                    are applied when issuing tokens for this client, but only when
+                    they are requested by the scope parameter in the OpenID Connect
+                    authorization request.
+                  items:
+                    type: string
+                  type: array
                 protocol:
                   description: Protocol used for this Client.
                   type: string
@@ -433,7 +452,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: KeycloakRealmSpec defines the desired state of KeycloakRealm
+          description: KeycloakRealmSpec defines the desired state of KeycloakRealm.
           properties:
             instanceSelector:
               description: Selector for looking up Keycloak Custom Resources.
@@ -489,6 +508,128 @@ spec:
                   description: 'Enable events recording TODO: change to values and
                     use kubebuilder default annotation once supported'
                   type: boolean
+                authenticationFlows:
+                  description: Authentication flows
+                  items:
+                    properties:
+                      alias:
+                        description: Alias
+                        type: string
+                      authenticationExecutions:
+                        description: Authentication executions
+                        items:
+                          properties:
+                            authenticator:
+                              description: Authenticator
+                              type: string
+                            authenticatorConfig:
+                              description: Authenticator Config
+                              type: string
+                            authenticatorFlow:
+                              description: Authenticator flow
+                              type: boolean
+                            flowAlias:
+                              description: Flow Alias
+                              type: string
+                            priority:
+                              description: Priority
+                              format: int32
+                              type: integer
+                            requirement:
+                              description: Requirement [REQUIRED, OPTIONAL, ALTERNATIVE,
+                                DISABLED]
+                              type: string
+                            userSetupAllowed:
+                              description: User setup allowed
+                              type: boolean
+                          type: object
+                        type: array
+                      builtIn:
+                        description: Built in
+                        type: boolean
+                      description:
+                        description: Description
+                        type: string
+                      id:
+                        description: ID
+                        type: string
+                      providerId:
+                        description: Provider ID
+                        type: string
+                      topLevel:
+                        description: Top level
+                        type: boolean
+                    required:
+                    - alias
+                    - authenticationExecutions
+                    type: object
+                  type: array
+                authenticatorConfig:
+                  description: Authenticator config
+                  items:
+                    properties:
+                      alias:
+                        description: Alias
+                        type: string
+                      config:
+                        additionalProperties:
+                          type: string
+                        description: Config
+                        type: object
+                      id:
+                        description: ID
+                        type: string
+                    required:
+                    - alias
+                    type: object
+                  type: array
+                clientScopes:
+                  description: Client scopes
+                  items:
+                    properties:
+                      attributes:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      description:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      protocol:
+                        type: string
+                      protocolMappers:
+                        description: Protocol Mappers.
+                        items:
+                          properties:
+                            config:
+                              additionalProperties:
+                                type: string
+                              description: Config options.
+                              type: object
+                            consentRequired:
+                              description: True if Consent Screen is required.
+                              type: boolean
+                            consentText:
+                              description: Text to use for displaying Consent Screen.
+                              type: string
+                            id:
+                              description: Protocol Mapper ID.
+                              type: string
+                            name:
+                              description: Protocol Mapper Name.
+                              type: string
+                            protocol:
+                              description: Protocol to use.
+                              type: string
+                            protocolMapper:
+                              description: Protocol Mapper to use
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  type: array
                 clients:
                   description: A set of Keycloak Clients.
                   items:
@@ -521,6 +662,13 @@ spec:
                       consentRequired:
                         description: True if Consent Screen is required.
                         type: boolean
+                      defaultClientScopes:
+                        description: A list of default client scopes. Default client
+                          scopes are always applied when issuing OpenID Connect tokens
+                          or SAML assertions for this client.
+                        items:
+                          type: string
+                        type: array
                       defaultRoles:
                         description: Default Client roles.
                         items:
@@ -556,6 +704,14 @@ spec:
                       notBefore:
                         description: Not Before setting.
                         type: integer
+                      optionalClientScopes:
+                        description: A list of optional client scopes. Optional client
+                          scopes are applied when issuing tokens for this client,
+                          but only when they are requested by the scope parameter
+                          in the OpenID Connect authorization request.
+                        items:
+                          type: string
+                        type: array
                       protocol:
                         description: Protocol used for this Client.
                         type: string
@@ -633,6 +789,12 @@ spec:
                 displayName:
                   description: Realm display name.
                   type: string
+                duplicateEmailsAllowed:
+                  description: Duplicate emails
+                  type: boolean
+                editUsernameAllowed:
+                  description: Edit username
+                  type: boolean
                 enabled:
                   description: Realm enabled flag.
                   type: boolean
@@ -692,13 +854,93 @@ spec:
                         type: boolean
                     type: object
                   type: array
+                loginWithEmailAllowed:
+                  description: Login with email
+                  type: boolean
                 realm:
                   description: Realm name.
                   type: string
+                registrationAllowed:
+                  description: User registration
+                  type: boolean
+                registrationEmailAsUsername:
+                  description: Email as username
+                  type: boolean
+                rememberMe:
+                  description: Remember me
+                  type: boolean
+                resetPasswordAllowed:
+                  description: Forgot password
+                  type: boolean
+                sslRequired:
+                  description: Require SSL
+                  type: string
+                userFederationMappers:
+                  description: User federation mappers are extension points triggered
+                    by the user federation at various points.
+                  items:
+                    description: https://www.keycloak.org/docs/11.0/server_admin/#_ldap_mappers
+                      https://www.keycloak.org/docs-api/11.0/rest-api/index.html#_userfederationmapperrepresentation
+                    properties:
+                      config:
+                        additionalProperties:
+                          type: string
+                        description: User federation mapper config.
+                        type: object
+                      federationMapperType:
+                        type: string
+                      federationProviderDisplayName:
+                        description: The displayName for the user federation provider
+                          this mapper applies to.
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  type: array
+                userFederationProviders:
+                  description: Point keycloak to an external user provider to validate
+                    credentials or pull in identity information.
+                  items:
+                    description: https://www.keycloak.org/docs-api/10.0/rest-api/index.html#_userfederationproviderrepresentation
+                    properties:
+                      config:
+                        additionalProperties:
+                          type: string
+                        description: User federation provider config.
+                        type: object
+                      displayName:
+                        description: The display name of this provider instance.
+                        type: string
+                      fullSyncPeriod:
+                        format: int32
+                        type: integer
+                      id:
+                        description: The ID of this provider
+                        type: string
+                      priority:
+                        description: The priority of this provider when looking up
+                          users or adding a user.
+                        format: int32
+                        type: integer
+                      providerName:
+                        description: The name of the user provider, such as "ldap",
+                          "kerberos" or a custom SPI.
+                        type: string
+                    type: object
+                  type: array
                 users:
                   description: A set of Keycloak Users.
                   items:
                     properties:
+                      attributes:
+                        additionalProperties:
+                          items:
+                            type: string
+                          type: array
+                        description: A set of Attributes.
+                        type: object
                       clientRoles:
                         additionalProperties:
                           items:
@@ -774,6 +1016,9 @@ spec:
                         type: string
                     type: object
                   type: array
+                verifyEmail:
+                  description: Verify email
+                  type: boolean
               required:
               - realm
               type: object
@@ -787,8 +1032,16 @@ spec:
                   identityProvider:
                     description: Identity Provider to be overridden.
                     type: string
+                required:
+                - identityProvider
                 type: object
               type: array
+              x-kubernetes-list-type: atomic
+            unmanaged:
+              description: When set to true, this KeycloakRealm will be marked as
+                unmanaged and not be managed by this operator. It can then be used
+                for targeting purposes.
+              type: boolean
           required:
           - realm
           type: object
@@ -834,141 +1087,6 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: keycloaks.keycloak.org
-spec:
-  group: keycloak.org
-  names:
-    kind: Keycloak
-    listKind: KeycloakList
-    plural: keycloaks
-    singular: keycloak
-  scope: Namespaced
-  subresources:
-    status: {}
-  validation:
-    openAPIV3Schema:
-      description: Keycloak is the Schema for the keycloaks API
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        metadata:
-          type: object
-        spec:
-          description: KeycloakSpec defines the desired state of Keycloak
-          properties:
-            extensions:
-              description: A list of extensions, where each one is a URL to a JAR
-                files that will be deployed in Keycloak.
-              items:
-                type: string
-              type: array
-            externalAccess:
-              description: Controls external Ingress/Route settings.
-              properties:
-                enabled:
-                  description: If set to true, the Operator will create an Ingress
-                    or a Route pointing to Keycloak.
-                  type: boolean
-              type: object
-            externalDatabase:
-              description: "Controls external database settings. Using an external
-                database requires providing a secret containing credentials as well
-                as connection details. Here's an example of such secret: \n     apiVersion:
-                v1     kind: Secret     metadata:         name: keycloak-db-secret
-                \        namespace: keycloak     stringData:         POSTGRES_DATABASE:
-                <Database Name>         POSTGRES_EXTERNAL_ADDRESS: <External Database
-                IP or URL (resolvable by K8s)>         POSTGRES_EXTERNAL_PORT: <External
-                Database Port>         # Strongly recommended to use <'Keycloak CR
-                Name'-postgresql>         POSTGRES_HOST: <Database Service Name>         POSTGRES_PASSWORD:
-                <Database Password>         # Required for AWS Backup functionality
-                \        POSTGRES_SUPERUSER: true         POSTGRES_USERNAME: <Database
-                Username>      type: Opaque \n Both POSTGRES_EXTERNAL_ADDRESS and
-                POSTGRES_EXTERNAL_PORT are specifically required for creating connection
-                to the external database. The secret name is created using the following
-                convention:       <Custom Resource Name>-db-secret \n For more information,
-                please refer to the Operator documentation."
-              properties:
-                enabled:
-                  description: If set to true, the Operator will use an external database.
-                    pointing to Keycloak.
-                  type: boolean
-              type: object
-            instances:
-              description: Number of Keycloak instances in HA mode. Default is 1.
-              type: integer
-            podDisruptionBudget:
-              description: Specify PodDisruptionBudget configuration
-              properties:
-                enabled:
-                  description: If set to true, the operator will create a PodDistruptionBudget
-                    for the Keycloak deployment and set its `maxUnavailable` value
-                    to 1
-                  type: boolean
-              type: object
-            profile:
-              description: Profile used for controlling Operator behavior. Default
-                is empty.
-              type: string
-          type: object
-        status:
-          description: KeycloakStatus defines the observed state of Keycloak
-          properties:
-            credentialSecret:
-              description: The secret where the admin credentials are to be found
-              type: string
-            internalURL:
-              description: Service IP and Port for in-cluster access to the keycloak
-                instance
-              type: string
-            message:
-              description: Human-readable message indicating details about current
-                operator phase or error.
-              type: string
-            phase:
-              description: Current phase of the operator.
-              type: string
-            ready:
-              description: True if all resources are in a ready state and all work
-                is done.
-              type: boolean
-            secondaryResources:
-              additionalProperties:
-                items:
-                  type: string
-                type: array
-              description: 'A map of all the secondary resources types and names created
-                for this CR. e.g "Deployment": [ "DeploymentName1", "DeploymentName2"
-                ]'
-              type: object
-            version:
-              description: Version of Keycloak or RHSSO running on the cluster
-              type: string
-          required:
-          - credentialSecret
-          - internalURL
-          - message
-          - phase
-          - ready
-          - version
-          type: object
-      type: object
-  version: v1alpha1
-  versions:
-  - name: v1alpha1
-    served: true
-    storage: true
----
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
   name: keycloakusers.keycloak.org
 spec:
   group: keycloak.org
@@ -982,7 +1100,7 @@ spec:
     status: {}
   validation:
     openAPIV3Schema:
-      description: KeycloakUser is the Schema for the keycloakusers API
+      description: KeycloakUser is the Schema for the keycloakusers API.
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -997,7 +1115,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: KeycloakUserSpec defines the desired state of KeycloakUser
+          description: KeycloakUserSpec defines the desired state of KeycloakUser.
           properties:
             realmSelector:
               description: Selector for looking up KeycloakRealm Custom Resources.
@@ -1045,6 +1163,13 @@ spec:
             user:
               description: Keycloak User REST object.
               properties:
+                attributes:
+                  additionalProperties:
+                    items:
+                      type: string
+                    type: array
+                  description: A set of Attributes.
+                  type: object
                 clientRoles:
                   additionalProperties:
                     items:
@@ -1123,7 +1248,7 @@ spec:
           - user
           type: object
         status:
-          description: KeycloakUserStatus defines the observed state of KeycloakUser
+          description: KeycloakUserStatus defines the observed state of KeycloakUser.
           properties:
             message:
               description: Human-readable message indicating details about current
@@ -1143,188 +1268,434 @@ spec:
     served: true
     storage: true
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
 metadata:
-  name: keycloak-operator
-  namespace: cno-system
+  name: keycloaks.keycloak.org
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: keycloak-operator
-  template:
-    metadata:
-      labels:
-        name: keycloak-operator
-    spec:
-      serviceAccountName: keycloak-operator
-      containers:
-        - name: keycloak-operator
-          # Replace this with the built image name
-          image: quay.io/keycloak/keycloak-operator:9.0.2
-          command:
-            - keycloak-operator
-          imagePullPolicy: Always
-          env:
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: OPERATOR_NAME
-              value: "keycloak-operator"
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  creationTimestamp: null
-  name: keycloak-operator
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - services
-  - services/finalizers
-  - endpoints
-  - persistentvolumeclaims
-  - events
-  - configmaps
-  - secrets
-  verbs:
-  - list
-  - get
-  - create
-  - patch
-  - update
-  - watch
-  - delete
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  - daemonsets
-  - replicasets
-  - statefulsets
-  verbs:
-  - list
-  - get
-  - create
-  - update
-  - watch
-- apiGroups:
-  - batch
-  resources:
-    - cronjobs
-    - jobs
-  verbs:
-    - list
-    - get
-    - create
-    - update
-    - watch
-- apiGroups:
-  - route.openshift.io
-  resources:
-  - routes
-  verbs:
-  - list
-  - get
-  - create
-  - update
-  - watch
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs:
-  - list
-  - get
-  - create
-  - update
-  - watch
-- apiGroups:
-  - monitoring.coreos.com
-  resources:
-  - servicemonitors
-  - prometheusrules
-  - podmonitors
-  verbs:
-  - list
-  - get
-  - create
-  - update
-  - watch
-- apiGroups:
-  - integreatly.org
-  resources:
-  - grafanadashboards
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resourceNames:
-  - keycloak-operator
-  resources:
-  - deployments/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - policy
-  resources:
-  - poddisruptionbudgets
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - watch
-- apiGroups:
-  - keycloak.org
-  resources:
-  - keycloaks
-  - keycloaks/status
-  - keycloaks/finalizers
-  - keycloakrealms
-  - keycloakrealms/status
-  - keycloakrealms/finalizers
-  - keycloakclients
-  - keycloakclients/status
-  - keycloakclients/finalizers
-  - keycloakbackups
-  - keycloakbackups/status
-  - keycloakbackups/finalizers
-  - keycloakusers
-  - keycloakusers/status
-  - keycloakusers/finalizers
-  verbs:
-  - get
-  - list
-  - update
-  - watch
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: keycloak-operator
-subjects:
-- kind: ServiceAccount
-  name: keycloak-operator
-roleRef:
-  kind: Role
-  name: keycloak-operator
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: keycloak-operator
-
+  group: keycloak.org
+  names:
+    kind: Keycloak
+    listKind: KeycloakList
+    plural: keycloaks
+    singular: keycloak
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Keycloak is the Schema for the keycloaks API.
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: KeycloakSpec defines the desired state of Keycloak.
+          properties:
+            extensions:
+              description: A list of extensions, where each one is a URL to a JAR
+                files that will be deployed in Keycloak.
+              items:
+                type: string
+              type: array
+              x-kubernetes-list-type: set
+            external:
+              description: Contains configuration for external Keycloak instances.
+                Unmanaged needs to be set to true to use this.
+              properties:
+                enabled:
+                  description: If set to true, this Keycloak will be treated as an
+                    external instance. The unmanaged field also needs to be set to
+                    true if this field is true.
+                  type: boolean
+                url:
+                  description: The URL to use for the keycloak admin API. Needs to
+                    be set if external is true.
+                  type: string
+              type: object
+            externalAccess:
+              description: Controls external Ingress/Route settings.
+              properties:
+                enabled:
+                  description: If set to true, the Operator will create an Ingress
+                    or a Route pointing to Keycloak.
+                  type: boolean
+                host:
+                  description: If set, the Operator will use value of host for Ingress/Route
+                    host instead of default value keycloak.local for ingress and automatically
+                    chosen name for Route
+                  type: string
+                tlsTermination:
+                  description: TLS Termination type for the external access. Setting
+                    this field to "reencrypt" will terminate TLS on the Ingress/Route
+                    level. Setting this field to "passthrough" will send encrypted
+                    traffic to the Pod. If unspecified, defaults to "reencrypt". Note,
+                    that this setting has no effect on Ingress as Ingress TLS settings
+                    are not reconciled by this operator. In other words, Ingress TLS
+                    configuration is the same in both cases and it is up to the user
+                    to configure TLS section of the Ingress.
+                  type: string
+              type: object
+            externalDatabase:
+              description: "Controls external database settings. Using an external
+                database requires providing a secret containing credentials as well
+                as connection details. Here's an example of such secret: \n     apiVersion:
+                v1     kind: Secret     metadata:         name: keycloak-db-secret
+                \        namespace: keycloak     stringData:         POSTGRES_DATABASE:
+                <Database Name>         POSTGRES_EXTERNAL_ADDRESS: <External Database
+                IP or URL (resolvable by K8s)>         POSTGRES_EXTERNAL_PORT: <External
+                Database Port>         # Strongly recommended to use <'Keycloak CR
+                Name'-postgresql>         POSTGRES_HOST: <Database Service Name>         POSTGRES_PASSWORD:
+                <Database Password>         # Required for AWS Backup functionality
+                \        POSTGRES_SUPERUSER: true         POSTGRES_USERNAME: <Database
+                Username>      type: Opaque \n Both POSTGRES_EXTERNAL_ADDRESS and
+                POSTGRES_EXTERNAL_PORT are specifically required for creating connection
+                to the external database. The secret name is created using the following
+                convention:       <Custom Resource Name>-db-secret \n For more information,
+                please refer to the Operator documentation."
+              properties:
+                enabled:
+                  description: If set to true, the Operator will use an external database.
+                    pointing to Keycloak.
+                  type: boolean
+              type: object
+            instances:
+              description: Number of Keycloak instances in HA mode. Default is 1.
+              type: integer
+            keycloakDeploymentSpec:
+              description: Resources (Requests and Limits) for KeycloakDeployment.
+              properties:
+                experimental:
+                  description: 'Experimental section NOTE: This section might change
+                    or get removed without any notice. It may also cause the deployment
+                    to behave in an unpredictable fashion. Please use with care.'
+                  properties:
+                    args:
+                      description: Arguments to the entrypoint. Translates into Container
+                        CMD.
+                      items:
+                        type: string
+                      type: array
+                    command:
+                      description: Container command. Translates into Container ENTRYPOINT.
+                      items:
+                        type: string
+                      type: array
+                    env:
+                      description: List of environment variables to set in the container.
+                      items:
+                        description: EnvVar represents an environment variable present
+                          in a Container.
+                        properties:
+                          name:
+                            description: Name of the environment variable. Must be
+                              a C_IDENTIFIER.
+                            type: string
+                          value:
+                            description: 'Variable references $(VAR_NAME) are expanded
+                              using the previous defined environment variables in
+                              the container and any service environment variables.
+                              If a variable cannot be resolved, the reference in the
+                              input string will be unchanged. The $(VAR_NAME) syntax
+                              can be escaped with a double $$, ie: $$(VAR_NAME). Escaped
+                              references will never be expanded, regardless of whether
+                              the variable exists or not. Defaults to "".'
+                            type: string
+                          valueFrom:
+                            description: Source for the environment variable's value.
+                              Cannot be used if value is not empty.
+                            properties:
+                              configMapKeyRef:
+                                description: Selects a key of a ConfigMap.
+                                properties:
+                                  key:
+                                    description: The key to select.
+                                    type: string
+                                  name:
+                                    description: 'Name of the referent. More info:
+                                      https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                      TODO: Add other useful fields. apiVersion, kind,
+                                      uid?'
+                                    type: string
+                                  optional:
+                                    description: Specify whether the ConfigMap or
+                                      its key must be defined
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                              fieldRef:
+                                description: 'Selects a field of the pod: supports
+                                  metadata.name, metadata.namespace, metadata.labels,
+                                  metadata.annotations, spec.nodeName, spec.serviceAccountName,
+                                  status.hostIP, status.podIP, status.podIPs.'
+                                properties:
+                                  apiVersion:
+                                    description: Version of the schema the FieldPath
+                                      is written in terms of, defaults to "v1".
+                                    type: string
+                                  fieldPath:
+                                    description: Path of the field to select in the
+                                      specified API version.
+                                    type: string
+                                required:
+                                - fieldPath
+                                type: object
+                              resourceFieldRef:
+                                description: 'Selects a resource of the container:
+                                  only resources limits and requests (limits.cpu,
+                                  limits.memory, limits.ephemeral-storage, requests.cpu,
+                                  requests.memory and requests.ephemeral-storage)
+                                  are currently supported.'
+                                properties:
+                                  containerName:
+                                    description: 'Container name: required for volumes,
+                                      optional for env vars'
+                                    type: string
+                                  divisor:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    description: Specifies the output format of the
+                                      exposed resources, defaults to "1"
+                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    x-kubernetes-int-or-string: true
+                                  resource:
+                                    description: 'Required: resource to select'
+                                    type: string
+                                required:
+                                - resource
+                                type: object
+                              secretKeyRef:
+                                description: Selects a key of a secret in the pod's
+                                  namespace
+                                properties:
+                                  key:
+                                    description: The key of the secret to select from.  Must
+                                      be a valid secret key.
+                                    type: string
+                                  name:
+                                    description: 'Name of the referent. More info:
+                                      https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                      TODO: Add other useful fields. apiVersion, kind,
+                                      uid?'
+                                    type: string
+                                  optional:
+                                    description: Specify whether the Secret or its
+                                      key must be defined
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                            type: object
+                        required:
+                        - name
+                        type: object
+                      type: array
+                    volumes:
+                      description: Additional volume mounts
+                      properties:
+                        defaultMode:
+                          description: Permissions mode.
+                          format: int32
+                          type: integer
+                        items:
+                          items:
+                            properties:
+                              configMap:
+                                description: ConfigMap mount
+                                properties:
+                                  items:
+                                    description: ConfigMap mount details
+                                    items:
+                                      description: Maps a string key to a path within
+                                        a volume.
+                                      properties:
+                                        key:
+                                          description: The key to project.
+                                          type: string
+                                        mode:
+                                          description: 'Optional: mode bits to use
+                                            on this file, must be a value between
+                                            0 and 0777. If not specified, the volume
+                                            defaultMode will be used. This might be
+                                            in conflict with other options that affect
+                                            the file mode, like fsGroup, and the result
+                                            can be other mode bits set.'
+                                          format: int32
+                                          type: integer
+                                        path:
+                                          description: The relative path of the file
+                                            to map the key to. May not be an absolute
+                                            path. May not contain the path element
+                                            '..'. May not start with the string '..'.
+                                          type: string
+                                      required:
+                                      - key
+                                      - path
+                                      type: object
+                                    type: array
+                                  mountPath:
+                                    description: An absolute path where to mount it
+                                    type: string
+                                  name:
+                                    description: ConfigMap name
+                                    type: string
+                                required:
+                                - mountPath
+                                type: object
+                            type: object
+                          type: array
+                      type: object
+                  type: object
+                resources:
+                  description: Resources (Requests and Limits) for the Pods.
+                  properties:
+                    limits:
+                      additionalProperties:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description: 'Limits describes the maximum amount of compute
+                        resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                      type: object
+                    requests:
+                      additionalProperties:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description: 'Requests describes the minimum amount of compute
+                        resources required. If Requests is omitted for a container,
+                        it defaults to Limits if that is explicitly specified, otherwise
+                        to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                      type: object
+                  type: object
+              type: object
+            migration:
+              description: Specify Migration configuration
+              properties:
+                backups:
+                  description: Set it to config backup policy for migration
+                  properties:
+                    enabled:
+                      description: If set to true, the operator will do database backup
+                        before doing migration
+                      type: boolean
+                  type: object
+                strategy:
+                  description: Specify migration strategy
+                  type: string
+              type: object
+            podDisruptionBudget:
+              description: Specify PodDisruptionBudget configuration.
+              properties:
+                enabled:
+                  description: If set to true, the operator will create a PodDistruptionBudget
+                    for the Keycloak deployment and set its `maxUnavailable` value
+                    to 1.
+                  type: boolean
+              type: object
+            postgresDeploymentSpec:
+              description: Resources (Requests and Limits) for PostgresDeployment.
+              properties:
+                resources:
+                  description: Resources (Requests and Limits) for the Pods.
+                  properties:
+                    limits:
+                      additionalProperties:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description: 'Limits describes the maximum amount of compute
+                        resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                      type: object
+                    requests:
+                      additionalProperties:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description: 'Requests describes the minimum amount of compute
+                        resources required. If Requests is omitted for a container,
+                        it defaults to Limits if that is explicitly specified, otherwise
+                        to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                      type: object
+                  type: object
+              type: object
+            profile:
+              description: Profile used for controlling Operator behavior. Default
+                is empty.
+              type: string
+            storageClassName:
+              description: Name of the StorageClass for Postgresql Persistent Volume
+                Claim
+              type: string
+            unmanaged:
+              description: When set to true, this Keycloak will be marked as unmanaged
+                and will not be managed by this operator. It can then be used for
+                targeting purposes.
+              type: boolean
+          type: object
+        status:
+          description: KeycloakStatus defines the observed state of Keycloak.
+          properties:
+            credentialSecret:
+              description: The secret where the admin credentials are to be found.
+              type: string
+            internalURL:
+              description: Service IP and Port for in-cluster access to the keycloak
+                instance.
+              type: string
+            message:
+              description: Human-readable message indicating details about current
+                operator phase or error.
+              type: string
+            phase:
+              description: Current phase of the operator.
+              type: string
+            ready:
+              description: True if all resources are in a ready state and all work
+                is done.
+              type: boolean
+            secondaryResources:
+              additionalProperties:
+                items:
+                  type: string
+                type: array
+              description: 'A map of all the secondary resources types and names created
+                for this CR. e.g "Deployment": [ "DeploymentName1", "DeploymentName2"
+                ].'
+              type: object
+            version:
+              description: Version of Keycloak or RHSSO running on the cluster.
+              type: string
+          required:
+          - credentialSecret
+          - internalURL
+          - message
+          - phase
+          - ready
+          - version
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
