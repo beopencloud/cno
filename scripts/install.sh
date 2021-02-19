@@ -58,6 +58,8 @@ installCno() {
 
     # Deploy keycloak Cluster and patch the ingress
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
+    #If PSP issue
+    #kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/patch-psp-postgresql.yaml)"
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/keycloak-ingress.yaml
     kubectl -n cno-system patch ing/keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
 
