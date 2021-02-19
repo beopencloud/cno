@@ -1,5 +1,4 @@
-{
-  "id": "cno",
+{"id": "cno",
   "realm": "cno",
   "displayName": "CNO REALM",
   "notBefore": 1613759244,
@@ -68,7 +67,6 @@
           "id": "03433236-0b13-4549-813c-bc463e5788bc",
           "name": "test",
           "composite": true,
-          "secret": "cno-api-client-secret",
           "composites": {
             "client": {
               "realm-management": [
@@ -390,7 +388,6 @@
       ]
     }
   },
-  "groups": [],
   "defaultRoles": [
     "uma_authorization",
     "offline_access"
@@ -669,7 +666,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "cno-api-client-secret",
       "redirectUris": [
         "*"
       ],
