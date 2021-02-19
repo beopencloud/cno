@@ -1,0 +1,71 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: public
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  client:
+    clientId: public
+    secret: client-secret
+    clientAuthenticatorType: public
+    protocol: openid-connect
+    bearerOnly: false
+    adminUrl: "https://cno-auth.beopenit.com"
+    baseUrl: "https://cno-authee.beopenit.com"
+    consentRequired: false
+    defaultRoles:
+    - "manage-users"
+    - "manage-realm"
+    directAccessGrantsEnabled: false
+    enabled: true
+    fullScopeAllowed: true
+    implicitFlowEnabled: true
+    publicClient: true
+    redirectUris:
+    - "*"
+    webOrigins:
+    - "*"
+    rootUrl: ""
+    serviceAccountsEnabled: true
+    standardFlowEnabled: true
+
+
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: cno-api
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  client:
+    clientId: cno-api
+    secret: client-secret
+    clientAuthenticatorType: credentials
+    protocol: openid-connect
+    bearerOnly: false
+    adminUrl: "https://cno-auth.beopenit.com"
+    baseUrl: "https://cno-authee.beopenit.com"
+    consentRequired: false
+    defaultRoles:
+    - "realm-management/manage-users"
+    - "realm-management/manage-realm"
+    directAccessGrantsEnabled: true
+    enabled: true
+    fullScopeAllowed: true
+    implicitFlowEnabled: false
+    publicClient: false
+    redirectUris:
+    - "*"
+    webOrigins:
+    - "*"
+    rootUrl: ""
+    serviceAccountsEnabled: true
+    standardFlowEnabled: true
