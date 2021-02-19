@@ -8,6 +8,9 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    ingress.bluemix.net/proxy-busy-buffers-size : "size=128k"
   labels:
     app: keycloak
   name: keycloak
