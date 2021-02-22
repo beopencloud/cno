@@ -2225,4 +2225,3 @@ data:
 kind: ConfigMap
 metadata:
   name: cno-realm
-  namespace: keycloak
