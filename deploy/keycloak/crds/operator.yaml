@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak-operator
-  namespace: cno-system
 spec:
   replicas: 1
   selector:
@@ -17,9 +16,9 @@ spec:
       containers:
         - name: keycloak-operator
           # Replace this with the built image name
-          image: quay.io/keycloak/keycloak-operator:9.0.2
+          image: quay.io/keycloak/keycloak-operator:12.0.1
           command:
-            - keycloak-operator
+          - keycloak-operator
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

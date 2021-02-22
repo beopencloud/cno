@@ -29,7 +29,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: KeycloakRealmSpec defines the desired state of KeycloakRealm
+          description: KeycloakRealmSpec defines the desired state of KeycloakRealm.
           properties:
             instanceSelector:
               description: Selector for looking up Keycloak Custom Resources.
@@ -85,6 +85,128 @@ spec:
                   description: 'Enable events recording TODO: change to values and
                     use kubebuilder default annotation once supported'
                   type: boolean
+                authenticationFlows:
+                  description: Authentication flows
+                  items:
+                    properties:
+                      alias:
+                        description: Alias
+                        type: string
+                      authenticationExecutions:
+                        description: Authentication executions
+                        items:
+                          properties:
+                            authenticator:
+                              description: Authenticator
+                              type: string
+                            authenticatorConfig:
+                              description: Authenticator Config
+                              type: string
+                            authenticatorFlow:
+                              description: Authenticator flow
+                              type: boolean
+                            flowAlias:
+                              description: Flow Alias
+                              type: string
+                            priority:
+                              description: Priority
+                              format: int32
+                              type: integer
+                            requirement:
+                              description: Requirement [REQUIRED, OPTIONAL, ALTERNATIVE,
+                                DISABLED]
+                              type: string
+                            userSetupAllowed:
+                              description: User setup allowed
+                              type: boolean
+                          type: object
+                        type: array
+                      builtIn:
+                        description: Built in
+                        type: boolean
+                      description:
+                        description: Description
+                        type: string
+                      id:
+                        description: ID
+                        type: string
+                      providerId:
+                        description: Provider ID
+                        type: string
+                      topLevel:
+                        description: Top level
+                        type: boolean
+                    required:
+                    - alias
+                    - authenticationExecutions
+                    type: object
+                  type: array
+                authenticatorConfig:
+                  description: Authenticator config
+                  items:
+                    properties:
+                      alias:
+                        description: Alias
+                        type: string
+                      config:
+                        additionalProperties:
+                          type: string
+                        description: Config
+                        type: object
+                      id:
+                        description: ID
+                        type: string
+                    required:
+                    - alias
+                    type: object
+                  type: array
+                clientScopes:
+                  description: Client scopes
+                  items:
+                    properties:
+                      attributes:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      description:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      protocol:
+                        type: string
+                      protocolMappers:
+                        description: Protocol Mappers.
+                        items:
+                          properties:
+                            config:
+                              additionalProperties:
+                                type: string
+                              description: Config options.
+                              type: object
+                            consentRequired:
+                              description: True if Consent Screen is required.
+                              type: boolean
+                            consentText:
+                              description: Text to use for displaying Consent Screen.
+                              type: string
+                            id:
+                              description: Protocol Mapper ID.
+                              type: string
+                            name:
+                              description: Protocol Mapper Name.
+                              type: string
+                            protocol:
+                              description: Protocol to use.
+                              type: string
+                            protocolMapper:
+                              description: Protocol Mapper to use
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  type: array
                 clients:
                   description: A set of Keycloak Clients.
                   items:
@@ -117,6 +239,13 @@ spec:
                       consentRequired:
                         description: True if Consent Screen is required.
                         type: boolean
+                      defaultClientScopes:
+                        description: A list of default client scopes. Default client
+                          scopes are always applied when issuing OpenID Connect tokens
+                          or SAML assertions for this client.
+                        items:
+                          type: string
+                        type: array
                       defaultRoles:
                         description: Default Client roles.
                         items:
@@ -152,6 +281,14 @@ spec:
                       notBefore:
                         description: Not Before setting.
                         type: integer
+                      optionalClientScopes:
+                        description: A list of optional client scopes. Optional client
+                          scopes are applied when issuing tokens for this client,
+                          but only when they are requested by the scope parameter
+                          in the OpenID Connect authorization request.
+                        items:
+                          type: string
+                        type: array
                       protocol:
                         description: Protocol used for this Client.
                         type: string
@@ -229,6 +366,12 @@ spec:
                 displayName:
                   description: Realm display name.
                   type: string
+                duplicateEmailsAllowed:
+                  description: Duplicate emails
+                  type: boolean
+                editUsernameAllowed:
+                  description: Edit username
+                  type: boolean
                 enabled:
                   description: Realm enabled flag.
                   type: boolean
@@ -288,13 +431,93 @@ spec:
                         type: boolean
                     type: object
                   type: array
+                loginWithEmailAllowed:
+                  description: Login with email
+                  type: boolean
                 realm:
                   description: Realm name.
                   type: string
+                registrationAllowed:
+                  description: User registration
+                  type: boolean
+                registrationEmailAsUsername:
+                  description: Email as username
+                  type: boolean
+                rememberMe:
+                  description: Remember me
+                  type: boolean
+                resetPasswordAllowed:
+                  description: Forgot password
+                  type: boolean
+                sslRequired:
+                  description: Require SSL
+                  type: string
+                userFederationMappers:
+                  description: User federation mappers are extension points triggered
+                    by the user federation at various points.
+                  items:
+                    description: https://www.keycloak.org/docs/11.0/server_admin/#_ldap_mappers
+                      https://www.keycloak.org/docs-api/11.0/rest-api/index.html#_userfederationmapperrepresentation
+                    properties:
+                      config:
+                        additionalProperties:
+                          type: string
+                        description: User federation mapper config.
+                        type: object
+                      federationMapperType:
+                        type: string
+                      federationProviderDisplayName:
+                        description: The displayName for the user federation provider
+                          this mapper applies to.
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  type: array
+                userFederationProviders:
+                  description: Point keycloak to an external user provider to validate
+                    credentials or pull in identity information.
+                  items:
+                    description: https://www.keycloak.org/docs-api/10.0/rest-api/index.html#_userfederationproviderrepresentation
+                    properties:
+                      config:
+                        additionalProperties:
+                          type: string
+                        description: User federation provider config.
+                        type: object
+                      displayName:
+                        description: The display name of this provider instance.
+                        type: string
+                      fullSyncPeriod:
+                        format: int32
+                        type: integer
+                      id:
+                        description: The ID of this provider
+                        type: string
+                      priority:
+                        description: The priority of this provider when looking up
+                          users or adding a user.
+                        format: int32
+                        type: integer
+                      providerName:
+                        description: The name of the user provider, such as "ldap",
+                          "kerberos" or a custom SPI.
+                        type: string
+                    type: object
+                  type: array
                 users:
                   description: A set of Keycloak Users.
                   items:
                     properties:
+                      attributes:
+                        additionalProperties:
+                          items:
+                            type: string
+                          type: array
+                        description: A set of Attributes.
+                        type: object
                       clientRoles:
                         additionalProperties:
                           items:
@@ -370,6 +593,9 @@ spec:
                         type: string
                     type: object
                   type: array
+                verifyEmail:
+                  description: Verify email
+                  type: boolean
               required:
               - realm
               type: object
@@ -383,8 +609,16 @@ spec:
                   identityProvider:
                     description: Identity Provider to be overridden.
                     type: string
+                required:
+                - identityProvider
                 type: object
               type: array
+              x-kubernetes-list-type: atomic
+            unmanaged:
+              description: When set to true, this KeycloakRealm will be marked as
+                unmanaged and not be managed by this operator. It can then be used
+                for targeting purposes.
+              type: boolean
           required:
           - realm
           type: object
