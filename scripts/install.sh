@@ -37,15 +37,16 @@ installCno() {
 
     # Install kafka operator
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml
-    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
+     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
-    sleep 15s
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-2 --for=condition=ready pod --timeout=1m
-    sleep 15s
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-2 --for=condition=ready pod --timeout=1m
-
+    # waiting for zookeeper deployment
+    waitForRessourceCreated pod cno-kafka-cluster-zookeeper-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=1m
+    # waiting for kafka deployment
+    waitForRessourceCreated pod cno-kafka-cluster-kafka-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=1m
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
 
@@ -103,7 +104,42 @@ installCno() {
 
 }
 
-hasKubectl
-hasSetDomainSuffix
-installCno
+# waitForRessourceCreated resource resourceName
+waitForRessourceCreated() {
+    echo "waiting for resource $1 $2 ...";
+    timeout=120
+    resource=""
+    while [ -z $resource ] && [ $timeout -gt 0 ];
+    do
+       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}')
+       timeout=$((timeout - 5))
+       sleep 5s
+    done
+    if [ ! $timeout -gt 0 ]; then
+        echo "timeout: $1 $2 not found"
+        return
+    fi
+    echo "$1 $2 successfully deployed"
+}
+
+installCnoTest(){
+    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
+
+    # Deploy a kafka cluster
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    # waiting for zookeeper deployment
+    waitForRessourceCreated pod cno-kafka-cluster-zookeeper-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=1m
+    # waiting for kafka deployment
+    waitForRessourceCreated pod cno-kafka-cluster-kafka-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=1m
+    # Create cno kafka super-admin user
+    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
+
+}
+
+installCnoTest
+#hasKubectl
+#hasSetDomainSuffix
+#installCno
 
