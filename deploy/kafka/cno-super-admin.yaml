@@ -2,9 +2,8 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: cno-kafka-superadmin
-  namespace: cno-system
   labels:
-    strimzi.io/cluster: kafka-cluster
+    strimzi.io/cluster: cno-kafka-cluster
 spec:
   authentication:
     type: tls

@@ -1,8 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
-  name: kafka-cluster
-  namespace: cno-system
+  name: cno-kafka-cluster
 spec:
   kafka:
     version: 2.5.0
@@ -20,15 +19,27 @@ spec:
           type: tls
       - name: external
         port: 9094
-        type: nodeport
+        type: ingress
         tls: true
-    tls:
         authentication:
           type: tls
+        configuration:
+          bootstrap:
+            host: bootstrap-cno.INGRESS_DOMAIN
+          brokers:
+          - broker: 0
+            host: broker-0-cno.INGRESS_DOMAIN
+          - broker: 1
+            host: broker-1-cno.INGRESS_DOMAIN
+          - broker: 2
+            host: broker-2-cno.INGRESS_DOMAIN
+    tls:
+      authentication:
+        type: tls
     authorization:
       type: simple
       superUsers:
-        - CN=onboarding
+        - CN=cno-kafka-superadmin
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3

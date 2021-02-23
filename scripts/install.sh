@@ -47,6 +47,7 @@ installCno() {
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-kafka-2 --for=condition=ready pod --timeout=-1s
     
     # Create Kafka ingress and patch it with right domain prefix
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml
     kubectl -n cno-system patch ing/kafka-bootstrap --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-broker.$INGRESS_DOMAIN'}]"
 
