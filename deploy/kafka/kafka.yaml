@@ -33,9 +33,6 @@ spec:
             host: broker-1-cno.INGRESS_DOMAIN
           - broker: 2
             host: broker-2-cno.INGRESS_DOMAIN
-    tls:
-      authentication:
-        type: tls
     authorization:
       type: simple
       superUsers:

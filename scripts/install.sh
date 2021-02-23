@@ -36,20 +36,15 @@ installCno() {
     kubectl create namespace cno-system
 
     # Install kafka operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml    
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml
     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml
-    sleep 5s
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-zookeeper-2 --for=condition=ready pod --timeout=-1s
-    sleep 5s
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-kafka-2 --for=condition=ready pod --timeout=-1s
-    
-    # Create Kafka ingress and patch it with right domain prefix
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' -
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml
-    kubectl -n cno-system patch ing/kafka-bootstrap --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-broker.$INGRESS_DOMAIN'}]"
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    sleep 15s
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-2 --for=condition=ready pod --timeout=1m
+    sleep 15s
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-2 --for=condition=ready pod --timeout=1m
 
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
