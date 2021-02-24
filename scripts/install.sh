@@ -36,20 +36,17 @@ installCno() {
     kubectl create namespace cno-system
 
     # Install kafka operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml    
-    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/kafka-strimzi/crds/kafkaOperator.yaml
+     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml
-    sleep 5s
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-zookeeper-2 --for=condition=ready pod --timeout=-1s
-    sleep 5s
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=kafka-cluster-kafka-2 --for=condition=ready pod --timeout=-1s
-    
-    # Create Kafka ingress and patch it with right domain prefix
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/kafka-ingress.yaml
-    kubectl -n cno-system patch ing/kafka-bootstrap --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-broker.$INGRESS_DOMAIN'}]"
-
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    # waiting for zookeeper deployment
+    waitForRessourceCreated pod cno-kafka-cluster-zookeeper-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=1m
+    # waiting for kafka deployment
+    waitForRessourceCreated pod cno-kafka-cluster-kafka-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=1m
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
 
@@ -57,9 +54,12 @@ installCno() {
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/crds/keycloak-all.yaml
 
     # Deploy keycloak Cluster and patch the ingress
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm-configmap.yml
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
+
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm.yml
     #If PSP issue
-    #kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/patch-psp-postgresql.yaml)"
+    #kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/patch-psp-postgresql.yaml)"
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/keycloak-ingress.yaml
     kubectl -n cno-system patch ing/keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
 
@@ -105,7 +105,42 @@ installCno() {
 
 }
 
-hasKubectl
-hasSetDomainSuffix
-installCno
+# waitForRessourceCreated resource resourceName
+waitForRessourceCreated() {
+    echo "waiting for resource $1 $2 ...";
+    timeout=120
+    resource=""
+    while [ -z $resource ] && [ $timeout -gt 0 ];
+    do
+       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}')
+       timeout=$((timeout - 5))
+       sleep 5s
+    done
+    if [ ! $timeout -gt 0 ]; then
+        echo "timeout: $1 $2 not found"
+        return
+    fi
+    echo "$1 $2 successfully deployed"
+}
+
+installCnoTest(){
+    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
+
+    # Deploy a kafka cluster
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    # waiting for zookeeper deployment
+    waitForRessourceCreated pod cno-kafka-cluster-zookeeper-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=1m
+    # waiting for kafka deployment
+    waitForRessourceCreated pod cno-kafka-cluster-kafka-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=1m
+    # Create cno kafka super-admin user
+    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
+
+}
+
+installCnoTest
+#hasKubectl
+#hasSetDomainSuffix
+#installCno
 
