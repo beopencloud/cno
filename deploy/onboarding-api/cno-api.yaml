@@ -61,10 +61,31 @@ spec:
         env:
         - name: IN_CLUSTER
           value: "true"
+        - name: SERVER_URL
+          value: $SERVER_URL # to replace
+        - name: OIDC_SERVER_URL
+          value: $OIDC_SERVER_URL # to replace
+        - name: OIDC_REALM
+          value: $OIDC_REALM # to replace
+        - name: OIDC_SERVER_BASE_URL
+          value: $OIDC_SERVER_BASE_URL # to replace
+        - name: OIDC_CLIENT_ID
+          value: cno-api
+        - name: OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: keycloak_client_cno_api
+              key: OIDC_CLIENT_SECRET
+        - name: KAFKA_BROKERS
+          value: $KAFKA_BROKERS # to replace
+        - name: KAFKA_TlS_ENABLED
+          value: true # to replace
+        - name: KAFKA_TLS_SKIP_VERIFY
+          value: false
+        - name: KAFKA_VERBOSE
+          value: true
         - name: DB_HOST
           value: cno-api-mysql-master
-        - name: SERVER_URL
-          value: api-cno-demo.beopenit.com
         - name: DB_USERNAME
           value: root
         - name: DB_PASSWORD
