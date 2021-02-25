@@ -86,12 +86,15 @@ installCno() {
     kubectl -n cno-system  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
     kubectl  -n cno-system create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     rm -rf /tmp/cno-*
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml
+    DEFAULT_AGENT_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml |
-        sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g' |
+        sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"true"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
         kubectl -n cno-system apply -f -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/api-ingress.yaml
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
+
+    kubectl -n cno-system rollout status deploy cno-api
+    kubectl -n cno-system exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD
 
     # Install CNO UI
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/cno-ui.yaml

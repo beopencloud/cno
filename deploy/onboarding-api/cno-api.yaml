@@ -97,6 +97,10 @@ spec:
             secretKeyRef:
               name: cno-api-db-secret
               key: ROOT_PASSWORD
+        - name: CREATE_DEFAULT_CLUSTER
+          value: $CREATE_DEFAULT_CLUSTER
+        - mame: DEFAULT_CLUSTER_ID
+          value: $DEFAULT_CLUSTER_ID
         volumeMounts:
         - name: kafkaconfig
           mountPath: "/root/.key"
