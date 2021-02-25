@@ -49,7 +49,7 @@ spec:
         run: cno-api
     spec:
       containers:
-      - image: beopenit/cno-api:v0.0.0.1.0d78da0
+      - image: beopenit/cno-api:v0.0.0.1.51050fa
         imagePullPolicy: Always
         name: cno-api
         ports:
@@ -61,12 +61,37 @@ spec:
         env:
         - name: IN_CLUSTER
           value: "true"
-        - name: DB_HOST
-          value: cno-api-mysql-master
         - name: SERVER_URL
-          value: api-cno-demo.beopenit.com
+          value: $SERVER_URL
+        - name: OIDC_SERVER_URL
+          value: $OIDC_SERVER_URL
+        - name: OIDC_REALM
+          value: $OIDC_REALM
+        - name: OIDC_SERVER_BASE_URL
+          value: $OIDC_SERVER_BASE_URL
+        - name: OIDC_CLIENT_ID
+          value: "cno-api"
+        - name: OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-client-cno-api
+              key: OIDC_CLIENT_SECRET
+        - name: KAFKA_BROKERS
+          value: $KAFKA_BROKERS
+        - name: KAFKA_TlS_ENABLED
+          value: "true"
+        - name: KAFKA_TLS_SKIP_VERIFY
+          value: "false"
+        - name: KAFKA_VERBOSE
+          value: "true"
+        - name: DB_HOST
+          value: "cno-api-mysql-master"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "cnoapi"
         - name: DB_USERNAME
-          value: root
+          value: "root"
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
