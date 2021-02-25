@@ -83,7 +83,7 @@ spec:
         - name: KAFKA_TLS_SKIP_VERIFY
           value: "false"
         - name: KAFKA_VERBOSE
-          value: "true"
+          value: "false"
         - name: DB_HOST
           value: "cno-api-mysql-master"
         - name: DB_PORT
