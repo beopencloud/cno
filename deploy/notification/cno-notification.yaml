@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: notification
+  name: notification
+  namespace: cno-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: notification
+    spec:
+      containers:
+      - image: nginx
+        name: notification
+        volumeMounts:
+        - name: kafkaconfig
+          mountPath: "/usr/src/app/.key"
+          readOnly: true
+        env:
+          - name: PORT
+            value: "3000"
+        envFrom:
+        - configMapRef:
+            name: cno-config
+        resources: {}
+      volumes:
+      - name: kafkaconfig
+        secret:
+          secretName: kafkaconfig
+status: {}
