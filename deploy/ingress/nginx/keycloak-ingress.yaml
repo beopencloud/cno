@@ -16,7 +16,7 @@ metadata:
   name: cno-keycloak
 spec:
   rules:
-  - host: cno-auth-test.beopenit.com
+  - host: cno-auth.beopenit.com
     http:
       paths:
       - backend:
