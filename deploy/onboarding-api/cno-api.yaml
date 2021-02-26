@@ -49,7 +49,7 @@ spec:
         run: cno-api
     spec:
       containers:
-      - image: beopenit/cno-api:v0.0.0.1.8187abt
+      - image: beopenit/cno-api:v0.0.0.1..5d1f00c
         imagePullPolicy: Always
         name: cno-api
         ports:
