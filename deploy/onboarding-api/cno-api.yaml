@@ -49,7 +49,7 @@ spec:
         run: cno-api
     spec:
       containers:
-      - image: beopenit/cno-api:v0.0.0.1.51050fa
+      - image: beopenit/cno-api:v0.0.0.1.af79db4
         imagePullPolicy: Always
         name: cno-api
         ports:
@@ -83,7 +83,7 @@ spec:
         - name: KAFKA_TLS_SKIP_VERIFY
           value: "false"
         - name: KAFKA_VERBOSE
-          value: "true"
+          value: "false"
         - name: DB_HOST
           value: "cno-api-mysql-master"
         - name: DB_PORT
@@ -97,6 +97,10 @@ spec:
             secretKeyRef:
               name: cno-api-db-secret
               key: ROOT_PASSWORD
+        - name: CREATE_DEFAULT_CLUSTER
+          value: $CREATE_DEFAULT_CLUSTER
+        - name: DEFAULT_CLUSTER_ID
+          value: $DEFAULT_CLUSTER_ID
         volumeMounts:
         - name: kafkaconfig
           mountPath: "/root/.key"

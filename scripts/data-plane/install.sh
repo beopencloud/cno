@@ -4,6 +4,19 @@
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [[ -z "${CNO_VERSION}" ]] && VERSION='main' || VERSION="${CNO_VERSION}"
 
+# Ex: export CNO_INGRESS="nginx"
+[[ -z "${KAFKA_BROKERS}" ]] && KAFKA_BROKERS=$1
+
+hasKafkaBrokersUrl(){
+    if [[ -z "${KAFKA_BROKERS}" ]]; then
+        echo "============================================================"
+        echo "  CNO installation failed."
+        echo "  KAFKA_BROKERS is required."
+        echo "  Ex: $ export KAFKA_BROKERS=bootstrap-cno.beopenit.com:443"
+        echo "============================================================"
+        exit 1
+    fi
+}
 
 hasKubectl() {
     hasKubectl=$(which kubectl)
@@ -16,35 +29,84 @@ hasKubectl() {
     fi
 }
 
+checkMetricsServer() {
+    hasMetricsServer=$(kubectl top nodes)
+    if [[ -z $hasMetricsServer ]]; then
+        echo "============================================================"
+        echo "  WARNING Metrics Server not installed ! we will installed it."
+        echo "============================================================"
+        kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+        kubectl -n kube-system rollout status deployment metrics-server
+    fi
+}
+
+genAgentConfig(){
+    if [[ -z $CNO_AGENT_LICENCE ]]; then
+        echo "============================================================"
+        echo " INFO CNO_AGENT_LICENCE environment variable is empty."
+        echo " INFO skip secrets/cno-agent creation."
+        echo "============================================================"
+        return
+    fi
+    if [[ -z $CNO_AGENT_CA_CERT ]]; then
+        echo "============================================================"
+        echo " INFO CNO_AGENT_CA_CERT environment variable is empty."
+        echo " INFO skip secrets/cno-agent creation."
+        echo "============================================================"
+        return
+    fi
+    if [[ -z $CNO_AGENT_USER_CERT ]]; then
+        echo "============================================================"
+        echo " INFO CNO_AGENT_USER_CERT environment variable is empty."
+        echo " INFO skip secrets/cno-agent creation."
+        echo "============================================================"
+        return
+    fi
+    if [[ -z $CNO_AGENT_USER_KEY ]]; then
+        echo "============================================================"
+        echo " INFO CNO_AGENT_USER_KEY environment variable is empty."
+        echo " INFO skip secrets/cno-agent creation."
+        echo "============================================================"
+        return
+    fi
+    kubectl -n cno-system delete secret cno-agent-config
+    echo $CNO_AGENT_CA_CERT | base64 --decode > /tmp/cno-ca
+    echo $CNO_AGENT_USER_CERT | base64 --decode > /tmp/cno-kafka-cert
+    echo $CNO_AGENT_USER_KEY | base64 --decode > /tmp/cno-kafka-key
+    kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$CNO_AGENT_LICENCE --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
+    rm -rf /tmp/cno-*
+
+    echo "============================================================"
+    echo " INFO secrets/cno-agent-config successfully regenerated."
+    echo "============================================================"
+}
+
+checkCnoAgentConfig(){
+    hasConfig=$(kubectl -n cno-system get secrets cno-agent-config)
+    if [[ -z $hasConfig ]]; then
+        echo "============================================================"
+        echo "  ERROR secrets/cno-agent is required."
+        echo "============================================================"
+        exit 1
+    fi
+}
+
 installCnoDataPlane() {
     # Create cno namespace
     kubectl create namespace cno-system
 
-    # Install CNO AGENT
-    kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
-    kubectl -n cno-system get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
-    kubectl -n cno-system  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
-    kubectl  -n cno-system create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
-    rm -rf /tmp/cno-*
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml |
-        sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g' |
+    # install cno-agent
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
         kubectl -n cno-system apply -f -
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/api-ingress.yaml
-    kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
 
-    # Install CNO UI
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g' |
-        kubectl -n cno-system apply -f -
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/ui-ingress.yaml
-    kubectl -n cno-system patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-ui.$INGRESS_DOMAIN'}]"
+    # install cno-operator
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
 
-    
     echo
     echo "============================================================"
-    echo "  CNO installation success."
-    echo "  Mysql Cluster root password : ${MYSQL_PWD}"
-    echo "  UI url : "
+    echo "  CNO data-plane installation success."
+    echo "  KAFKA_BROKERS: $KAFKA_BROKERS"
     echo "============================================================"
     echo
 
@@ -68,24 +130,10 @@ waitForRessourceCreated() {
     echo "$1 $2 successfully deployed"
 }
 
-installCnoTest(){
-    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
-
-    # Deploy a kafka cluster
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
-    # waiting for zookeeper deployment
-    waitForRessourceCreated pod cno-kafka-cluster-zookeeper-0
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=1m
-    # waiting for kafka deployment
-    waitForRessourceCreated pod cno-kafka-cluster-kafka-0
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=1m
-    # Create cno kafka super-admin user
-    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
-
-}
-
-#installCnoTest
 hasKubectl
-hasSetDomainSuffix
-installCno
+checkMetricsServer
+genAgentConfig
+hasKafkaBrokersUrl
+checkCnoAgentConfig
+installCnoDataPlane
 

@@ -16,7 +16,7 @@ spec:
         app: cno-ui
     spec:
       containers:
-      - image: beopenit/cno-ui:v0.0.0.1.c6b4413
+      - image: beopenit/cno-ui:v0.0.0.1.0a11278
         name: onboarding-ui-prod
         ports:
           - containerPort: 8080
@@ -44,9 +44,9 @@ metadata:
   name: cno-ui
 spec:
   ports:
-  - port: 8080
+  - port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: cno-ui
   type: LoadBalancer
