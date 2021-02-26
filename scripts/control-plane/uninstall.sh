@@ -40,5 +40,10 @@ kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cn
 #Delete remaining resources
 kubectl -n cno-system delete --all  all,ing,secret,cm
 
+curl https://raw.githubusercontent.com/beopencloud/cno/feature/kafka-config/scripts/data-plane/uninstall.sh > uninstallcnodataplane.sh
+    chmod +x uninstallcnodataplane.sh
+    ./uninstallcnodataplane.sh
+    rm -rf uninstallcnodataplane.sh
+
 # Delete cno namespace
 kubectl delete namespace cno-system

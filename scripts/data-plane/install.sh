@@ -4,6 +4,19 @@
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [[ -z "${CNO_VERSION}" ]] && VERSION='main' || VERSION="${CNO_VERSION}"
 
+# Ex: export CNO_INGRESS="nginx"
+[[ -z "${KAFKA_BROKERS}" ]] && KAFKA_BROKERS=$1
+
+hasKafkaBrokersUrl(){
+    if [[ -z "${KAFKA_BROKERS}" ]]; then
+        echo "============================================================"
+        echo "  CNO installation failed."
+        echo "  KAFKA_BROKERS is required."
+        echo "  Ex: $ export KAFKA_BROKERS=bootstrap-cno.beopenit.com:443"
+        echo "============================================================"
+        exit 1
+    fi
+}
 
 hasKubectl() {
     hasKubectl=$(which kubectl)
@@ -84,7 +97,7 @@ installCnoDataPlane() {
 
     # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g' |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
         kubectl -n cno-system apply -f -
 
     # install cno-operator
@@ -93,6 +106,7 @@ installCnoDataPlane() {
     echo
     echo "============================================================"
     echo "  CNO data-plane installation success."
+    echo "  KAFKA_BROKERS: $KAFKA_BROKERS"
     echo "============================================================"
     echo
 
@@ -119,6 +133,7 @@ waitForRessourceCreated() {
 hasKubectl
 checkMetricsServer
 genAgentConfig
+hasKafkaBrokersUrl
 checkCnoAgentConfig
 installCnoDataPlane
 
