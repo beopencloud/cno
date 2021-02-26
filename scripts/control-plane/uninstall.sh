@@ -46,4 +46,4 @@ curl https://raw.githubusercontent.com/beopencloud/cno/feature/kafka-config/scri
     rm -rf uninstallcnodataplane.sh
 
 # Delete cno namespace
-kubectl delete namespace cno-system
+#kubectl delete namespace cno-system
