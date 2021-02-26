@@ -156,7 +156,7 @@ installCnoTest() {
     kubectl -n cno-system  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
     kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$DEFAULT_AGENT_ID --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     rm -rf /tmp/cno-*
-
+    curl https://raw.githubusercontent.com/beopencloud/cno/feature/kafka-config/scripts/data-plane/install.sh | bash -
     
     echo
     echo "============================================================"

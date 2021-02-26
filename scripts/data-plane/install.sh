@@ -82,10 +82,13 @@ installCnoDataPlane() {
     # Create cno namespace
     kubectl create namespace cno-system
 
-    # deploy cno-data-plane
+    # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
         sed 's|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g' |
         kubectl -n cno-system apply -f -
+
+    # install cno-operator
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
 
     echo
     echo "============================================================"
