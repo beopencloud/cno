@@ -48,12 +48,16 @@ installCno() {
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n cno-system rollout status deploy cno-api
 
+    # deploy cno-data-plane
     waitForRessourceCreated secrets $DEFAULT_AGENT_ID
     kubectl -n cno-system get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
     kubectl -n cno-system get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
     kubectl -n cno-system  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
-    kubectl  -n cno-system create secret generic kafkaconfig-$DEFAULT_AGENT_ID --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
-
+    kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$DEFAULT_AGENT_ID --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
+    rm -rf /tmp/cno-*
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
+        sed 's|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g' |
+        kubectl -n cno-system apply -f -
 
     # Install CNO UI
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/cno-ui.yaml
@@ -68,6 +72,7 @@ installCno() {
     echo "============================================================"
     echo "  CNO installation success."
     echo "  Mysql Cluster root password : ${MYSQL_PWD}"
+    echo "  AgentID : ${DEFAULT_AGENT_ID}"
     echo "  UI url : "
     echo "============================================================"
     echo
@@ -77,7 +82,7 @@ installCno() {
 # waitForRessourceCreated resource resourceName
 waitForRessourceCreated() {
     echo "waiting for resource $1 $2 ...";
-    timeout=120
+    timeout=240
     resource=""
     while [ -z $resource ] && [ $timeout -gt 0 ];
     do
