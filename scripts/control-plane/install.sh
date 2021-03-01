@@ -107,9 +107,7 @@ installCno() {
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml |
         sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"true"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
         kubectl -n cno-system apply -f -
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.c
-
-    om/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/api-ingress.yaml
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/api-ingress.yaml
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n cno-system rollout status deploy cno-api
     # Install CNO NOTIFICATION
@@ -133,7 +131,7 @@ installCno() {
     rm -rf /tmp/cno-*
     curl https://raw.githubusercontent.com/beopencloud/cno/feature/kafka-config/scripts/data-plane/install.sh > cnodataplane.sh
     chmod +x cnodataplane.sh
-    ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrapeeee:9093
+    ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093
     rm -rf cnodataplane.sh
 
     echo
