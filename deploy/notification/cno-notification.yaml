@@ -19,7 +19,7 @@ spec:
         app: notification
     spec:
       containers:
-      - image: nginx
+      - image: beopenit/cno-notification:v0.0.1-aplpha
         name: notification
         volumeMounts:
         - name: kafkaconfig
