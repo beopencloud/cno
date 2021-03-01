@@ -16,7 +16,7 @@ spec:
         app: cno-ui
     spec:
       containers:
-      - image: beopenit/cno-ui:v0.0.0.1.0a11278
+      - image: beopenit/cno-ui:v0.0.0.1.8187kop
         name: onboarding-ui-prod
         ports:
           - containerPort: 8080
