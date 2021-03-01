@@ -132,4 +132,4 @@ spec:
   selector:
     run: cno-api
   sessionAffinity: None
-  type: LoadBalancer
+  type: ClusterIP

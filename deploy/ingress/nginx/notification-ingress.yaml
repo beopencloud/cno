@@ -8,14 +8,14 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   labels:
-    app: cno-ui
-  name: cno-ui
+    app: cno-notification
+  name: cno-notification
 spec:
   rules:
-  - host: cno-ui.cluster.beopenit.com
+  - host: cno-notification.cluster.beopenit.com
     http:
       paths:
       - backend:
-          serviceName: cno-ui
-          servicePort: 80
+          serviceName: cno-notification
+          servicePort: 3000
         path: /
