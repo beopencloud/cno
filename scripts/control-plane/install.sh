@@ -2,7 +2,7 @@
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
-[[ -z "${CNO_VERSION}" ]] && VERSION='main' || VERSION="${CNO_VERSION}"
+[[ -z "${CNO_VERSION}" ]] && VERSION='fix-bug' || VERSION="${CNO_VERSION}"
 
 # Set INGRESS to nginx if CNO_INGRESS env variable is not set
 # Ex: export CNO_INGRESS="nginx"
@@ -42,6 +42,7 @@ installCno() {
     # Deploy a kafka cluster
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
+    echo $TIMEOUT
     echo "  Waiting to create zookeeper pod."
     zo=$(kubectl -n cno-system wait pod cno-kafka-cluster-zookeeper-0 --for=condition=ready --timeout=$TIMEOUT)
     if [ -z "${zo}" ]; then
