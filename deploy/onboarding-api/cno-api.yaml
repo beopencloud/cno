@@ -63,8 +63,6 @@ spec:
           value: "true"
         - name: SERVER_URL
           value: $SERVER_URL
-        - name: OIDC_SERVER_URL
-          value: $OIDC_SERVER_URL
         - name: OIDC_REALM
           value: $OIDC_REALM
         - name: OIDC_SERVER_BASE_URL
