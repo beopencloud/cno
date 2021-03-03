@@ -44,12 +44,12 @@ installCno() {
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
     echo "  Waiting to create zookeeper pod."
-    zo=$(kubectl -n cno-system wait pod cno-kafka-cluster-zookeeper-0 --for=delete --timeout='-'$TIMEOUT's')
+    zo=$(kubectl -n cno-system wait pod cno-kafka-cluster-zookeeper-0 --for=condition=ready --timeout='-'$TIMEOUT's')
     if [ -z "${zo}" ]; then
       echo "  Zookeeper pod is failed."
       exit 1
     else
-       echo "  Zookeeper pod is created."
+      echo "  Zookeeper pod is created."
     fi
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
     # waiting for kafka deployment
