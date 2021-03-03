@@ -41,10 +41,10 @@ installCno() {
     # Deploy a kafka cluster
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
-    waitForRessourceCreated pod cno-kafka-cluster-zookeeper-0
+    waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
     # waiting for kafka deployment
-    waitForRessourceCreated pod cno-kafka-cluster-kafka-0
+    waitForResourceCreated pod cno-kafka-cluster-kafka-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/cno-super-admin.yaml
@@ -61,12 +61,15 @@ installCno() {
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm.yml
 
     #If PSP issue
-    waitForRessourceCreated deployment keycloak-postgresql
+    waitForResourceCreated deployment keycloak-postgresql
     if [ "${CNO_POD_POLICY_ACTIVITED}" = "true" ]; then
         kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/patch-psp-postgresql.yaml)"
     fi
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/keycloak-ingress.yaml
     kubectl -n cno-system patch ing/keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
+    # Restart keycloak pod to reload realm
+    kubectl -n cno-system wait deploy/keycloak-postgresql --for condition=available --timeout=20m
+    kubectl -n cno-system delete pod keycloak-0
 
 
     # Deploy CNO operator
@@ -82,7 +85,7 @@ installCno() {
     MYSQL_PWD=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic cno-api-db-secret  --from-literal=ROOT_PASSWORD="${MYSQL_PWD}"
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api-mysql.yaml
-    waitForRessourceCreated pod cno-api-mysql-0
+    waitForResourceCreated pod cno-api-mysql-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-api-mysql-0 --for=condition=ready pod --timeout=5m
     sleep 10s
     kubectl -n cno-system exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
@@ -103,7 +106,7 @@ installCno() {
     # Install CNO API
     DEFAULT_AGENT_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml |
-        sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"true"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
+        sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"true"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
         kubectl -n cno-system apply -f -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/api-ingress.yaml
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
@@ -121,7 +124,7 @@ installCno() {
     kubectl -n cno-system patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-ui.$INGRESS_DOMAIN'}]"
 
     # deploy cno-data-plane
-    waitForRessourceCreated secrets $DEFAULT_AGENT_ID
+    waitForResourceCreated secrets $DEFAULT_AGENT_ID
     kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
     kubectl -n cno-system get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
     kubectl -n cno-system  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
@@ -147,8 +150,8 @@ installCno() {
 
 }
 
-# waitForRessourceCreated resource resourceName
-waitForRessourceCreated() {
+# waitForResourceCreated resource resourceName
+waitForResourceCreated() {
     echo "waiting for resource $1 $2 ...";
     timeout=300
     resource=""
