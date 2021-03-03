@@ -31,8 +31,8 @@ spec:
       - "query-users"
       - "create-client"
   clients:
-  - adminUrl: "cno-auth.beopenit.com"
-    baseUrl: "cno-auth.beopenit.com"
+  - adminUrl: "$AUTH_URL"
+    baseUrl: "$AUTH_URL"
     bearerOnly: false
     clientAuthenticatorType: "public"
     clientId: "public"
@@ -53,7 +53,7 @@ spec:
     - "*"
     webOrigins:
     - "*"
-    rootUrl: "https://cno-auth.beopenit.com/"
+    rootUrl: "$AUTH_URL"
     secret: "my-secret"
     serviceAccountsEnabled: true
     standardFlowEnabled: true

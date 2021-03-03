@@ -61,7 +61,9 @@ installCno() {
       kubectl -n cno-system apply -f  -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
 
-    # kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm.yml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm.yml |
+      sed -e 's|$AUTH_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g' |
+      kubectl -n cno-system apply -f  -
 
     #If PSP issue
     waitForResourceCreated deployment keycloak-postgresql
