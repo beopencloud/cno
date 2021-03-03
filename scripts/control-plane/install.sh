@@ -8,6 +8,7 @@
 # Ex: export CNO_INGRESS="nginx"
 [[ -z "${CNO_INGRESS}" ]] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
+
 hasKubectl() {
     hasKubectl=$(which kubectl)
     if [ "$?" = "1" ]; then
@@ -55,7 +56,9 @@ installCno() {
     # Deploy keycloak Cluster and patch the ingress
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm-configmap.yml | sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g' |kubectl -n cno-system apply -f  -
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm-configmap.yml |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g' |
+      kubectl -n cno-system apply -f  -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
 
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm.yml
@@ -66,7 +69,7 @@ installCno() {
         kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/patch-psp-postgresql.yaml)"
     fi
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/keycloak-ingress.yaml
-    kubectl -n cno-system patch ing/keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
+    kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
     # Restart keycloak pod to reload realm
     kubectl -n cno-system wait deploy/keycloak-postgresql --for condition=available --timeout=20m
     kubectl -n cno-system delete pod keycloak-0
