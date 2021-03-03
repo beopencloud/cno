@@ -663,8 +663,8 @@ data:
         {
           "id": "c39b01dd-c137-4a95-b3ea-91b297110b43",
           "clientId": "cno-api",
-          "adminUrl": "https://cno-auth.beopenit.com/",
-          "baseUrl": "https://cno-auth.beopenit.com/",
+          "adminUrl": "$AUTH_URL",
+          "baseUrl": "$AUTH_URL",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
@@ -768,8 +768,8 @@ data:
         {
           "id": "38ed526a-6b52-442d-a663-d4980e19cbe9",
           "clientId": "public",
-          "adminUrl": "https://cno-auth.beopenit.com/",
-          "baseUrl": "https://cno-auth.beopenit.com/",
+          "adminUrl": "$AUTH_URL",
+          "baseUrl": "$AUTH_URL",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
