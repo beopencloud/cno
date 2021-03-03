@@ -8,6 +8,7 @@
 # Ex: export CNO_INGRESS="nginx"
 [[ -z "${CNO_INGRESS}" ]] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
+
 hasKubectl() {
     hasKubectl=$(which kubectl)
     if [ "$?" = "1" ]; then
@@ -31,7 +32,6 @@ hasSetDomainSuffix() {
 }
 
 installCno() {
-    TIMEOUT='-300s'
     # Create cno namespace
     kubectl create namespace cno-system
 
@@ -42,15 +42,7 @@ installCno() {
     # Deploy a kafka cluster
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
-    echo $TIMEOUT
-    echo "  Waiting to create zookeeper pod."
-    zo=$(kubectl -n cno-system wait pod cno-kafka-cluster-zookeeper-0 --for=condition=ready --timeout=$TIMEOUT)
-    if [ -z "${zo}" ]; then
-      echo "  Zookeeper pod is failed."
-      exit 1
-    else
-      echo "  Zookeeper pod is created."
-    fi
+    waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
     # waiting for kafka deployment
     waitForResourceCreated pod cno-kafka-cluster-kafka-0
@@ -134,7 +126,7 @@ installCno() {
         sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g' |
         kubectl -n cno-system apply -f -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/ui-ingress.yaml
-    kubectl -n cno-system patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-ui.$INGRESS_DOMAIN'}]"
+    kubectl -n cno-system patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno.$INGRESS_DOMAIN'}]"
 
     # deploy cno-data-plane
     waitForResourceCreated secrets $DEFAULT_AGENT_ID
