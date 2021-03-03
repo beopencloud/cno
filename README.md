@@ -32,6 +32,10 @@ CNO is an open source project mainly composed of 7 modules.
 7. [cno Client](https://github.com/beopencloud/cnoctl)
    
 # Installation CNO via utility script with curl
+## Prerequisites
+Ingress controller must be installed in the cluster and the ingress domain suffix by exporting env variable INGRESS_DOMAIN.
+
+Ex: $ export INGRESS_DOMAIN=cluster1.beopenit.com  
 ## Installation
 ```bash
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/install.sh | sh

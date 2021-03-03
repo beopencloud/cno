@@ -87,12 +87,20 @@ installCno() {
     sleep 10s
     kubectl -n cno-system exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
 
-    # Install CNO API
+    # Create CNO configMap
+    kubectl create cm -n cno-system cno-config --from-literal OIDC_SERVER_BASE_URL=https://cno-auth.$INGRESS_DOMAIN \
+     --from-literal OIDC_REALM=cno-realm --from-literal KAFKA_BROKERS=kafka-cluster-kafka-external-bootstrap:9094 \
+     --from-literal KAFKA_TLS_ENABLED="true"  --from-literal KAFKA_TOPIC_NOTIFICATION=cno-notification 
+
+    # kafka auth config
     kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
     kubectl -n cno-system get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
     kubectl -n cno-system  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
     kubectl  -n cno-system create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
+    # Clean
     rm -rf /tmp/cno-*
+
+    # Install CNO API
     DEFAULT_AGENT_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-api/cno-api.yaml |
         sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_URL|https://cno-auth.'"$INGRESS_DOMAIN"'/auth/realms/cno/|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"true"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
@@ -100,6 +108,10 @@ installCno() {
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/api-ingress.yaml
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n cno-system rollout status deploy cno-api
+    # Install CNO NOTIFICATION
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/notification/cno-notification.yaml
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/notification-ingress.yaml
+    kubectl -n cno-system patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
 
     # Install CNO UI
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/onboarding-ui/cno-ui.yaml |
@@ -115,19 +127,23 @@ installCno() {
     kubectl -n cno-system  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
     kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$DEFAULT_AGENT_ID --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     rm -rf /tmp/cno-*
-    curl https://raw.githubusercontent.com/beopencloud/cno/feature/kafka-config/scripts/data-plane/install.sh > cnodataplane.sh
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
     chmod +x cnodataplane.sh
-    ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrapeeee:9093
+    ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093
     rm -rf cnodataplane.sh
 
     echo
     echo "============================================================"
-    echo "  CNO installation success."
-    echo "  Mysql Cluster root password : ${MYSQL_PWD}"
-    echo "  AgentID : ${DEFAULT_AGENT_ID}"
-    echo "  UI url : "
+    echo "  INFO CNO installation success."
+    echo "  INFO make sure ssl-passthrough is configured on your ingress controller. Otherwise, communication between cno components may not work correctly."
+    echo "  INFO You Have to create the DNS mapping for the following URLs and you ingress controller"
+    echo "  -->"
+    printf "     "
+    kubectl -n cno-system get ing -o jsonpath='{.items[*].spec.rules[*].host}' | sed -e 's| |\n     |g'
+    echo
     echo "============================================================"
     echo
+
 
 }
 

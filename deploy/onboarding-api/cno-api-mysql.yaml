@@ -36,4 +36,4 @@ spec:
     mysql.presslabs.org/cluster: cno-api
     role: master
   sessionAffinity: None
-  type: LoadBalancer
+  type: ClusterIP
