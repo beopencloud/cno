@@ -118,7 +118,7 @@ spec:
                       type: string
                     environmentId:
                       type: string
-                    id:
+                    userId:
                       type: string
                     role:
                       type: string
@@ -129,7 +129,7 @@ spec:
                   required:
                   - email
                   - environmentId
-                  - id
+                  - userId
                   - role
                   - userFullName
                   - username
