@@ -8,6 +8,7 @@
 # Ex: export CNO_INGRESS="nginx"
 [[ -z "${CNO_INGRESS}" ]] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
+TIMEOUT = 300
 
 hasKubectl() {
     hasKubectl=$(which kubectl)
@@ -42,7 +43,14 @@ installCno() {
     # Deploy a kafka cluster
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
-    waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
+    echo "  Waiting to create zookeeper pod."
+    zo=$(kubectl -n cno-system wait pod cno-kafka-cluster-zookeeper-0 --for=delete --timeout='-'$TIMEOUT's')
+    if [ -z "${zo}" ]; then
+      echo "  Zookeeper pod is failed."
+      exit 1
+    else
+       echo "  Zookeeper pod is created."
+    fi
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
     # waiting for kafka deployment
     waitForResourceCreated pod cno-kafka-cluster-kafka-0
