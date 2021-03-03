@@ -2,7 +2,7 @@
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
-[[ -z "${CNO_VERSION}" ]] && VERSION='fix-bub' || VERSION="${CNO_VERSION}"
+[[ -z "${CNO_VERSION}" ]] && VERSION='fix-bug' || VERSION="${CNO_VERSION}"
 
 # Set INGRESS to nginx if CNO_INGRESS env variable is not set
 # Ex: export CNO_INGRESS="nginx"
