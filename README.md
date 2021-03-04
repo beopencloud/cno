@@ -33,16 +33,61 @@ CNO is an open source project mainly composed of 7 modules.
    
 # Installation CNO via utility script with curl
 ## Prerequisites
-Ingress controller must be installed in the cluster and the ingress domain suffix by exporting env variable INGRESS_DOMAIN.
-
-Ex: $ export INGRESS_DOMAIN=cluster1.beopenit.com  
-## Installation
-```bash
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/install.sh | sh
+- Ingress controller must be installed in a cluster, and the ingress domain suffix by exporting env variable INGRESS_DOMAIN.
+```bash 
+export INGRESS_DOMAIN=cluster1.beopenit.com
 ```
-## Uninstallation
+NOTICE: ssl passthrough must be activated in your ingress controller
+- If you install control plan in a cluster which pod security policy is activated (like EKS, AKS) set CNO_POD_POLICY_ACTIVITED to true
+```bash 
+export CNO_POD_POLICY_ACTIVITED=true
+```
+- Set CNO_VERSION if you want to use a specific version (default version is the current version in the main branch)
+```bash 
+export CNO_VERSION=<version>
+```
+- Install Kubectl 
+
+## Default installation (control plane with data plane)
+```bash
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/control-plane/install.sh | sh
+```
+## Custom installation (control plane without data plane)
+set INSTALL_DATA_PLANE environment variable to false:
+```bash
+export INSTALL_DATA_PLANE=false
+```
+```bash
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/control-plane/install.sh | sh
+```
+## Install data plane
+- Create the cluster on CNO UI ang get licence, ca_cert, user_key, user_cert
+- Set environment variables
+```bash
+export CNO_AGENT_LICENCE=<licence>
+export CNO_AGENT_CA_CERT=<ca_cert>
+export CNO_AGENT_USER_CERT=<user_key>
+export CNO_AGENT_USER_KEY=<user_cert>
+```
+- Set KAFKA_BROKERS
+```bash
+export KAFKA_BROKERS=<kafka broker url>:<kafka broker port>
+```
+- Set CNO_VERSION if you want to use a specific version (default version is the current version in the main branch)
+```bash 
+export CNO_VERSION=<version>
+```
  ```bash
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/uninstall.sh | sh
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/data-plane/install.sh | sh
+```
+
+## Uninstallation control plane
+ ```bash
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/control-plane/uninstall.sh | sh
+```
+## Uninstallation date plane
+ ```bash
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/data-plane/uninstall.sh | sh
 ```
 
 ## Contributing
