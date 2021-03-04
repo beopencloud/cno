@@ -73,7 +73,7 @@ installCno() {
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress/$INGRESS/keycloak-ingress.yaml
     kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
     # Restart keycloak pod to reload realm
-    kubectl -n cno-system wait deploy/keycloak-postgresql --for=condition=available --timeout=5m
+    kubectl -n cno-system wait pod -l component=database -l app=keycloak --for=condition=ready --timeout=5m
     kubectl -n cno-system delete pod keycloak-0
     kubectl -n cno-system wait pod keycloak-0 --for=condition=ready --timeout=5m
 
@@ -163,7 +163,7 @@ waitForResourceCreated() {
     resource=""
     while [ -z $resource ] && [ $timeout -gt 0 ];
     do
-       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}')
+       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' > /dev/null 2>&1)
        timeout=$((timeout - 5))
        sleep 5s
     done
