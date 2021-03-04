@@ -163,7 +163,7 @@ waitForResourceCreated() {
     resource=""
     while [ -z $resource ] && [ $timeout -gt 0 ];
     do
-       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' > /dev/null 2>&1)
+       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}')
        timeout=$((timeout - 5))
        sleep 5s
     done
