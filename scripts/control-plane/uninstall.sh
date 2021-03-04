@@ -21,8 +21,6 @@ kubectl -n cno-system delete -f  https://raw.githubusercontent.com/beopencloud/c
 # Delete keycloak Cluster
 kubectl -n cno-system delete -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
 kubectl -n cno-system delete -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm-configmap.yml
-# Delete CNO operator
-kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/cnoOperator/cno-operator-all.yaml
 
 # Delete CNO service account, role and binding
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/templates/cno-rbac.yaml

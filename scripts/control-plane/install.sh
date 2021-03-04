@@ -77,10 +77,6 @@ installCno() {
     kubectl -n cno-system delete pod keycloak-0
     kubectl -n cno-system wait pod keycloak-0 --for=condition=ready --timeout=5m
 
-
-    # Deploy CNO operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/cno-operator/cno-operator-all.yaml
-
     # Create CNO service account, role and binding
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/operator/templates/cno-rbac.yaml
 
