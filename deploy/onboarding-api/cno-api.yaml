@@ -103,8 +103,6 @@ spec:
         - name: kafkaconfig
           mountPath: "/root/.key"
           readOnly: true
-      imagePullSecrets:
-      - name: regcred
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

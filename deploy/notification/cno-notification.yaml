@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
       - image: beopenit/cno-notification:v0.0.1-aplpha
-        name: notification
+        name: cno-ui-notification
+        imagePullPolicy: Always
         volumeMounts:
         - name: kafkaconfig
           mountPath: "/usr/src/app/.key"

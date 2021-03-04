@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
       - image: beopenit/cno-ui:v0.0.1-aplpha
-        name: onboarding-ui-prod
+        name: cno-ui
+        imagePullPolicy: Always
         ports:
           - containerPort: 8080
         resources: {}
