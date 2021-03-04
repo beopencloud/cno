@@ -16,7 +16,7 @@ spec:
       serviceAccountName: onboarding-operator-kubernetes
       containers:
       - name: onboarding-operator-kubernetes
-        image: beopenit/onboarding-operator-kubernetes:v0.0.5
+        image: beopenit/onboarding-operator-kubernetes:v0.0.1-aplpha
         command:
         - onboarding-operator-kubernetes
         imagePullPolicy: Always
