@@ -162,6 +162,9 @@ waitForResourceCreated() {
        resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
        timeout=$((timeout - 5))
        sleep 5s
+       if [ -z $resource ]; then
+           printf '...'
+       fi
     done
     if [ ! $timeout -gt 0 ]; then
         echo "timeout: $1 $2 not found"
