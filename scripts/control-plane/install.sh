@@ -57,12 +57,12 @@ installCno() {
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
       kubectl -n cno-system apply -f  -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/keycloak.yaml
 
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/keycloak/cno-realm.yml |
-      sed -e 's|$AUTH_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g' |
+      sed -e 's|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
       kubectl -n cno-system apply -f  -
 
     #If PSP issue

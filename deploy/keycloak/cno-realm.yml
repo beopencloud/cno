@@ -31,8 +31,8 @@ spec:
       - "query-users"
       - "create-client"
   clients:
-  - adminUrl: "$AUTH_URL"
-    baseUrl: "$AUTH_URL"
+  - adminUrl: "cno-auth.$AUTH_URL"
+    baseUrl: "cno-auth.$AUTH_URL"
     bearerOnly: false
     clientAuthenticatorType: "public"
     clientId: "public"
@@ -53,7 +53,7 @@ spec:
     - "*"
     webOrigins:
     - "*"
-    rootUrl: "$AUTH_URL"
+    rootUrl: "https://cno-auth.$AUTH_URL/"
     secret: "my-secret"
     serviceAccountsEnabled: true
     standardFlowEnabled: true
