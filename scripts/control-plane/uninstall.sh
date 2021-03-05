@@ -32,7 +32,7 @@ kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cn
 kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-ui/onboarding-ui.yaml
 
 #Delete remaining resources
-kubectl -n cno-system delete --all  all,ing,secret,cm
+kubectl -n cno-system delete --all  all,ing,secret,cm,pvc
 
 curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/uninstall.sh > uninstallcnodataplane.sh
     chmod +x uninstallcnodataplane.sh

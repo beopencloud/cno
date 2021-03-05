@@ -44,6 +44,9 @@ installCno() {
     # Create cno namespace
     kubectl create namespace cno-system
 
+    # Install keycloak Operator
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
+
     # Deploy keycloak Cluster and patch the ingress
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
@@ -78,9 +81,6 @@ installCno() {
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
-
-    # Install keycloak Operator
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
 
     # Restart keycloak to reload realm cno
     kubectl -n cno-system delete pod keycloak-0
