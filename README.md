@@ -81,10 +81,12 @@ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts
  ```bash
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/uninstall.sh | sh
 ```
+NOTICE: If the uninstallation crashes, stop the command and run the uninstallation command again
 ## Uninstallation date plane
  ```bash
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/data-plane/uninstall.sh | sh
 ```
+NOTICE: If the uninstallation crashes, stop the command and run the uninstallation command again
 
 ## Contributing
 To Contribute to the CNO project, please follow this [Contributor's Guide](https://github.com/beopencloud/cno/tree/$CNO_VERSION/contributor_guide)
