@@ -146,7 +146,7 @@ installCno() {
         rm -rf /tmp/cno-*
         curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
         chmod +x cnodataplane.sh
-        ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093
+        ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093 bootstrap-cno.$INGRESS_DOMAIN
         rm -rf cnodataplane.sh
     fi
 
