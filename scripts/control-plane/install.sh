@@ -44,6 +44,26 @@ installCno() {
     # Create cno namespace
     kubectl create namespace cno-system
 
+    # Deploy keycloak Cluster and patch the ingress
+    CLIENT_CNO_API=$(openssl rand -base64 14)
+    kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
+      kubectl -n cno-system apply -f  -
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
+
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm.yml |
+      kubectl -n cno-system apply -f  -
+
+    #If PSP issue
+    waitForResourceCreated deployment keycloak-postgresql
+    if [ "${CNO_POD_POLICY_ACTIVITED}" = "true" ]; then
+        kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql.yaml)"
+    fi
+    kubectl -n cno-system rollout status deploy keycloak-postgresql # Rollout keycloak postgres
+    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/keycloak-ingress.yaml
+    kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
+
     # Install kafka operator
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml
     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
@@ -62,26 +82,7 @@ installCno() {
     # Install keycloak Operator
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
 
-    # Deploy keycloak Cluster and patch the ingress
-    CLIENT_CNO_API=$(openssl rand -base64 14)
-    kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
-      kubectl -n cno-system apply -f  -
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
-
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm.yml |
-      kubectl -n cno-system apply -f  -
-
-    #If PSP issue
-    waitForResourceCreated deployment keycloak-postgresql
-    if [ "${CNO_POD_POLICY_ACTIVITED}" = "true" ]; then
-        kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql.yaml)"
-    fi
-    kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/keycloak-ingress.yaml
-    kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
-    # Restart keycloak pod to reload realm
-    kubectl -n cno-system rollout status deploy keycloak-postgresql
+    # Restart keycloak to reload realm cno
     kubectl -n cno-system delete pod keycloak-0
     kubectl -n cno-system wait pod keycloak-0 --for=condition=ready --timeout=5m
 
@@ -156,8 +157,8 @@ installCno() {
     printf "     "
     kubectl -n cno-system get ing -o jsonpath='{.items[*].spec.rules[*].host}' | sed -e 's| |\n     |g'
     echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
-    username=$(kubectl -n keycloak get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_USERNAME}' | base64 --decode)
-    password=$(kubectl -n keycloak get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 --decode)
+    username=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_USERNAME}' | base64 --decode)
+    password=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 --decode)
     echo "  KEYCLOAK master realm credentials: USERNAME: $username       PASSWORD: $password"
     echo
     echo "============================================================"
