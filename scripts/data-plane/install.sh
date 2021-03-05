@@ -7,6 +7,8 @@
 # Ex: export CNO_INGRESS="nginx"
 [[ -z "${KAFKA_BROKERS}" ]] && KAFKA_BROKERS=$1
 
+[[ -z "${CLUSTER_API_SERVER_URL}" ]] && CLUSTER_API_SERVER_URL=$2
+
 hasKafkaBrokersUrl(){
     if [[ -z "${KAFKA_BROKERS}" ]]; then
         echo "============================================================"
@@ -91,10 +93,19 @@ checkCnoAgentConfig(){
     fi
 }
 
+checkServerApiClusterUrl(){
+    if [[ -z $CLUSTER_API_SERVER_URL ]]; then
+        echo "============================================================"
+        echo "  ERROR CLUSTER_API_SERVER_URL environment variable is required."
+        echo "============================================================"
+        exit 1
+    fi
+}
+
 installCnoDataPlane() {
     # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$CLUSTER_API_SERVER_URL|'"$CLUSTER_API_SERVER_URL"'|g' |
         kubectl -n cno-system apply -f -
 
     # install cno-operator
@@ -133,5 +144,6 @@ checkMetricsServer
 genAgentConfig
 hasKafkaBrokersUrl
 checkCnoAgentConfig
+checkServerApiClusterUrl
 installCnoDataPlane
 
