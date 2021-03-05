@@ -59,6 +59,8 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         env:
+        - name: DEFAULT_SUPER_ADMIN_PASSWORD
+          value: $SUPER_ADMIN_PASSWORD
         - name: IN_CLUSTER
           value: "true"
         - name: SERVER_URL

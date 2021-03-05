@@ -92,9 +92,6 @@ checkCnoAgentConfig(){
 }
 
 installCnoDataPlane() {
-    # Create cno namespace
-    kubectl create namespace cno-system
-
     # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
         sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
@@ -129,7 +126,8 @@ waitForRessourceCreated() {
     fi
     echo "$1 $2 successfully deployed"
 }
-
+# Create cno namespace
+kubectl create namespace cno-system
 hasKubectl
 checkMetricsServer
 genAgentConfig

@@ -44,21 +44,6 @@ installCno() {
     # Create cno namespace
     kubectl create namespace cno-system
 
-    # Install kafka operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml
-    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
-
-    # Deploy a kafka cluster
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
-    # waiting for zookeeper deployment
-    waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
-    # waiting for kafka deployment
-    waitForResourceCreated pod cno-kafka-cluster-kafka-0
-    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
-    # Create cno kafka super-admin user
-    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
-
     # Install keycloak Operator
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
 
@@ -78,11 +63,29 @@ installCno() {
     if [ "${CNO_POD_POLICY_ACTIVITED}" = "true" ]; then
         kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql.yaml)"
     fi
+    kubectl -n cno-system rollout status deploy keycloak-postgresql # Rollout keycloak postgres
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/keycloak-ingress.yaml
     kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
-    # Restart keycloak pod to reload realm
-    kubectl -n cno-system rollout status deploy keycloak-postgresql
+
+    # Install kafka operator
+    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml
+    kubectl -n cno-system rollout status deploy strimzi-cluster-operator
+
+    # Deploy a kafka cluster
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    # waiting for zookeeper deployment
+    waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
+    # waiting for kafka deployment
+    waitForResourceCreated pod cno-kafka-cluster-kafka-0
+    kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
+    # Create cno kafka super-admin user
+    kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
+
+    # Restart keycloak to reload realm cno
+    sleep 30s
     kubectl -n cno-system delete pod keycloak-0
+    echo "  waiting recreate keycloak ..."
     kubectl -n cno-system wait pod keycloak-0 --for=condition=ready --timeout=5m
 
 
@@ -113,8 +116,10 @@ installCno() {
 
     # Install CNO API
     DEFAULT_AGENT_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
+    SUPER_ADMIN_PASSWORD=$(openssl rand -base64 14)
+    kubectl -n cno-system create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
         kubectl -n cno-system apply -f -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/api-ingress.yaml
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
@@ -153,6 +158,10 @@ installCno() {
     echo "  -->"
     printf "     "
     kubectl -n cno-system get ing -o jsonpath='{.items[*].spec.rules[*].host}' | sed -e 's| |\n     |g'
+    echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
+    username=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_USERNAME}' | base64 --decode)
+    password=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 --decode)
+    echo "  KEYCLOAK master realm credentials: USERNAME: $username       PASSWORD: $password"
     echo
     echo "============================================================"
     echo

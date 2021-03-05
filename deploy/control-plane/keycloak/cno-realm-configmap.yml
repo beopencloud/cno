@@ -786,7 +786,7 @@ data:
           "consentRequired": false,
           "standardFlowEnabled": true,
           "implicitFlowEnabled": true,
-          "directAccessGrantsEnabled": false,
+          "directAccessGrantsEnabled": true,
           "serviceAccountsEnabled": false,
           "publicClient": true,
           "frontchannelLogout": false,
