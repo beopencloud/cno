@@ -18,6 +18,13 @@ if [ $INSTALL_DATA_PLANE != 'true' ] && [ $INSTALL_DATA_PLANE != 'false' ]; then
     exit 1
 fi
 
+if [ $INSTALL_DATA_PLANE = 'true'  ] && [ -z $CLUSTER_API_SERVER_URL ]; then
+    echo "============================================================"
+    echo "  ERROR CLUSTER_API_SERVER_URL environment variable is required."
+    echo "============================================================"
+    exit 1
+fi
+
 hasKubectl() {
     hasKubectl=$(which kubectl)
     if [ "$?" = "1" ]; then
