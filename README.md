@@ -46,8 +46,10 @@ export CNO_POD_POLICY_ACTIVITED=true
 
 ## Default installation (control plane with data plane)
 - Set CNO_VERSION environment variable (if you want to use a specific version replace main value to a specific version)
+- Set CLUSTER_API_SERVER_URL environment variable(url of api server ex: https://api.cno.com:443)
 ```bash
 export CNO_VERSION=main
+export CLUSTER_API_SERVER_URL=<url api cluster>
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh
 ```
 ## Custom installation (control plane without data plane)
@@ -65,6 +67,10 @@ export CNO_AGENT_LICENCE=<licence>
 export CNO_AGENT_CA_CERT=<ca_cert>
 export CNO_AGENT_USER_CERT=<user_key>
 export CNO_AGENT_USER_KEY=<user_cert>
+```
+- Set CLUSTER_API_SERVER_URL environment variable(url of api server ex: https://api.cno.com:443)
+```bash
+export CLUSTER_API_SERVER_URL=<url api cluster>
 ```
 - Set KAFKA_BROKERS
 ```bash
