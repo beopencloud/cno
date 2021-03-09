@@ -7,8 +7,6 @@
 # Ex: export CNO_INGRESS="nginx"
 [[ -z "${KAFKA_BROKERS}" ]] && KAFKA_BROKERS=$1
 
-[[ -z "${CLUSTER_API_SERVER_URL}" ]] && CLUSTER_API_SERVER_URL=$2
-
 hasKafkaBrokersUrl(){
     if [[ -z "${KAFKA_BROKERS}" ]]; then
         echo "============================================================"
@@ -93,19 +91,10 @@ checkCnoAgentConfig(){
     fi
 }
 
-checkServerApiClusterUrl(){
-    if [[ -z $CLUSTER_API_SERVER_URL ]]; then
-        echo "============================================================"
-        echo "  ERROR CLUSTER_API_SERVER_URL environment variable is required."
-        echo "============================================================"
-        exit 1
-    fi
-}
-
 installCnoDataPlane() {
     # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$CLUSTER_API_SERVER_URL|'"$CLUSTER_API_SERVER_URL"'|g' |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
         kubectl -n cno-system apply -f -
 
     # install cno-operator
@@ -127,7 +116,7 @@ waitForRessourceCreated() {
     resource=""
     while [ -z $resource ] && [ $timeout -gt 0 ];
     do
-       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}')
+       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
        timeout=$((timeout - 5))
        sleep 5s
     done
@@ -138,7 +127,7 @@ waitForRessourceCreated() {
     echo "$1 $2 successfully deployed"
 }
 # Create cno namespace
-kubectl create namespace cno-system
+kubectl create namespace cno-system > /dev/null 2>&1
 hasKubectl
 checkMetricsServer
 genAgentConfig

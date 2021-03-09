@@ -18,13 +18,6 @@ if [ $INSTALL_DATA_PLANE != 'true' ] && [ $INSTALL_DATA_PLANE != 'false' ]; then
     exit 1
 fi
 
-if [ $INSTALL_DATA_PLANE = 'true'  ] && [ -z $CLUSTER_API_SERVER_URL ]; then
-    echo "============================================================"
-    echo "  ERROR CLUSTER_API_SERVER_URL environment variable is required."
-    echo "============================================================"
-    exit 1
-fi
-
 hasKubectl() {
     hasKubectl=$(which kubectl)
     if [ "$?" = "1" ]; then
@@ -49,7 +42,7 @@ hasSetDomainSuffix() {
 
 installCno() {
     # Create cno namespace
-    kubectl create namespace cno-system
+    kubectl create namespace cno-system > /dev/null 2>&1
 
     # Install keycloak Operator
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
@@ -124,9 +117,10 @@ installCno() {
     # Install CNO API
     DEFAULT_AGENT_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
     SUPER_ADMIN_PASSWORD=$(openssl rand -base64 14)
+    DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n cno-system create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
         kubectl -n cno-system apply -f -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/api-ingress.yaml
     kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
@@ -153,7 +147,7 @@ installCno() {
         rm -rf /tmp/cno-*
         curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
         chmod +x cnodataplane.sh
-        ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093 bootstrap-cno.$INGRESS_DOMAIN
+        ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093
         rm -rf cnodataplane.sh
     fi
 
