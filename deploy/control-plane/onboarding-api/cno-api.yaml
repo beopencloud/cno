@@ -101,6 +101,8 @@ spec:
           value: $CREATE_DEFAULT_CLUSTER
         - name: DEFAULT_CLUSTER_ID
           value: $DEFAULT_CLUSTER_ID
+        - name: DEFAULT_CLUSTER_API_SERVER_URL
+          value: $DEFAULT_CLUSTER_API_SERVER_URL
         volumeMounts:
         - name: kafkaconfig
           mountPath: "/root/.key"

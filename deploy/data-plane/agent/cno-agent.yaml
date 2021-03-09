@@ -62,8 +62,6 @@ spec:
           value: "true"
         - name: KAFKA_BROKERS
           value: $KAFKA_BROKERS
-        - name: CLUSTER_API_SERVER_URL
-          value: $CLUSTER_API_SERVER_URL
         - name: LICENCE
           valueFrom:
             secretKeyRef:
