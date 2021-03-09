@@ -127,7 +127,7 @@ waitForRessourceCreated() {
     echo "$1 $2 successfully deployed"
 }
 # Create cno namespace
-kubectl create namespace cno-system
+kubectl create namespace cno-system > /dev/null 2>&1
 hasKubectl
 checkMetricsServer
 genAgentConfig
