@@ -99,6 +99,8 @@ spec:
               key: ROOT_PASSWORD
         - name: CREATE_DEFAULT_CLUSTER
           value: $CREATE_DEFAULT_CLUSTER
+        - name: DEFAULT_EXTERNAL_BROKERS_URL
+          value: $DEFAULT_EXTERNAL_BROKERS_URL
         - name: DEFAULT_CLUSTER_ID
           value: $DEFAULT_CLUSTER_ID
         - name: DEFAULT_CLUSTER_API_SERVER_URL
