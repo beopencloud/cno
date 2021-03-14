@@ -7,8 +7,10 @@ CNO (Cloud Native Onboarding) is an open source platform to onboard easily and s
 * [Architecture](#Architecture)
 * [Component](#Component)
 * [Installation](#Installation)
-* [Contributing](#Contributing)
+* [Add a new kubernetes or OpenShift Clsuter](#Installation)
+
 # Why CNO ?
+
 In 2021, running a Kubernetes or OpenShift cluster has never been easy.  It's possible to bootstrap a Production Cluster on any platform in a few minutes. But most companies still struggle to know the best way to onboard all teams and are not really taking advantage of Kubernetes ecosystem. A well executed and secured Cloud Native platform project can offer an ROI up to 531%.
 CNO is built on the idea of filling the gap of adoption and avoid mistakes by:
 - Setting up the best onboarding process for your existing teams and ecosystem
@@ -19,76 +21,77 @@ CNO is built on the idea of filling the gap of adoption and avoid mistakes by:
 - Ensuring that your clusters are compliant to your Standards and Governance Policies
 
 # Architecture overview
-![Architecture](image/ArchiCNO.png)
+![Architecture](image/arch.png)
 ## Components
 CNO is an open source project mainly composed of 7 modules.
-1. [cno UI](https://github.com/beopencloud/cno-ui-template)
-2. [cno API](https://github.com/beopencloud/cno-api)
-3. [cno Agent](https://github.com/beopencloud/cno-agent)
-4. [cno Openshift-operator](https://github.com/beopencloud/cno-openshift-operator)
-5. [cno CD-operator](https://github.com/beopencloud/cno-cd)
-6. [cno K8s-operator](https://github.com/beopencloud/cno-kubernetes-operator)
-7. [cno Notification](https://github.com/beopencloud/cno-notification)
-7. [cno Client](https://github.com/beopencloud/cnoctl)
-   
-# Installation CNO via utility script with curl
+1. CNO Console
+2. CNO API
+7. CNO CLI (cnoctl)
+3. CNO Agent installed in each kubernetes Clsuter
+4. CNO OpenShift Operators
+5. CNO CD Operators
+6. CNO Kubernetes Operators
+7. CNO Notification
+
+
+# Quick  Intallation
+
 ## Prerequisites
-- Ingress controller must be installed in a cluster, and the ingress domain suffix by exporting env variable INGRESS_DOMAIN.
-```bash 
-export INGRESS_DOMAIN=cluster1.beopenit.com
+
+Kubernetes **v1.16** or higher is supported by CNO.
+
+**Important** Make sure your kubectl CLI is correctly configured. If you need help to configure Kubernetes environnement, follow [kubectl configuration documentaion](configure-kube.md).
+
+**Important** If you are a beginner and don't have a Kubernetes cluster ready to use, you can follow [Bootstrap kubernetes Cluster on any cloud provider in 1 minute](bootstrap-kube.md) documentaion.
+
+
+#### Define your Ingress Controller multidomain.
+
+
 ```
-NOTICE: ssl passthrough must be activated in your ingress controller
-- If you install control plan in a cluster which pod security policy is activated (like EKS, AKS) set CNO_POD_POLICY_ACTIVITED to true
-```bash 
+export INGRESS_DOMAIN=apps.example.com
+```
+If your INGRESS_DOMAIN is **apps.example.com**, CNO will create **cno.apps.example.com** ingress ressource.
+
+Your Ingress Controller needs to support SSL passthrough. Most Ingress controllers (NGINX, OpenShift Router and Traefic) support SSL passthrough. Make sure that SSL passthrough parameter is activated in your Kubernetes Ingress Controller or OpenShift Router.
+
+**Important** If you are a beginner and don't have an ingress controller in your Kubernetes  cluster ready to use, you can follow [Install NGINX INGRESS Controller](bootstrap-ingress.md) documentaion.
+
+##### AWS Elastic Kubernetes Service (EKS) and Azure Kubernetes Service (AKS)
+
+If you installed CNO in a Kubernetes clsuter with PSP (Pod Security Policy) activated such as EKS and AKS, run the following command.
+
+```
 export CNO_POD_POLICY_ACTIVITED=true
 ```
-- Install Kubectl 
 
-## Default installation (control plane with data plane)
-- Set CNO_VERSION environment variable (if you want to use a specific version replace main value to a specific version)
-```bash
+### Install CNO
+
+```
 export CNO_VERSION=main
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh
 ```
-## Custom installation (control plane without data plane)
-- Set CNO_VERSION environment variable (if you want to use a specific version replace main value to a specific version)
-```bash
-export CNO_VERSION=main
-export INSTALL_DATA_PLANE=false
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh
-```
-## Install data plane
-- Create the cluster on CNO UI ang get licence, ca_cert, user_key, user_cert
-- Set environment variables
-```bash
-export CNO_AGENT_LICENCE=<licence>
-export CNO_AGENT_CA_CERT=<ca_cert>
-export CNO_AGENT_USER_CERT=<user_key>
-export CNO_AGENT_USER_KEY=<user_cert>
-```
-- Set KAFKA_BROKERS
-```bash
-export KAFKA_BROKERS=<kafka broker url>:<kafka broker port>
-```
-- Set CNO_VERSION environment variable (if you want to use a specific version replace main value to a specific version) 
-```bash
-export CNO_VERSION=main
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/data-plane/install.sh | sh
+
+####  Enjoy
+
+You can login to your CNO console via cno.$INGRESS_DOMAIN.
+You will see CNO UI URL and credentails.
 
 ```
+============================================================
+  INFO CNO installation success.
+     cno.apps.example.com  CNO Credentials USERNAME: admin    PASSWORD: xxxxxxxxxxxxxxxx
+     cno-auth.apps.example.com credentials: USERNAME: admin       PASSWORD: xxxxxxxxxxxxxxxxx
 
-## Uninstallation control plane
- ```bash
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/uninstall.sh | sh
+============================================================
 ```
-NOTICE: If the uninstallation crashes, stop the command and run the uninstallation command again
-## Uninstallation date plane
- ```bash
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/data-plane/uninstall.sh | sh
-```
-NOTICE: If the uninstallation crashes, stop the command and run the uninstallation command again
 
-## Contributing
-To Contribute to the CNO project, please follow this [Contributor's Guide](https://github.com/beopencloud/cno/tree/$CNO_VERSION/contributor_guide)
+Now you can start onboarding your IT teams, projects and any add Kubernetes cluster.
 
+##  Add a new Kubernetes or OpenShift cluster
 
+1. In the CNO Console, navigate to the clusters page.
+2. Select Add Cluster.
+3. Enter a name for the cluster.
+4. Enter the cluster type (EKS, AKS , GKE, Kubernetes or OpenShift) and click on Add Cluster
+5. Copy and outpout commands and install CNO agent is your new cluster.
