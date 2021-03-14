@@ -5,9 +5,9 @@ CNO (Cloud Native Onboarding) is an open source platform to onboard easily and s
 
 * [Why CNO](#why-cno)
 * [Get Started](#quick-installation)
-* [Architecture and components](#architecture-overview-and-cno-components))
+* [Architecture and components](#architecture-overview-and-components)
 * [Quick Installation](#quick-installation)
-* [Add a new cluster into CNO HUB](#add-a-new-Kubernetes-or-openshift-cluster-into-cno-hub)
+* [Register a new cluster into CNO HUB](#register-a-cluster-into-cno-bub)
 
 # Supported Platforms
 
@@ -31,7 +31,7 @@ CNO is built on the idea of filling the gap of adoption and avoid mistakes by:
 -  Leveraging Visibility and centralized management into your IAM strategy
 - Ensuring that your clusters are compliant to your Standards and Governance Policies
 
-# Architecture overview and CNO components
+# Architecture overview and components
 ![Architecture](image/arch.png)
 
 CNO is an open source project mainly composed of 8 modules.
@@ -51,9 +51,9 @@ CNO is an open source project mainly composed of 8 modules.
 
 Kubernetes **v1.16** or higher is supported by CNO.
 
-**Important** Make sure your kubectl CLI is correctly configured. If you need help to configure Kubernetes environnement, follow [kubectl configuration documentaion](configure-kube.md).
+**Important** Make sure your kubectl CLI is correctly configured. If you need help to configure Kubernetes environnement, follow [kubectl configuration ](configure-kube.md) documentation.
 
-**Important** If you are a beginner and don't have a Kubernetes cluster ready to use, you can follow [Bootstrap kubernetes Cluster on any cloud provider in 1 minute](bootstrap-kube.md) documentaion.
+**Important** If you are a beginner and don't have a Kubernetes cluster ready to use, you can follow [Bootstrap kubernetes Cluster on any cloud provider in 1 minute](bootstrap-kube.md) documentation.
 
 
 #### Define your Ingress Controller multidomain.
@@ -66,7 +66,7 @@ If your INGRESS_DOMAIN is **apps.example.com**, CNO will create **cno.apps.examp
 
 Your Ingress Controller needs to support SSL passthrough. Most Ingress controllers (NGINX, OpenShift Router and Traefic) support SSL passthrough. Make sure that SSL passthrough parameter is activated in your Kubernetes Ingress Controller or OpenShift Router.
 
-**Important** If you are a beginner and don't have an ingress controller in your Kubernetes  cluster ready to use, you can follow [Install NGINX INGRESS Controller](bootstrap-ingress.md) documentaion.
+**Important** If you are a beginner and don't have an ingress controller in your Kubernetes  cluster ready to use, you can follow [Install NGINX INGRESS Controller](bootstrap-ingress.md) documentation.
 
 ##### AWS Elastic Kubernetes Service (EKS) and Azure Kubernetes Service (AKS)
 
@@ -86,22 +86,20 @@ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts
 ####  Enjoy
 
 You can login to your CNO console via cno.$INGRESS_DOMAIN.
-You will see CNO URLs and credentials into post installation outpout.
+You will see CNO URL and credentials into post installation outpout.
 
 ```
 ============================================================
   INFO CNO installation success.
      cno.apps.example.com  CNO Credentials USERNAME: admin    PASSWORD: xxxxxxxxxxxxxxxx
-     cno-auth.apps.example.com credentials: USERNAME: admin       PASSWORD: xxxxxxxxxxxxxxxxx
-
 ============================================================
 ```
 
 Now you can start onboarding your IT teams, projects and add clusters into CNO HUB.
 
-# Add a new Kubernetes or OpenShift cluster into CNO Hub
+# Register a cluster into CNO Hub
 
-1. In the CNO Console, navigate to the clusters page.
+1. In the CNO Console, go to the clusters Hub page.
 2. Select Add Cluster.
 3. Enter a name for the cluster.
 4. Enter the cluster type (***EKS, AKS , GKE, Kubernetes or OpenShift***) and click on Add Cluster
