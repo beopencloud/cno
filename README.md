@@ -97,7 +97,7 @@ You will see CNO URLs and credentials into post installation outpout.
 ============================================================
 ```
 
-Now you can start onboarding your IT teams, projects and any add Kubernetes cluster.
+Now you can start onboarding your IT teams, projects and add clusters into CNO HUB.
 
 # Add a new Kubernetes or OpenShift cluster into CNO Hub
 
