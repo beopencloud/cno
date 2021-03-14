@@ -38,7 +38,7 @@ CNO is an open source project mainly composed of 8 modules.
 1. CNO Console
 2. CNO API
 3. CNO CLI (cnoctl)
-4. CNO Agent installed in each kubernetes Clsuter
+4. CNO Agent installed in each kubernetes Cluster
 5. CNO OpenShift Operators
 6. CNO CD Operators
 7. CNO Kubernetes Operators
@@ -86,7 +86,7 @@ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts
 ####  Enjoy
 
 You can login to your CNO console via cno.$INGRESS_DOMAIN.
-You will see CNO UI URL and credentails.
+You will see CNO URLs and credentials into post installation outpout.
 
 ```
 ============================================================
@@ -105,4 +105,4 @@ Now you can start onboarding your IT teams, projects and any add Kubernetes clus
 2. Select Add Cluster.
 3. Enter a name for the cluster.
 4. Enter the cluster type (***EKS, AKS , GKE, Kubernetes or OpenShift***) and click on Add Cluster
-5. Copy outpout commands and install CNO agent is your new cluster.
+5. Copy outpout commands and install CNO agent in your new cluster.
