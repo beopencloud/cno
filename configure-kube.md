@@ -10,7 +10,7 @@ export AZSUBSCRIPTION=xxxxxxx
 export RESOURCE_GROUP="xxxxxxxx"
 export AKS_CLUSTER_NAME="xxxxxx"
 
-az account set --subscription $AZSUBSCRIPTION1
+az account set --subscription $AZSUBSCRIPTION
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
 ```
 
