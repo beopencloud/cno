@@ -3,12 +3,21 @@ Onboard, Deploy, Manage and Secure microservices on Kubernetes.
 
 CNO (Cloud Native Onboarding) is an open source platform to onboard easily and securely development teams on multi-cloud Kubernetes clusters from a single console.
 
-* [Why CNO](#why-cno)
-* [Get Started](#quick-intallation)
-* [Architecture](#architecture-overview)
-* [Component](#architecture-overview-and-cno-components)
-* [Installation](#quick-intallation)
-* [Add a new kubernetes or OpenShift Clsuter](#add-a-new-Kubernetes-or-openshift-cluster)
+* [Why CNO](#why-cno-?)
+* [Get Started](#quick-installation)
+* [Architecture and components](#architecture-overview-and-cno-components))
+* [Quick Installation](#quick-installation)
+* [Add a new cluster into CNO HUB](#add-a-new-Kubernetes-or-openshift-cluster-into-cno-hub)
+
+# Supported Platforms
+
+1. Amazon Elastic Kubernetes Service (EKS)
+2. Google Kubernetes Engine (GKE)
+3. Azure Kubernetes Service (AKS)
+4. RedHat Hat OpenShift container Platform
+5. VMWARE Tanzu
+6. Rancher
+7. Any other kubernetes distribution
 
 # Why CNO ?
 
@@ -35,7 +44,7 @@ CNO is an open source project mainly composed of 8 modules.
 8. CNO Notification
 
 
-# Quick  Intallation
+# Quick Installation
 
 ## Prerequisites
 
@@ -89,7 +98,7 @@ You will see CNO UI URL and credentails.
 
 Now you can start onboarding your IT teams, projects and any add Kubernetes cluster.
 
-# Add a new Kubernetes or OpenShift cluster
+# Add a new Kubernetes or OpenShift cluster into CNO Hub
 
 1. In the CNO Console, navigate to the clusters page.
 2. Select Add Cluster.
