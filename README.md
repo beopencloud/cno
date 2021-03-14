@@ -70,7 +70,7 @@ Your Ingress Controller needs to support SSL passthrough. Most Ingress controlle
 
 ##### AWS Elastic Kubernetes Service (EKS) and Azure Kubernetes Service (AKS)
 
-If you installed CNO in a Kubernetes clsuter with PSP (Pod Security Policy) activated such as EKS and AKS, run the following command.
+If you installed CNO in a Kubernetes cluster with PSP (Pod Security Policy) activated such as EKS and AKS, run the following command.
 
 ```
 export CNO_POD_POLICY_ACTIVITED=true
