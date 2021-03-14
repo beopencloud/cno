@@ -14,10 +14,11 @@ CNO (Cloud Native Onboarding) is an open source platform to onboard easily and s
 1. Amazon Elastic Kubernetes Service (EKS)
 2. Google Kubernetes Engine (GKE)
 3. Azure Kubernetes Service (AKS)
-4. RedHat Hat OpenShift container Platform
-5. VMWARE Tanzu
+4. RedHat Hat OpenShift Container Platform
+5. VMware Tanzu
 6. Rancher
-7. Any other kubernetes distribution
+7. Scaleway Kubernetes Kapsule
+8. Any other kubernetes distribution
 
 # Why CNO
 
