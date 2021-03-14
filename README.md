@@ -34,7 +34,7 @@ CNO is built on the idea of filling the gap of adoption and avoid mistakes by:
 # Architecture overview and components
 ![Architecture](image/arch.png)
 
-CNO is an open source project mainly composed of 8 modules.
+CNO is an open source project mainly made up of 8 modules.
 1. CNO Console
 2. CNO API
 3. CNO CLI (cnoctl)
