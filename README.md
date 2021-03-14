@@ -7,7 +7,7 @@ CNO is an open source platform to onboard easily and securely development teams 
 * [Get Started](#quick-installation)
 * [Architecture and components](#architecture-overview-and-components)
 * [Quick Installation](#quick-installation)
-* [Register a new cluster into CNO HUB](#register-a-cluster-into-cno-bub)
+* [Register a cluster into CNO HUB](#register-a-cluster-into-cno-hub)
 
 # Supported Platforms
 
