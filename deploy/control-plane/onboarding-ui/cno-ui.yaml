@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+  namespace: cno-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cno-ui
+  template:
+    metadata:
+      labels:
+        app: cno-ui
+    spec:
+      containers:
+      - image: beopenit/cno-ui:v0.0.1-alpha
+        name: cno-ui
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        resources: {}
+        env:
+        - name: API_URL
+          value: $API_URL
+        - name: NOTIFICATION_URL
+          value: $NOTIFICATION_URL
+        - name: OIDC_URL
+          value: $OIDC_URL
+        - name: OIDC_REALM
+          value: $OIDC_REALM
+        - name: OIDC_CLIENT_ID
+          value: $OIDC_CLIENT_ID
+        - name: OIDC_CLIENT_SECRET
+          value: ""
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: cno-ui
+  type: ClusterIP
