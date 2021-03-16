@@ -21,6 +21,10 @@ eksctl create cluster \
 --ssh-access \
 --managed'''
 ```
+Update the current context of your local kubeconfig
+```
+aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
+```
 
 You can also install a Kubernetes cluster with [AWS CLI or via AWS console](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
 
@@ -41,6 +45,11 @@ az aks create --resource-group $RESOURCE_GROUP \
     --network-plugin kubenet \
     --network-policy calico
 ```
+Update the current context of your local kubeconfig 
+```
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+```
+
 #### Google Kubernetes Engine (GKE)
 
 
@@ -57,7 +66,10 @@ gcloud container clusters create $GKE_CLUSTER_NAME \
     --enable-autoscaling --min-nodes=1 --max-nodes=10 --num-nodes=1 \
     --zone=$GCP_ZONE --cluster-version=$GKE_VERSION
 ```
-
+Update the current context of your local kubeconfig 
+```
+gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone us-central1-c --project $GCP_PROJECT_NAME
+```
 #### OpenShift
 
 #### Minishift
