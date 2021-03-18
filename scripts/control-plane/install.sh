@@ -2,13 +2,13 @@
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
-[[ -z "${CNO_VERSION}" ]] && VERSION='main' || VERSION="${CNO_VERSION}"
+[ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
 
-[[ -z "${CNO_INSTALL_DATA_PLANE}" ]] && INSTALL_DATA_PLANE='true' || INSTALL_DATA_PLANE="${CNO_INSTALL_DATA_PLANE}"
+[ -z "${CNO_INSTALL_DATA_PLANE}" ] && INSTALL_DATA_PLANE='true' || INSTALL_DATA_PLANE="${CNO_INSTALL_DATA_PLANE}"
 
 # Set INGRESS to nginx if CNO_INGRESS env variable is not set
 # Ex: export CNO_INGRESS="nginx"
-[[ -z "${CNO_INGRESS}" ]] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
+[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
 if [ $INSTALL_DATA_PLANE != 'true' ] && [ $INSTALL_DATA_PLANE != 'false' ]; then
     echo "============================================================"
