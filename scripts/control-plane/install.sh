@@ -139,6 +139,7 @@ installCno() {
 
     if [ $INSTALL_DATA_PLANE = 'true' ]; then
         # deploy cno-data-plane
+        export KAFKA_BROKERS="cno-kafka-cluster-kafka-bootstrap:9093"
         waitForResourceCreated secrets $DEFAULT_AGENT_ID
         kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
         kubectl -n cno-system get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
@@ -147,7 +148,7 @@ installCno() {
         rm -rf /tmp/cno-*
         curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
         chmod +x cnodataplane.sh
-        ./cnodataplane.sh cno-kafka-cluster-kafka-bootstrap:9093
+        ./cnodataplane.sh
         rm -rf cnodataplane.sh
     fi
 

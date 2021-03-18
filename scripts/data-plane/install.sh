@@ -4,9 +4,6 @@
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
 
-# Ex: export CNO_INGRESS="nginx"
-[ -z "${KAFKA_BROKERS}" ] && KAFKA_BROKERS=$1
-
 hasKafkaBrokersUrl(){
     if [ -z "${KAFKA_BROKERS}" ]; then
         echo "============================================================"
