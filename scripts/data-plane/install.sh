@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
-[[ -z "${CNO_VERSION}" ]] && VERSION='main' || VERSION="${CNO_VERSION}"
+[ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
 
 hasKafkaBrokersUrl(){
-    if [[ -z "${KAFKA_BROKERS}" ]]; then
+    if [ -z "${KAFKA_BROKERS}" ]; then
         echo "============================================================"
         echo "  CNO installation failed."
         echo "  KAFKA_BROKERS is required."
@@ -28,7 +28,7 @@ hasKubectl() {
 
 checkMetricsServer() {
     hasMetricsServer=$(kubectl top nodes)
-    if [[ -z $hasMetricsServer ]]; then
+    if [ -z $hasMetricsServer ]; then
         echo "============================================================"
         echo "  WARNING Metrics Server not installed ! we will installed it."
         echo "============================================================"
@@ -38,28 +38,28 @@ checkMetricsServer() {
 }
 
 genAgentConfig(){
-    if [[ -z $CNO_AGENT_LICENCE ]]; then
+    if [ -z $CNO_AGENT_LICENCE ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_LICENCE environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
         echo "============================================================"
         return
     fi
-    if [[ -z $CNO_AGENT_CA_CERT ]]; then
+    if [ -z $CNO_AGENT_CA_CERT ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_CA_CERT environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
         echo "============================================================"
         return
     fi
-    if [[ -z $CNO_AGENT_USER_CERT ]]; then
+    if [ -z $CNO_AGENT_USER_CERT ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_USER_CERT environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
         echo "============================================================"
         return
     fi
-    if [[ -z $CNO_AGENT_USER_KEY ]]; then
+    if [ -z $CNO_AGENT_USER_KEY ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_USER_KEY environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
@@ -80,7 +80,7 @@ genAgentConfig(){
 
 checkCnoAgentConfig(){
     hasConfig=$(kubectl -n cno-system get secrets cno-agent-config)
-    if [[ -z $hasConfig ]]; then
+    if [ -z $hasConfig ]; then
         echo "============================================================"
         echo "  ERROR secrets/cno-agent is required."
         echo "============================================================"
