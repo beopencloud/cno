@@ -2,7 +2,7 @@
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
-[[ -z "${CNO_VERSION}" ]] && VERSION='main' || VERSION="${CNO_VERSION}"
+[ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
 
 # Delete ressources
 ## Delete the onboarding super-admin
