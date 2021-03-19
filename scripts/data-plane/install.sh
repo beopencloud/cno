@@ -28,7 +28,7 @@ hasKubectl() {
 
 checkMetricsServer() {
     hasMetricsServer=$(kubectl top nodes)
-    if [ -z $hasMetricsServer ]; then
+    if [ -z "${hasMetricsServer}" ]; then
         echo "============================================================"
         echo "  WARNING Metrics Server not installed ! we will installed it."
         echo "============================================================"
@@ -38,28 +38,28 @@ checkMetricsServer() {
 }
 
 genAgentConfig(){
-    if [ -z $CNO_AGENT_LICENCE ]; then
+    if [ -z "${CNO_AGENT_LICENCE}" ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_LICENCE environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
         echo "============================================================"
         return
     fi
-    if [ -z $CNO_AGENT_CA_CERT ]; then
+    if [ -z "${CNO_AGENT_CA_CERT}" ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_CA_CERT environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
         echo "============================================================"
         return
     fi
-    if [ -z $CNO_AGENT_USER_CERT ]; then
+    if [ -z "${CNO_AGENT_USER_CERT}" ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_USER_CERT environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
         echo "============================================================"
         return
     fi
-    if [ -z $CNO_AGENT_USER_KEY ]; then
+    if [ -z "${CNO_AGENT_USER_KEY}" ]; then
         echo "============================================================"
         echo " INFO CNO_AGENT_USER_KEY environment variable is empty."
         echo " INFO skip secrets/cno-agent creation."
@@ -80,7 +80,7 @@ genAgentConfig(){
 
 checkCnoAgentConfig(){
     hasConfig=$(kubectl -n cno-system get secrets cno-agent-config)
-    if [ -z $hasConfig ]; then
+    if [ -z "${hasConfig}" ]; then
         echo "============================================================"
         echo "  ERROR secrets/cno-agent is required."
         echo "============================================================"
@@ -111,13 +111,13 @@ waitForRessourceCreated() {
     echo "waiting for resource $1 $2 ...";
     timeout=120
     resource=""
-    while [ -z $resource ] && [ $timeout -gt 0 ];
+    while [ -z "${resource}" ] && [ "${timeout}" -gt 0 ];
     do
        resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
        timeout=$((timeout - 5))
        sleep 5s
     done
-    if [ ! $timeout -gt 0 ]; then
+    if [ ! "${timeout}" -gt 0 ]; then
         echo "timeout: $1 $2 not found"
         return
     fi

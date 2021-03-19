@@ -10,7 +10,7 @@
 # Ex: export CNO_INGRESS="nginx"
 [ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
-if [ $INSTALL_DATA_PLANE != 'true' ] && [ $INSTALL_DATA_PLANE != 'false' ]; then
+if [ "${INSTALL_DATA_PLANE}" != 'true' ] && [ "${INSTALL_DATA_PLANE}" != 'false' ]; then
     echo "============================================================"
     echo "  CNO installation failed."
     echo "  INSTALL_DATA_PLANE value must be true or false."
@@ -30,7 +30,7 @@ hasKubectl() {
 }
 
 hasSetDomainSuffix() {
-    if [ -z $INGRESS_DOMAIN ]; then
+    if [ -z "${INGRESS_DOMAIN}" ]; then
         echo "============================================================"
         echo "  CNO installation failed."
         echo "  Provide your cluster ingress domain suffix by exporting env variable INGRESS_DOMAIN."
@@ -137,7 +137,7 @@ installCno() {
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/ui-ingress.yaml
     kubectl -n cno-system patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno.$INGRESS_DOMAIN'}]"
 
-    if [ $INSTALL_DATA_PLANE = 'true' ]; then
+    if [ "${INSTALL_DATA_PLANE}" = 'true' ]; then
         # deploy cno-data-plane
         export KAFKA_BROKERS="cno-kafka-cluster-kafka-bootstrap:9093"
         waitForResourceCreated secrets $DEFAULT_AGENT_ID
@@ -181,11 +181,11 @@ waitForResourceCreated() {
        resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
        timeout=$((timeout - 5))
        sleep 5s
-       if [ -z $resource ]; then
+       if [ -z "${resource}" ]; then
            printf '...'
        fi
     done
-    if [ ! $timeout -gt 0 ]; then
+    if [ ! "${timeout}" -gt 0 ]; then
         echo "timeout: $1 $2 not found"
         return
     fi
