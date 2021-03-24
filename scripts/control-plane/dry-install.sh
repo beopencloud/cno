@@ -17,7 +17,6 @@ if [ "${INSTALL_DATA_PLANE}" != 'true' ] && [ "${INSTALL_DATA_PLANE}" != 'false'
     echo "============================================================"
     exit 1
 fi
-#!/bin/sh
 
 dry_run=false
 

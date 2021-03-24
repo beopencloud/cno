@@ -15,4 +15,4 @@ kubectl -n cno-system delete -f https://raw.githubusercontent.com/beopencloud/cn
 kubectl -n cno-system delete --all  all,ing,secret,cm
 
 # Delete cno namespace
-#kubectl delete namespace cno-system
+kubectl delete namespace cno-system
