@@ -19,7 +19,7 @@ eksctl create cluster \
 --nodes-max 3 \
 --with-oidc \
 --ssh-access \
---managed'''
+--managed
 ```
 Update the current context of your local kubeconfig
 ```
