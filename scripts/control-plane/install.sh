@@ -93,13 +93,12 @@ installCno() {
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml
 
     # Install Mysql cluster
-    MYSQL_PWD=$(openssl rand -base64 14)
-    kubectl -n cno-system create secret generic cno-api-db-secret  --from-literal=ROOT_PASSWORD="${MYSQL_PWD}"
+    kubectl -n cno-system create secret generic cno-api-db-secret  --from-literal=ROOT_PASSWORD="${SUPER_ADMIN_PASSWORD}"
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api-mysql.yaml
     waitForResourceCreated pod cno-api-mysql-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-api-mysql-0 --for=condition=ready pod --timeout=5m
     sleep 10s
-    kubectl -n cno-system exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
+    kubectl -n cno-system exec -it cno-api-mysql-0 -- mysql -u root -p$SUPER_ADMIN_PASSWORD -e "create database cnoapi"
 
     # Create CNO configMap
     kubectl create cm -n cno-system cno-config --from-literal OIDC_SERVER_BASE_URL=https://cno-auth.$INGRESS_DOMAIN \
@@ -157,14 +156,8 @@ installCno() {
     echo "  INFO CNO installation success."
     echo "  INFO make sure ssl-passthrough is configured on your ingress controller. Otherwise, communication between cno components may not work correctly."
     echo "  INFO You Have to create the DNS mapping for the following URLs and you ingress controller"
-    echo "  -->"
-    printf "     "
-    kubectl -n cno-system get ing -o jsonpath='{.items[*].spec.rules[*].host}' | sed -e 's| |\n     |g'
+    echo "  CNO URL: cno.$INGRESS_DOMAIN"
     echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
-    username=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_USERNAME}' | base64 --decode)
-    password=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 --decode)
-    echo "  KEYCLOAK master realm credentials: USERNAME: $username       PASSWORD: $password"
-    echo
     echo "============================================================"
     echo
 
