@@ -97,12 +97,6 @@ installCnoDataPlane() {
     # install cno-operator
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
 
-    echo
-    echo "============================================================"
-    echo "  CNO data-plane installation success."
-    echo "  KAFKA_BROKERS: $KAFKA_BROKERS"
-    echo "============================================================"
-    echo
 
 }
 
