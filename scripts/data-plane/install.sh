@@ -67,9 +67,9 @@ genAgentConfig(){
         return
     fi
     kubectl -n cno-system delete secret cno-agent-config
-    echo $CNO_AGENT_CA_CERT | base64 --decode > /tmp/cno-ca
-    echo $CNO_AGENT_USER_CERT | base64 --decode > /tmp/cno-kafka-cert
-    echo $CNO_AGENT_USER_KEY | base64 --decode > /tmp/cno-kafka-key
+    echo $CNO_AGENT_CA_CERT | base64 -d > /tmp/cno-ca
+    echo $CNO_AGENT_USER_CERT | base64 -d > /tmp/cno-kafka-cert
+    echo $CNO_AGENT_USER_KEY | base64 -d > /tmp/cno-kafka-key
     kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$CNO_AGENT_LICENCE --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     rm -rf /tmp/cno-*
 
