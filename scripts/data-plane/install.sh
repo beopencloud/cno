@@ -4,7 +4,7 @@
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
 
-[ -z "${CNO_INSTALL_INGRESS_CONTROLLER}" ] && INSTALL_INGRESS_CONTROLLER='true' || INSTALL_INGRESS_CONTROLLER="${CNO_INSTALL_INGRESS_CONTROLLER}"
+[ -z "${CNO_INSTALL_INGRESS_CONTROLLER}" ] && INSTALL_INGRESS_CONTROLLER='false' || INSTALL_INGRESS_CONTROLLER="${CNO_INSTALL_INGRESS_CONTROLLER}"
 
 [ -z "${CNO_IS_AN_EKS_CLUSTER}" ] && IS_AN_EKS_CLUSTER='true' || IS_AN_EKS_CLUSTER="${CNO_IS_AN_EKS_CLUSTER}"
 
@@ -37,12 +37,12 @@ ingressControllerInstallation(){
                 esac
             done
         fi
+        export IS_AN_EKS_CLUSTER=${IS_AN_EKS_CLUSTER}
+        curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
+        chmod +x ingressControllerInstallation.sh
+        ./ingressControllerInstallation.sh
+        rm -rf ingressControllerInstallation.sh
     fi
-    export IS_AN_EKS_CLUSTER=${IS_AN_EKS_CLUSTER}
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
-    chmod +x ingressControllerInstallation.sh
-    ./ingressControllerInstallation.sh
-    rm -rf ingressControllerInstallation.sh
 }
 
 hasKafkaBrokersUrl(){
