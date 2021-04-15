@@ -107,16 +107,16 @@ installCno() {
      --from-literal KAFKA_TLS_ENABLED="true"  --from-literal KAFKA_TOPIC_NOTIFICATION=cno-notification
 
     # kafka auth config
-    kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
-    kubectl -n cno-system get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
-    kubectl -n cno-system  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
+    kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
+    kubectl -n cno-system get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
+    kubectl -n cno-system  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
     kubectl  -n cno-system create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     # Clean
     rm -rf /tmp/cno-*
 
     # Install CNO API
     DEFAULT_AGENT_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
-    SUPER_ADMIN_PASSWORD=$(openssl rand -base64 14)
+    SUPER_ADMIN_PASSWORD=$(kubectl -n cno-system get  secret credential-cloud-keycloak -o jsonpath="{.data.ADMIN_PASSWORD}" | base64 -d)
     DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n cno-system create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
@@ -141,9 +141,9 @@ installCno() {
         # deploy cno-data-plane
         export KAFKA_BROKERS="cno-kafka-cluster-kafka-bootstrap:9093"
         waitForResourceCreated secrets $DEFAULT_AGENT_ID
-        kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 --decode > /tmp/cno-ca
-        kubectl -n cno-system get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 --decode > /tmp/cno-kafka-key
-        kubectl -n cno-system  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 --decode > /tmp/cno-kafka-cert
+        kubectl -n cno-system get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
+        kubectl -n cno-system get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
+        kubectl -n cno-system  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
         kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$DEFAULT_AGENT_ID --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
         rm -rf /tmp/cno-*
         curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
@@ -153,19 +153,10 @@ installCno() {
     fi
 
     echo
-    echo "============================================================"
+    echo "============================================================================================="
     echo "  INFO CNO installation success."
-    echo "  INFO make sure ssl-passthrough is configured on your ingress controller. Otherwise, communication between cno components may not work correctly."
-    echo "  INFO You Have to create the DNS mapping for the following URLs and you ingress controller"
-    echo "  -->"
-    printf "     "
-    kubectl -n cno-system get ing -o jsonpath='{.items[*].spec.rules[*].host}' | sed -e 's| |\n     |g'
-    echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
-    username=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_USERNAME}' | base64 --decode)
-    password=$(kubectl -n cno-system get secrets credential-cloud-keycloak -o jsonpath='{.data.ADMIN_PASSWORD}' | base64 --decode)
-    echo "  KEYCLOAK master realm credentials: USERNAME: $username       PASSWORD: $password"
-    echo
-    echo "============================================================"
+    echo "  cno.$INGRESS_DOMAIN CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
+    echo "============================================================================================="
     echo
 
 
