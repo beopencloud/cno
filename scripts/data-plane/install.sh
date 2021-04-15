@@ -4,6 +4,47 @@
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
 
+[ -z "${CNO_INSTALL_INGRESS_CONTROLLER}" ] && INSTALL_INGRESS_CONTROLLER='true' || INSTALL_INGRESS_CONTROLLER="${CNO_INSTALL_INGRESS_CONTROLLER}"
+
+[ -z "${CNO_IS_AN_EKS_CLUSTER}" ] && IS_AN_EKS_CLUSTER='true' || IS_AN_EKS_CLUSTER="${CNO_IS_AN_EKS_CLUSTER}"
+
+ingressControllerInstallation(){
+    if [ $INSTALL_INGRESS_CONTROLLER = "true" ]; then
+        NS_NGINX=$(kubectl get ns nginx-ingress -o jsonpath='{.metadata.name}' --ignore-not-found)
+        if [ -z $NS_NGINX ]; then
+            echo "nginx ingress controller will be installed"
+        else
+            if [ -z "${CNO_INSTALL_INGRESS_CONTROLLER}" ]; then
+                INSTALL_INGRESS_CONTROLLER="false"
+            else
+                while true; do
+                    read -p "Namespace nginx-ingress already exist ! would you like to overwrite you ingress controller (Y/n): " yn
+                    case $yn in
+                        [Yy]* ) INSTALL_INGRESS_CONTROLLER="true"; break;;
+                        [Nn]* ) INSTALL_INGRESS_CONTROLLER="false"; break;;
+                        * ) echo "Please answer yes or no.";;
+                    esac
+                done
+            fi
+        fi
+        if [ -z $CNO_IS_AN_EKS_CLUSTER ]; then
+            while true; do
+                read -p "Is an EKS cluster (Y/n): " yn
+                case $yn in
+                    [Yy]* ) IS_AN_EKS_CLUSTER="true"; break;;
+                    [Nn]* ) IS_AN_EKS_CLUSTER="false"; break;;
+                    * ) echo "Please answer yes or no.";;
+                esac
+            done
+        fi
+    fi
+    export IS_AN_EKS_CLUSTER=${IS_AN_EKS_CLUSTER}
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
+    chmod +x ingressControllerInstallation.sh
+    ./ingressControllerInstallation.sh
+    rm -rf ingressControllerInstallation.sh
+}
+
 hasKafkaBrokersUrl(){
     if [ -z "${KAFKA_BROKERS}" ]; then
         echo "============================================================"
@@ -126,10 +167,10 @@ waitForRessourceCreated() {
 # Create cno namespace
 kubectl create namespace cno-system > /dev/null 2>&1
 hasKubectl
+ingressControllerInstallation
 checkMetricsServer
 genAgentConfig
 hasKafkaBrokersUrl
 checkCnoAgentConfig
-checkServerApiClusterUrl
 installCnoDataPlane
 
