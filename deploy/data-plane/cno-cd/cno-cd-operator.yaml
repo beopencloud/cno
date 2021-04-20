@@ -243,6 +243,8 @@ spec:
                 properties:
                   autoDeploy:
                     type: boolean
+                  filter:
+                    type: boolean
                   image:
                     type: string
                   name:
