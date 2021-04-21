@@ -55,11 +55,27 @@ or
 
 ![cluter on CNO Hub](image/ExistingORnewcluster.PNG)
 
+### Add existing cluster
+
 For this part we go to use the button Add existing cluster; for the second we can talk about it in the end session of our documention that concerns **Add cloud providers**.
 
 Now, we select before the cloud provider available :
 
 ![cluter on CNO Hub](image/chooseCloudProvider.PNG)
 
-After selection, the two options are highlighted. We click on *Add existing cluster*
+After selection, the two options are highlighted. We click on *Add existing cluster* and this interface appears :
 
+![add cluster](image/addExistingcluster.PNG)
+
+On this interface we must to choose a cloud provider. Here this is AWS that it's available for this moment.
+
+### Add new cluster
+
+Here we want to create a new cluster and register it to CNO Hub. When you click on button `Add new Cluster` this interface come:
+
+![add new cluster](image/AddNewCluster.PNG)
+
+**Halt** When you click on add new cluster, you are asked to choose a cloud provider. However, before choosing a cloud, you must have added a cloud provider. How to add a cloud provider we will see in the last part.
+
+
+## III. Add cloud providers
