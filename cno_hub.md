@@ -34,12 +34,22 @@ On this interface you can put the name of your cluster, his Api server URL and t
 After clicking on ` Add ` a new window opens so that we can add the CNO agent to the cluster created.
 
 
-## II. Creating a Cluster form
+## II. Creating a Cluster form CNO Hub
 
 1. Platform supported
 
-This part of the creation of the cluster takes at the moment the AWS EKS platform.
+This part of the creation of the cluster support at the moment the AWS EKS platform.
 
 2. Register an existing Cluster
 
-We resume on the part where we had two options opposite to know Advanced 
+We resume on the part where we had two options opposite to know Advanced Registration and Add New cluster on CNO Hub. For create a cluster form CNO Hub you must click on `  Add New cluster on CNO Hub `. See the following picture
+
+![CreateCluster](image/Cnohub_create.PNG)
+
+After click on the button **Test** to access on the interface where you can see more cluster existing with their cloud providers and two button at the top right:
+> Add existing cluster
+
+and
+
+> Add new cluster
+
