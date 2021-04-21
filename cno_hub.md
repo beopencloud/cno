@@ -49,7 +49,17 @@ We resume on the part where we had two options opposite to know Advanced Registr
 After click on the button **Test** to access on the interface where you can see more cluster existing with their cloud providers and two button at the top right:
 > Add existing cluster
 
-and
+or
 
 > Add new cluster
+
+![cluter on CNO Hub](image/ExistingORnewcluster.PNG)
+
+For this part we go to use the button Add existing cluster; for the second we can talk about it in the end session of our documention that concerns **Add cloud providers**.
+
+Now, we select before the cloud provider available :
+
+![cluter on CNO Hub](image/chooseCloudProvider.PNG)
+
+After selection, the two options are highlighted. We click on *Add existing cluster*
 
