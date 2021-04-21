@@ -31,7 +31,7 @@ After this picture you can see the interface which permit to you to register you
 
 On this interface you can put the name of your cluster, his Api server URL and the cluster type. All the fields are required. If you finish to inform these field you can click on ` Add `.
 
-After clicking on ` Add ` a new window opens so that we can add the CNO agent to the cluster created.
+After clicking on ` Add ` a new window opens, copy outpout commands in order to install the CNO agent to the cluster created.
 
 
 ## II. Creating a Cluster form CNO Hub
