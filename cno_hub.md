@@ -35,3 +35,11 @@ After clicking on ` Add ` a new window opens so that we can add the CNO agent to
 
 
 ## II. Creating a Cluster form
+
+1. Platform supported
+
+This part of the creation of the cluster takes at the moment the AWS EKS platform.
+
+2. Register an existing Cluster
+
+We resume on the part where we had two options opposite to know Advanced 
