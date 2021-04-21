@@ -79,3 +79,20 @@ Here we want to create a new cluster and register it to CNO Hub. When you click 
 
 
 ## III. Add cloud providers
+
+1. Platform supported
+
+This part also support at the moment the AWS EKS platform.
+
+2. Add your cloud provider
+
+To add a cloud provider, we go to the left menu in the parameters section. We click on ` parameters ` then on ` cloud provider `
+
+![parameters](image/CloudProvider.PNG)
+
+On the interface that appeared we will see at the top right the button *Add New Cloud Provider*. 
+We click on this and we have another interface:
+
+![add new cloud](image/addCloudProvider.PNG)
+
+For the addition of the cloud, here it is only AWS that is available. Then we fill in the rest of the required fields to finally validate by pressing the add button.
