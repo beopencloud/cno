@@ -21,11 +21,11 @@ Add new Cluster to CNOHub
 ```
 ![CNOHub](image/addcluster.png)
 
-When you finish to click on this target we can see a other interface in wich there two fields. For register an existing cluster you must click on ` Advanced Registration `.
+When you finish to click on this target we can see a other interface in which there are two fields. For register an existing cluster you must click on ` Advanced Registration `.
 
 ![Register Cluster](image/Registrer.PNG)
 
-After this picture you can see the interface which permit to you to register your cluster form.But you must to have your cluster before this step.
+After this picture you can see the interface which permit to you to register your cluster in the part cluster form.But you must to have your cluster before this step.
 
 ![Advanced register](image/Advanced.PNG)
 
