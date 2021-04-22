@@ -67,7 +67,7 @@ After selection, the two options are highlighted. We click on *Add existing clus
 
 ![add cluster](image/addExistingcluster.PNG)
 
-On this interface we must to choose a cloud provider. Here this is AWS that it's available for this moment.
+On this interface we must to choose a cloud provider.Then you choice the cluster that existing on this cloud provider and click on ` Add `. Here this is AWS that it's available for this moment.
 
 ### Add new cluster
 
