@@ -15,7 +15,7 @@
 
 2. Step to register an existing cluster
 
-To access the CNO HUB you have to follow [CNO UI](https://cno.cno-dev.beopenit.com/). Once on the CNO interface, you must click on ``` CNOHub ``` at the top right on the dashboard to access the registration space of an existing cluster. After this we can see other interface, at the top left click on 
+To access to CNO HUB you can follow [CNO UI](https://cno.cno-dev.beopenit.com/). Once on the CNO interface, you must click on ``` CNOHub ``` at the top right on the dashboard to access the registration space of an existing cluster. After this we can see other interface, at the top left click on 
 ``` 
 Add new Cluster to CNOHub 
 ```
