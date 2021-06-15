@@ -69,7 +69,7 @@ spec:
               key: licence
         volumeMounts:
         - name: kafkaconfig
-          mountPath: "/root/.key"
+          mountPath: "/app/.key"
           readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
