@@ -107,9 +107,15 @@ spec:
           value: $DEFAULT_CLUSTER_ID
         - name: DEFAULT_CLUSTER_API_SERVER_URL
           value: $DEFAULT_CLUSTER_API_SERVER_URL
+        - name: KAFKA_CA_CERT
+          value: /.key/caFile
+        - name: KAFKA_CLIENT_CERT
+          value: /.key/certFile
+        - name: KAFKA_CLIENT_KEY
+          value: /.key/keyFile
         volumeMounts:
         - name: kafkaconfig
-          mountPath: "/root/.key"
+          mountPath: "/.key"
           readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
