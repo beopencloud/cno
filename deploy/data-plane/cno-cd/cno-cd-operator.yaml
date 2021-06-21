@@ -244,7 +244,7 @@ spec:
                   autoDeploy:
                     type: boolean
                   filter:
-                    type: boolean
+                    type: string
                   image:
                     type: string
                   name:

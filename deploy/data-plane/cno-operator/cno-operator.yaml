@@ -949,7 +949,7 @@ spec:
       serviceAccountName: onboarding-operator-kubernetes
       containers:
       - name: onboarding-operator-kubernetes
-        image: beopenit/onboarding-operator-kubernetes:v0.0.1-alpha
+        image: beopenit/onboarding-operator-kubernetes:latest
         command:
         - onboarding-operator-kubernetes
         imagePullPolicy: Always
