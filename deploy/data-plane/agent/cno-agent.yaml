@@ -49,7 +49,7 @@ spec:
         run: cno-agent
     spec:
       containers:
-      - image: beopenit/cno-agent:latest
+      - image: beopenit/cno-agent:1.0.0-rc
         imagePullPolicy: Always
         name: cno-agent
         resources: {}
