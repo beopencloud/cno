@@ -663,8 +663,8 @@ data:
         {
           "id": "c39b01dd-c137-4a95-b3ea-91b297110b43",
           "clientId": "cno-api",
-          "adminUrl": "https://cno-auth.$AUTH_URL/",
-          "baseUrl": "https://cno-auth.$AUTH_URL/",
+          "adminUrl": "https://$AUTH_URL/",
+          "baseUrl": "https://$AUTH_URL/",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,

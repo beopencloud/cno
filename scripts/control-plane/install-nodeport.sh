@@ -8,7 +8,7 @@
 
 # Set INGRESS to nginx if CNO_INGRESS env variable is not set
 # Ex: export CNO_INGRESS="nginx"
-[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
+#[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
 if [ "${INSTALL_DATA_PLANE}" != 'true' ] && [ "${INSTALL_DATA_PLANE}" != 'false' ]; then
     echo "============================================================"
@@ -29,16 +29,6 @@ hasKubectl() {
     fi
 }
 
-hasSetDomainSuffix() {
-    if [ -z "${INGRESS_DOMAIN}" ]; then
-        echo "============================================================"
-        echo "  CNO installation failed."
-        echo "  Provide your cluster ingress domain suffix by exporting env variable INGRESS_DOMAIN."
-        echo "  Ex: $ export INGRESS_DOMAIN=cluster1.beopenit.com"
-        echo "============================================================"
-        exit 1
-    fi
-}
 
 installCno() {
     # Create cno namespace
@@ -47,11 +37,11 @@ installCno() {
     # Install keycloak Operator
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
 
-    # Deploy keycloak Cluster and patch the ingress
+    # Deploy keycloak Cluster and patch the service
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"cno-auth.$INGRESS_DOMAIN"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
       kubectl -n cno-system apply -f  -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
 
@@ -72,7 +62,7 @@ installCno() {
     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka-nodeport.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
