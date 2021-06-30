@@ -29,6 +29,16 @@ hasKubectl() {
     fi
 }
 
+hasSetLoadBalancerIP() {
+    if [ -z "${LOADBALANCER_IP}" ]; then
+        echo "============================================================"
+        echo "  CNO installation failed."
+        echo "  The ip of a loadbalancer for your cluster nodes by exporting env variable LOADBALANCER_IP."
+        echo "  Ex: $ export LOADBALANCER_IP=x.x.x.x"
+        echo "============================================================"
+        exit 1
+    fi
+}
 
 installCno() {
     # Create cno namespace
@@ -41,7 +51,7 @@ installCno() {
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$LOADBALANCER_IP"'|g' |
       kubectl -n cno-system apply -f  -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
 
@@ -55,7 +65,7 @@ installCno() {
     fi
     kubectl -n cno-system rollout status deploy keycloak-postgresql # Rollout keycloak postgres
     #kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/keycloak-ingress.yaml
-    kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
+    #kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
 
     # Install kafka operator
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml
@@ -74,7 +84,7 @@ installCno() {
 
     # Restart keycloak to reload realm cno
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$INGRESS_DOMAIN"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$LOADBALANCER_IP"'|g' |
       kubectl -n cno-system apply -f  -
     sleep 30s
     kubectl -n cno-system delete pod keycloak-0
