@@ -62,7 +62,7 @@ installCno() {
     kubectl -n cno-system rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka-nodeport.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n cno-system apply -f -
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka-nodeport.yaml | kubectl -n cno-system apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
