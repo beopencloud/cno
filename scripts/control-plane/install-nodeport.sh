@@ -51,7 +51,7 @@ installCno() {
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n cno-system create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"$LOADBALANCER_IP"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"keycloak.cno-system.svc.cluster.local:8443"'|g' |
       kubectl -n cno-system apply -f  -
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
 
@@ -64,8 +64,6 @@ installCno() {
         kubectl -n cno-system patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql.yaml)"
     fi
     kubectl -n cno-system rollout status deploy keycloak-postgresql # Rollout keycloak postgres
-    #kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/keycloak-ingress.yaml
-    #kubectl -n cno-system patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
 
     # Install kafka operator
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml
@@ -81,6 +79,9 @@ installCno() {
     kubectl -n cno-system wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
+    # Get the kafka brokers nodeport
+    KAFKA_NODEPORT=$(kubectl -n cno-system get service my-cluster-kafka-external-bootstrap -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
+    echo "  The node port number of the external bootstrap service is $KAFKA_NODEPORT"
 
     # Restart keycloak to reload realm cno
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
@@ -105,7 +106,7 @@ installCno() {
     kubectl -n cno-system exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
 
     # Create CNO configMap
-    kubectl create cm -n cno-system cno-config --from-literal OIDC_SERVER_BASE_URL=https://cno-auth.$INGRESS_DOMAIN \
+    kubectl create cm -n cno-system cno-config --from-literal OIDC_SERVER_BASE_URL=https://keycloak.cno-system.svc.cluster.local:8443 \
      --from-literal OIDC_REALM=cno-realm --from-literal KAFKA_BROKERS=kafka-cluster-kafka-external-bootstrap:9094 \
      --from-literal KAFKA_TLS_ENABLED="true"  --from-literal KAFKA_TOPIC_NOTIFICATION=cno-notification
 
@@ -123,22 +124,19 @@ installCno() {
     DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n cno-system create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g; s|$OIDC_SERVER_BASE_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|bootstrap-cno.'"$INGRESS_DOMAIN"':443|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|NodePort|g' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://keycloak.cno-system.svc.cluster.local:8443|g; s|$OIDC_SERVER_BASE_URL|https://keycloak.cno-system.svc.cluster.local:8443|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$LOADBALANCER_IP"':'"$KAFKA_NODEPORT"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|NodePort|g' |
         kubectl -n cno-system apply -f -
-    #kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/api-ingress.yaml
-    kubectl -n cno-system patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n cno-system rollout status deploy cno-api
+    CNO_API_NODEPORT=$(kubectl -n cno-system get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
     # Install CNO NOTIFICATION
     kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/notification/cno-notification.yaml
-    #kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/notification-ingress.yaml
-    kubectl -n cno-system patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
+    CNO_NOTIFICATION_NODEPORT=$(kubectl -n cno-system get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
 
     # Install CNO UI
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|https://cno-auth.'"$INGRESS_DOMAIN"'|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|NodePort|g' |
+        sed 's|$API_URL|https://'"$LOADBALANCER_IP"':'"$CNO_API_NODEPORT"'|g;  s|$NOTIFICATION_URL|https://'"$LOADBALANCER_IP"':'"$CNO_NOTIFICATION_NODEPORT"'|g; s|$OIDC_URL|https://keycloak.cno-system.svc.cluster.local:8443|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|NodePort|g' |
         kubectl -n cno-system apply -f -
-    #kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/ui-ingress.yaml
-    kubectl -n cno-system patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno.$INGRESS_DOMAIN'}]"
+    CNO_UI_NODEPORT=$(kubectl -n cno-system get service cno-ui -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
 
     if [ "${INSTALL_DATA_PLANE}" = 'true' ]; then
         # deploy cno-data-plane
@@ -158,7 +156,8 @@ installCno() {
     echo
     echo "============================================================================================="
     echo "  INFO CNO installation success."
-    echo "  cno.$INGRESS_DOMAIN CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
+    echo "  You can access CNO at https://'"$LOADBALANCER_IP"':'"$CNO_UI_NODEPORT"'"
+    echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
     echo "============================================================================================="
     echo
 
@@ -188,6 +187,6 @@ waitForResourceCreated() {
 
 
 hasKubectl
-hasSetDomainSuffix
+hasSetLoadBalancerIP
 installCno
 
