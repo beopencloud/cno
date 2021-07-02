@@ -122,8 +122,8 @@ installCno() {
 
     # kafka auth config
     kubectl -n $NAMESPACE get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
-    kubectl -n $NAMESPACE get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
-    kubectl -n $NAMESPACE  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
+    kubectl -n $NAMESPACE get secret/cno-kafka-superadmin-credential -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
+    kubectl -n $NAMESPACE  get secret/cno-kafka-superadmin-credential -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
     kubectl  -n $NAMESPACE create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     # Clean
     rm -rf /tmp/cno-*
@@ -139,7 +139,7 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy cno-api
     CNO_API_NODEPORT=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
     # Install CNO NOTIFICATION
-    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/notification/cno-notification.yaml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g' | kubectl -n $NAMESPACE apply -f -
     CNO_NOTIFICATION_NODEPORT=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
 
     # Install CNO UI
