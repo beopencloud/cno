@@ -160,7 +160,7 @@ roleRef:
   name: mysql-operator
 subjects:
   - name: mysql-operator
-    namespace: "cno-system"
+    namespace: $NAMESPACE
     kind: ServiceAccount
 ---
 # Source: mysql-operator/templates/orc-service.yaml
@@ -251,7 +251,7 @@ spec:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
           args:
-            - --leader-election-namespace=cno-system
+            - --leader-election-namespace=$NAMESPACE
             # connect to orchestrator on localhost
             - --orchestrator-uri=http://127.0.0.1:3000/api
             - --sidecar-image=quay.io/presslabs/mysql-operator-sidecar:0.4.0

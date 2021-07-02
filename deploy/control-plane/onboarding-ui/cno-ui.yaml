@@ -4,7 +4,6 @@ metadata:
   labels:
     app: cno-ui
   name: cno-ui
-  namespace: cno-system
 spec:
   replicas: 1
   selector:
