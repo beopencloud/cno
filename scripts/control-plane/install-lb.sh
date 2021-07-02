@@ -92,7 +92,7 @@ installCno() {
 
 
     # Install Mysql Operator
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # Install Mysql cluster
     MYSQL_PWD=$(openssl rand -base64 14)
