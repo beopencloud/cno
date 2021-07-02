@@ -80,7 +80,7 @@ installCno() {
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
     # Get the kafka brokers nodeport
-    KAFKA_NODEPORT=$(kubectl -n cno-system get service my-cluster-kafka-external-bootstrap -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
+    KAFKA_NODEPORT=$(kubectl -n cno-system get service cno-kafka-external-bootstrap -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
     echo "  The node port number of the external bootstrap service is $KAFKA_NODEPORT"
 
     # Restart keycloak to reload realm cno

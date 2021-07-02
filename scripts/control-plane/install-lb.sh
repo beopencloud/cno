@@ -69,8 +69,8 @@ installCno() {
     # Create cno kafka super-admin user
     kubectl -n cno-system  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
     # Get the kafka brokers nodeport
-    KAFKA_BOOTSTRAP=$(kubectl -n cno-system get service my-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}')
-    KAFKA_BOOTSTRAP_IP=$(kubectl -n cno-system get service my-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    KAFKA_BOOTSTRAP=$(kubectl -n cno-system get service cno-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}')
+    KAFKA_BOOTSTRAP_IP=$(kubectl -n cno-system get service cno-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
     echo "  The bootstrap load balancer address is $KAFKA_BOOTSTRAP"
     echo "  The bootstrap load balancer is $KAFKA_BOOTSTRAP_IP"
 
