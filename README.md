@@ -79,7 +79,7 @@ export CNO_POD_POLICY_ACTIVITED=true
 ### Install CNO
 
 ```
-export CNO_VERSION=main
+export CNO_VERSION=1.0.0-rc
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh
 ```
 
