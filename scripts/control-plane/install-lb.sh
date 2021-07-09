@@ -78,9 +78,19 @@ installCno() {
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
     # Create cno kafka super-admin user
     kubectl -n $NAMESPACE  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
-    # Get the kafka brokers nodeport
-    KAFKA_BOOTSTRAP=$(kubectl -n $NAMESPACE get service cno-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}')
-    KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    # Get the kafka brokers lb
+    KAFKA_BOOTSTRAP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}')
+    KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    while true; do                                                                     
+        KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')        
+        if [[ -z "$KAFKA_BOOTSTRAP_IP" ]]; then                                               
+            echo "Waiting for endpoint readiness..."                                   
+            sleep 10                                                                   
+        else                                                                           
+            sleep 2                                                                                                                                          
+            break                                                                      
+        fi                                                                             
+    done
     echo "  The bootstrap load balancer address is $KAFKA_BOOTSTRAP"
     echo "  The bootstrap load balancer is $KAFKA_BOOTSTRAP_IP"
 
@@ -101,7 +111,7 @@ installCno() {
     waitForResourceCreated pod cno-api-mysql-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-api-mysql-0 --for=condition=ready pod --timeout=5m
     sleep 10s
-    kubectl -n $NAMESPACE exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
+    kubectl -n $NAMESPACE exec -it cno-api-mysql-0 -c mysql -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
 
     # Create CNO configMap
     kubectl create cm -n $NAMESPACE cno-config --from-literal OIDC_SERVER_BASE_URL=https://keycloak.$NAMESPACE.svc.cluster.local:8443 \
@@ -110,8 +120,8 @@ installCno() {
 
     # kafka auth config
     kubectl -n $NAMESPACE get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
-    kubectl -n $NAMESPACE get secret/cno-kafka-superadmin-credential -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
-    kubectl -n $NAMESPACE  get secret/cno-kafka-superadmin-credential -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
+    kubectl -n $NAMESPACE get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
+    kubectl -n $NAMESPACE  get secret/cno-kafka-superadmin -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
     kubectl  -n $NAMESPACE create secret generic kafkaconfig --from-literal=KAFKA_BROKERS=kafka-cluster-kafka-bootstrap --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     # Clean
     rm -rf /tmp/cno-*
@@ -122,7 +132,7 @@ installCno() {
     DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n $NAMESPACE create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://keycloak.$NAMESPACE.svc.cluster.local:8443|g; s|$OIDC_SERVER_BASE_URL|https://keycloak.$NAMESPACE.svc.cluster.local:8443|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$KAFKA_BOOTSTRAP_IP"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|LoadBalancer|g; s|$NAMESPACE|'"$NAMESPACE"'' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|https://keycloak.'"$NAMESPACE"'.svc.cluster.local:8443|g; s|$OIDC_SERVER_BASE_URL|https://keycloak.'"$NAMESPACE"'.svc.cluster.local:8443|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$KAFKA_BOOTSTRAP_IP"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|LoadBalancer|g; s|$NAMESPACE|'"$NAMESPACE"'|g' |
         kubectl -n $NAMESPACE apply -f -
     kubectl -n $NAMESPACE rollout status deploy cno-api
     CNO_API_LB=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
@@ -132,9 +142,19 @@ installCno() {
 
     # Install CNO UI
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://'"$CNO_API_LB"'|g;  s|$NOTIFICATION_URL|https://'"$CNO_NOTIFICATION_LB"'|g; s|$OIDC_URL|https://keycloak.$NAMESPACE.svc.cluster.local:8443|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|LoadBalancer|g' |
+        sed 's|$API_URL|https://'"$CNO_API_LB"'|g;  s|$NOTIFICATION_URL|https://'"$CNO_NOTIFICATION_LB"'|g; s|$OIDC_URL|https://keycloak.'"$NAMESPACE"'.svc.cluster.local:8443|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|LoadBalancer|g' |
         kubectl -n $NAMESPACE apply -f -
     CNO_UI_LB=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    while true; do                                                                     
+        CNO_UI_LB=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')        
+        if [[ -z "$CNO_UI_LB" ]]; then                                               
+            echo "Waiting for endpoint readiness..."                                   
+            sleep 10                                                                   
+        else                                                                           
+            sleep 2                                                                                                                                          
+            break                                                                      
+        fi                                                                             
+    done
 
     if [ "${INSTALL_DATA_PLANE}" = 'true' ]; then
         # deploy cno-data-plane
@@ -154,7 +174,7 @@ installCno() {
     echo
     echo "============================================================================================="
     echo "  INFO CNO installation success."
-    echo "  You can access CNO at https://'"$CNO_UI_LB"'"
+    echo "  You can access CNO at https://$CNO_UI_LB"
     echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
     echo "============================================================================================="
     echo
