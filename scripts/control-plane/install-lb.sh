@@ -8,7 +8,7 @@ do
 done
 
 # Set NAMESPACE to cno-system if -n flag is empty
-[ -z "${NAMESPACE}" ] && NAMESPACE='$NAMESPACE'
+[ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
@@ -18,7 +18,7 @@ done
 
 # Set INGRESS to nginx if CNO_INGRESS env variable is not set
 # Ex: export CNO_INGRESS="nginx"
-[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
+#[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
 if [ "${INSTALL_DATA_PLANE}" != 'true' ] && [ "${INSTALL_DATA_PLANE}" != 'false' ]; then
     echo "============================================================"
@@ -39,17 +39,6 @@ hasKubectl() {
     fi
 }
 
-hasSetDomainSuffix() {
-    if [ -z "${INGRESS_DOMAIN}" ]; then
-        echo "============================================================"
-        echo "  CNO installation failed."
-        echo "  Provide your cluster ingress domain suffix by exporting env variable INGRESS_DOMAIN."
-        echo "  Ex: $ export INGRESS_DOMAIN=cluster1.beopenit.com"
-        echo "============================================================"
-        exit 1
-    fi
-}
-
 installCno() {
     # Create cno namespace
     kubectl create namespace $NAMESPACE > /dev/null 2>&1
@@ -57,11 +46,11 @@ installCno() {
     # Install keycloak Operator
     kubectl -n $NAMESPACE apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
 
-    # Deploy keycloak Cluster and patch the ingress
+    # Deploy keycloak Cluster and patch the service
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n $NAMESPACE create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"keycloak-discovery.$NAMESPACE.svc.cluster.local:8080"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g' |
       kubectl -n $NAMESPACE apply -f  -
     kubectl -n $NAMESPACE apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
 
@@ -74,15 +63,13 @@ installCno() {
         kubectl -n $NAMESPACE patch deployment keycloak-postgresql --patch "$(curl --silent https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql.yaml)"
     fi
     kubectl -n $NAMESPACE rollout status deploy keycloak-postgresql # Rollout keycloak postgres
-    #kubectl -n $NAMESPACE apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/keycloak-ingress.yaml
-    #kubectl -n $NAMESPACE patch ing/cno-keycloak --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-auth.$INGRESS_DOMAIN'}]"
 
     # Install kafka operator
-    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
     kubectl -n $NAMESPACE rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/kafka-lb.yaml | kubectl -n $NAMESPACE apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
@@ -91,6 +78,21 @@ installCno() {
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
     # Create cno kafka super-admin user
     kubectl -n $NAMESPACE  apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
+    # Get the kafka brokers lb
+    KAFKA_BOOTSTRAP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}')
+    KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    while true; do                                                                     
+        KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')        
+        if [[ -z "$KAFKA_BOOTSTRAP_IP" ]]; then                                               
+            echo "Waiting for endpoint readiness..."                                   
+            sleep 10                                                                   
+        else                                                                           
+            sleep 2                                                                                                                                          
+            break                                                                      
+        fi                                                                             
+    done
+    echo "  The bootstrap load balancer address is $KAFKA_BOOTSTRAP"
+    echo "  The bootstrap load balancer is $KAFKA_BOOTSTRAP_IP"
 
     # Restart keycloak to reload realm cno
     sleep 30s
@@ -100,7 +102,7 @@ installCno() {
 
 
     # Install Mysql Operator
-    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # Install Mysql cluster
     MYSQL_PWD=$(openssl rand -base64 14)
@@ -109,7 +111,7 @@ installCno() {
     waitForResourceCreated pod cno-api-mysql-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-api-mysql-0 --for=condition=ready pod --timeout=5m
     sleep 10s
-    kubectl -n $NAMESPACE exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
+    kubectl -n $NAMESPACE exec -it cno-api-mysql-0 -c mysql -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
 
     # Create CNO configMap
     kubectl create cm -n $NAMESPACE cno-config --from-literal OIDC_SERVER_BASE_URL=http://keycloak-discovery.$NAMESPACE.svc.cluster.local:8080 \
@@ -130,22 +132,29 @@ installCno() {
     DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n $NAMESPACE create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|bootstrap-cno.'"$INGRESS_DOMAIN"':443|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$KAFKA_BOOTSTRAP_IP"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|LoadBalancer|g; s|$NAMESPACE|'"$NAMESPACE"'|g' |
         kubectl -n $NAMESPACE apply -f -
-    kubectl -n $NAMESPACE apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/api-ingress.yaml
-    kubectl -n $NAMESPACE patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n $NAMESPACE rollout status deploy cno-api
+    CNO_API_LB=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
     # Install CNO NOTIFICATION
-    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/notification/cno-notification.yaml
-    kubectl -n $NAMESPACE apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/notification-ingress.yaml
-    kubectl -n $NAMESPACE patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g'  | kubectl -n $NAMESPACE apply -f -
+    CNO_NOTIFICATION_LB=$(kubectl -n $NAMESPACE get service cno-notification -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
 
     # Install CNO UI
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g' |
+        sed 's|$API_URL|https://'"$CNO_API_LB"'|g;  s|$NOTIFICATION_URL|https://'"$CNO_NOTIFICATION_LB"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|LoadBalancer|g' |
         kubectl -n $NAMESPACE apply -f -
-    kubectl -n $NAMESPACE apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/ingress/$INGRESS/ui-ingress.yaml
-    kubectl -n $NAMESPACE patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno.$INGRESS_DOMAIN'}]"
+    CNO_UI_LB=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    while true; do                                                                     
+        CNO_UI_LB=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')        
+        if [[ -z "$CNO_UI_LB" ]]; then                                               
+            echo "Waiting for endpoint readiness..."                                   
+            sleep 10                                                                   
+        else                                                                           
+            sleep 2                                                                                                                                          
+            break                                                                      
+        fi                                                                             
+    done
 
     if [ "${INSTALL_DATA_PLANE}" = 'true' ]; then
         # deploy cno-data-plane
@@ -165,7 +174,8 @@ installCno() {
     echo
     echo "============================================================================================="
     echo "  INFO CNO installation success."
-    echo "  cno.$INGRESS_DOMAIN CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
+    echo "  You can access CNO at https://$CNO_UI_LB"
+    echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
     echo "============================================================================================="
     echo
 
@@ -195,6 +205,5 @@ waitForResourceCreated() {
 
 
 hasKubectl
-hasSetDomainSuffix
 installCno
 

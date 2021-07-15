@@ -78,11 +78,43 @@ export CNO_POD_POLICY_ACTIVITED=true
 
 ### Install CNO
 
+> if your cluster has PSPs, set the CNO_POD_POLICY_ACTIVITED variable to true before install:
+
 ```
-export CNO_VERSION=main
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh
+export CNO_POD_POLICY_ACTIVITED=true
 ```
 
+#### 1. install using ingress to expose applications
+
+> You must provide a domain name for the ingress resources
+
+> Replace \<namespace> with the desired target namespace. default is cno-system
+
+```
+export CNO_VERSION=main
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
+```
+
+#### 2. install using service type LoadBalancer to expose applications
+
+> Replace \<namespace> with the desired target namespace. default is cno-system
+
+```
+export CNO_VERSION=main
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
+```
+
+#### 3. install using service type NodePort to expose applications
+
+> You must give an address to use as the enpoint for the nodeports eg. LOADBALANCER_IP=x.x.x.x. Could be one of the cluster nodes or a loadbalancer IP.
+
+> Replace \<namespace> with the desired target namespace. default is cno-system
+
+```
+export CNO_VERSION=main
+export LOADBALANCER_IP=x.x.x.x
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-nodeport.sh | sh -s -- -n <namespace>
+```
 ####  Enjoy
 
 You can login to your CNO console via cno.$INGRESS_DOMAIN.
