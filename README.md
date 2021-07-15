@@ -117,7 +117,7 @@ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts
 ```
 ####  Enjoy
 
-You can login to your CNO console via cno.$INGRESS_DOMAIN.
+You can login to your CNO console via cno.$INGRESS_DOMAIN if you installed with ingress, or via the loadbalancer annd odeport addresses.
 You will see CNO URL and credentials into post installation outpout.
 
 ```
