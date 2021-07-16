@@ -10,7 +10,6 @@ metadata:
   labels:
     app: cno-api
   name: cno-api
-  namespace: cno-system
 spec:
   rules:
   - host: cno-api.cluster.beopenit.com
