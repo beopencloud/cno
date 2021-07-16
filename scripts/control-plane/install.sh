@@ -158,7 +158,7 @@ installCno() {
         rm -rf /tmp/cno-*
         curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
         chmod +x cnodataplane.sh
-        ./cnodataplane.sh
+        ./cnodataplane.sh -n $NAMESPACE
         rm -rf cnodataplane.sh
     fi
 
