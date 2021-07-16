@@ -142,14 +142,14 @@ checkCnoAgentConfig(){
 installCnoDataPlane() {
     # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g' |
         kubectl -n $NAMESPACE apply -f -
 
     # install cno-operator
-    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # install cno-cd-operator
-    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml
+    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
 }
 
 # waitForRessourceCreated resource resourceName
