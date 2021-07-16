@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   name: onboarding-operator-kubernetes
   annotations:
-    namespace: cno-system
+    namespace: $NAMESPACE
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -11,7 +11,6 @@ metadata:
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
   name: cno-admin-cluster-role
-  namespace: cno-system
 rules:
   - apiGroups:
       - ""
@@ -925,7 +924,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: onboarding-operator-kubernetes
-    namespace: cno-system
+    namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: cluster-admin
@@ -935,7 +934,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: onboarding-operator-kubernetes
-  namespace: cno-system
 spec:
   replicas: 1
   selector:

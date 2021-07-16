@@ -13,7 +13,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cno-agent
-  namespace: cno-system
+  namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: cluster-admin
