@@ -1,5 +1,15 @@
 #!/bin/sh
 
+while getopts n: flag
+do
+    case "${flag}" in
+        n) NAMESPACE=${OPTARG};;
+    esac
+done
+
+# Set NAMESPACE to cno-system if -n flag is empty
+[ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
+
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
@@ -107,11 +117,11 @@ genAgentConfig(){
         echo "============================================================"
         return
     fi
-    kubectl -n cno-system delete secret cno-agent-config
+    kubectl -n $NAMESPACE delete secret cno-agent-config
     echo $CNO_AGENT_CA_CERT | base64 -d > /tmp/cno-ca
     echo $CNO_AGENT_USER_CERT | base64 -d > /tmp/cno-kafka-cert
     echo $CNO_AGENT_USER_KEY | base64 -d > /tmp/cno-kafka-key
-    kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$CNO_AGENT_LICENCE --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
+    kubectl -n $NAMESPACE create secret generic cno-agent-config --from-literal=licence=$CNO_AGENT_LICENCE --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     rm -rf /tmp/cno-*
 
     echo "============================================================"
@@ -120,7 +130,7 @@ genAgentConfig(){
 }
 
 checkCnoAgentConfig(){
-    hasConfig=$(kubectl -n cno-system get secrets cno-agent-config)
+    hasConfig=$(kubectl -n $NAMESPACE get secrets cno-agent-config)
     if [ -z "${hasConfig}" ]; then
         echo "============================================================"
         echo "  ERROR secrets/cno-agent is required."
@@ -133,13 +143,13 @@ installCnoDataPlane() {
     # install cno-agent
     curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
         sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
-        kubectl -n cno-system apply -f -
+        kubectl -n $NAMESPACE apply -f -
 
     # install cno-operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
+    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
 
     # install cno-cd-operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml
+    kubectl -n $NAMESPACE apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml
 }
 
 # waitForRessourceCreated resource resourceName
@@ -149,7 +159,7 @@ waitForRessourceCreated() {
     resource=""
     while [ -z "${resource}" ] && [ "${timeout}" -gt 0 ];
     do
-       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
+       resource=$(kubectl -n $NAMESPACE get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
        timeout=$((timeout - 5))
        sleep 5s
     done
@@ -160,7 +170,7 @@ waitForRessourceCreated() {
     echo "$1 $2 successfully deployed"
 }
 # Create cno namespace
-kubectl create namespace cno-system > /dev/null 2>&1
+kubectl create namespace $NAMESPACE > /dev/null 2>&1
 hasKubectl
 ingressControllerInstallation
 checkMetricsServer

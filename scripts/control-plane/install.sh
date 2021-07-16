@@ -8,7 +8,7 @@ do
 done
 
 # Set NAMESPACE to cno-system if -n flag is empty
-[ -z "${NAMESPACE}" ] && NAMESPACE='$NAMESPACE'
+[ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
