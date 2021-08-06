@@ -4,6 +4,7 @@ metadata:
   name: cno-kafka-cluster
 spec:
   kafka:
+    image: $KAFKA_BROKER_IMAGE
     version: 2.5.0
     replicas: 1
     listeners:
@@ -35,9 +36,14 @@ spec:
     storage:
       type: ephemeral
   zookeeper:
+    image: $KAFKA_ZOOKEEPER_IMAGE
     replicas: 1
     storage:
       type: ephemeral
   entityOperator:
-    topicOperator: {}
-    userOperator: {}
+    topicOperator: 
+      image: $KAFKA_TOPIC_OPERATOR_IMAGE
+    userOperator: 
+      image: $KAFKA_USER_OPERATOR_IMAGE
+    tlsSidecar:
+      image: $KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE

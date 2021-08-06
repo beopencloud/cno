@@ -237,7 +237,7 @@ spec:
       serviceAccountName: mysql-operator
       containers:
         - name: operator
-          image: "quay.io/presslabs/mysql-operator:0.4.0"
+          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: ORC_TOPOLOGY_USER
@@ -254,7 +254,8 @@ spec:
             - --leader-election-namespace=$NAMESPACE
             # connect to orchestrator on localhost
             - --orchestrator-uri=http://127.0.0.1:3000/api
-            - --sidecar-image=quay.io/presslabs/mysql-operator-sidecar:0.4.0
+            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
+            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
           resources:
             {}
           # TODO: add livenessProbe to controller
@@ -263,7 +264,7 @@ spec:
           #     path: /health
           #     port: 80
         - name: orchestrator
-          image: quay.io/presslabs/mysql-operator-orchestrator:0.4.0
+          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

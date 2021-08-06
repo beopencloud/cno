@@ -15,7 +15,7 @@ spec:
         app: cno-ui
     spec:
       containers:
-      - image: beopenit/cno-ui:latest
+      - image: $CNO_UI_IMAGE #beopenit/cno-ui:latest
         name: cno-ui
         imagePullPolicy: Always
         ports:

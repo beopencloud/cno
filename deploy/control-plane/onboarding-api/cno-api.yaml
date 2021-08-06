@@ -47,7 +47,7 @@ spec:
         run: cno-api
     spec:
       containers:
-      - image: beopenit/cno-api:latest
+      - image: $CNO_API_IMAGE #beopenit/cno-api:latest
         imagePullPolicy: Always
         name: cno-api
         ports:

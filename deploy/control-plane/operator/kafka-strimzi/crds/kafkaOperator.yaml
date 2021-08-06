@@ -8722,7 +8722,7 @@ spec:
             name: strimzi-cluster-operator
       containers:
         - name: strimzi-cluster-operator
-          image: 'strimzi/operator:0.20.0'
+          image: $KAFKA_OPERATOR_IMAGE #'strimzi/operator:0.20.0'
           ports:
             - containerPort: 8080
               name: http
