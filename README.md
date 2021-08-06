@@ -91,6 +91,7 @@ export CNO_POD_POLICY_ACTIVITED=true
 > Replace \<namespace> with the desired target namespace. default is cno-system
 
 ```
+export INGRESS_DOMAIN=cluster1.beopenit.com"
 export CNO_VERSION=main
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
 ```
