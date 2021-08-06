@@ -7,6 +7,14 @@ do
     esac
 done
 
+#Setting git repository
+CNO_RAW_REPOSITORY="https://raw.githubusercontent.com/beopencloud/cno"
+
+#Setting registry images
+CNO_AGENT_IMAGE="beopenit/cno-agent:latest"
+CNO_ONBOARDING_OPERATOR_IMAGE="beopenit/onboarding-operator-kubernetes:latest"
+CNO_CD_OPERATOR_IMAGE="beopenit/cno-cd-operator:latest"
+
 # Set NAMESPACE to cno-system if -n flag is empty
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
 
@@ -48,7 +56,7 @@ ingressControllerInstallation(){
             done
         fi
         export IS_AN_EKS_CLUSTER=${IS_AN_EKS_CLUSTER}
-        curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
+        curl $CNO_RAW_REPOSITORY/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
         chmod +x ingressControllerInstallation.sh
         ./ingressControllerInstallation.sh
         rm -rf ingressControllerInstallation.sh
@@ -141,15 +149,15 @@ checkCnoAgentConfig(){
 
 installCnoDataPlane() {
     # install cno-agent
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g' |
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_AGENT_IMAGE|'"$CNO_AGENT_IMAGE"'|g' |
         kubectl -n $NAMESPACE apply -f -
 
     # install cno-operator
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_ONBOARDING_OPERATOR_IMAGE|'"$CNO_ONBOARDING_OPERATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # install cno-cd-operator
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_CD_OPERATOR_IMAGE|'"$CNO_CD_OPERATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
 }
 
 # waitForRessourceCreated resource resourceName
