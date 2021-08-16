@@ -309,9 +309,6 @@ spec:
             name: mysql-operator-orc
         - name: etc-orchestrator
           emptyDir: {}
-      # security context to mount corectly the volume for orc
-      securityContext:
-        fsGroup: 777
   volumeClaimTemplates:
     - metadata:
         name: data
