@@ -43,6 +43,7 @@ hasSetDomainSuffix() {
 installCno() {
     # Create cno namespace
     kubectl create namespace cno-system > /dev/null 2>&1
+    kubectl annotate namespace cno-system  openshift.io/sa.scc.supplemental-groups=999/100 openshift.io/sa.scc.uid-range=999/100 --overwrite > /dev/null 2>&1
 
     # Install keycloak Operator
     kubectl -n cno-system apply -f  https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml
