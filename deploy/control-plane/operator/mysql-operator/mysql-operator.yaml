@@ -289,6 +289,8 @@ spec:
               mountPath: /var/lib/orchestrator/
             - name: config
               mountPath: /templates/
+            - name: etc-orchestrator
+              mountPath: /etc/orchestrator
           livenessProbe:
             timeoutSeconds: 10
             initialDelaySeconds: 200
@@ -305,7 +307,8 @@ spec:
         - name: config
           configMap:
             name: mysql-operator-orc
-
+        - name: etc-orchestrator
+          emptyDir: {}
       # security context to mount corectly the volume for orc
       securityContext:
         fsGroup: 777
