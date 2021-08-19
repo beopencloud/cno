@@ -127,7 +127,7 @@ installCno() {
 
 
     # Install Mysql Operator
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$MYSQL_OPERATOR_IMAGE|'"$MYSQL_OPERATOR_IMAGE"'|g; s|$MYSQL_SIDECAR_IMAGE|'"$MYSQL_SIDECAR_IMAGE"'|g; s|$MYSQL_EXPORTER_IMAGE|'"$MYSQL_EXPORTER_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$MYSQL_OPERATOR_IMAGE|'"$MYSQL_OPERATOR_IMAGE"'|g; s|$MYSQL_SIDECAR_IMAGE|'"$MYSQL_SIDECAR_IMAGE"'|g; s|$MYSQL_EXPORTER_IMAGE|'"$MYSQL_EXPORTER_IMAGE"'|g; s|$MYSQL_OPERATOR_ORCHESTRATOR_IMAGE|'"$MYSQL_OPERATOR_ORCHESTRATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # Install Mysql cluster
     MYSQL_PWD=$(openssl rand -base64 14)
