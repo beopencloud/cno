@@ -77,7 +77,7 @@ installCno() {
     kubectl create namespace $NAMESPACE > /dev/null 2>&1
 
     #create scc
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/openshift/cno-scc.yaml | | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' |
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/openshift/cno-scc.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' |
       kubectl -n $NAMESPACE apply -f  -
 
     # Install keycloak Operator
