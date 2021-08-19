@@ -163,7 +163,7 @@ installCno() {
 
     # Install CNO UI
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g' |
+        sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|$CNO_UI_IMAGE|'"$CNO_UI_IMAGE"'|g' |
         kubectl -n $NAMESPACE apply -f -
     kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/ui-ingress.yaml
     kubectl -n $NAMESPACE patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno.$INGRESS_DOMAIN'}]"

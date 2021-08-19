@@ -23,6 +23,7 @@ supplementalGroups:
   type: RunAsAny
 users:
 - system:serviceaccount:$NAMESPACE:default
+- system:serviceaccount:$NAMESPACE:mysql-operator
 volumes:
 - awsElasticBlockStore
 - azureDisk
