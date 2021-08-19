@@ -2,4 +2,4 @@ spec:
   template:
     spec:
       securityContext:
-        priviledged: true
+        privileged: true
