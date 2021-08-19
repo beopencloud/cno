@@ -22,7 +22,7 @@ seLinuxContext:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:cno-system:default
+- system:serviceaccount:$NAMESPACE:default
 volumes:
 - awsElasticBlockStore
 - azureDisk
