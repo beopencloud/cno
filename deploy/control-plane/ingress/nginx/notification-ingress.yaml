@@ -18,4 +18,3 @@ spec:
       - backend:
           serviceName: cno-notification
           servicePort: 3000
-        path: /
