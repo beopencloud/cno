@@ -18,4 +18,3 @@ spec:
       - backend:
           serviceName: cno-ui
           servicePort: 80
-        path: /
