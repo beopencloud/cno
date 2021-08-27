@@ -1,6 +1,6 @@
 #!/bin/sh
 
-while getopts ni: flag
+while getopts n:i: flag
 do
     case "${flag}" in
         n) NAMESPACE=${OPTARG};;
@@ -19,7 +19,7 @@ CNO_CD_OPERATOR_IMAGE="beopenit/cno-cd-operator:latest"
 # Set NAMESPACE to cno-system if -n flag is empty
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
 
-# Set IMAGEPULLSECRET to '' if --imagepullsecret flag is empty
+# Set IMAGEPULLSECRET to '' if -i flag is empty
 [ -z "${IMAGEPULLSECRET}" ] && IMAGEPULLSECRET=''
 
 # Set VERSION to main if CNO_VERSION env variable is not set
