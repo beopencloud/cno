@@ -4,7 +4,7 @@ while getopts n: flag
 do
     case "${flag}" in
         n) NAMESPACE=${OPTARG};;
-        imagepullsecret) IMAGEPULLSECRET=${OPTARG};;
+        i) IMAGEPULLSECRET=${OPTARG};;
     esac
 done
 
@@ -182,7 +182,7 @@ installCno() {
     if [ "${INSTALL_DATA_PLANE}" = 'true' ]; then
         # deploy cno-data-plane
         export KAFKA_BROKERS="cno-kafka-cluster-kafka-bootstrap:9093"
-        waitForResourceCreated secrets $DEFAULT_AGENT_ID
+        #waitForResourceCreated secrets $DEFAULT_AGENT_ID
         kubectl -n $NAMESPACE get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
         kubectl -n $NAMESPACE get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
         kubectl -n $NAMESPACE  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
