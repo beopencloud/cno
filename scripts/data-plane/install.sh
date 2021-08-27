@@ -186,7 +186,7 @@ hasKubectl
 # Create cno namespace
 kubectl create namespace $NAMESPACE > /dev/null 2>&1
 #Add imagepullsecret to default sa
-kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"$IMAGEPULLSECRET"'}]}'
+kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"\"$IMAGEPULLSECRET\""'}]}'
 ingressControllerInstallation
 checkMetricsServer
 genAgentConfig

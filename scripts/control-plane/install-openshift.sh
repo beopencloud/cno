@@ -81,7 +81,7 @@ installCno() {
     kubectl create namespace $NAMESPACE > /dev/null 2>&1
 
     #Add imagepullsecret to default sa
-    kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"$IMAGEPULLSECRET"'}]}'
+    kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"\"$IMAGEPULLSECRET\""'}]}'
 
     #create scc
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/openshift/cno-scc.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' |
