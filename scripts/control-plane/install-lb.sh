@@ -1,6 +1,6 @@
 #!/bin/sh
 
-while getopts n: flag
+while getopts ni: flag
 do
     case "${flag}" in
         n) NAMESPACE=${OPTARG};;
@@ -197,7 +197,7 @@ installCno() {
         rm -rf /tmp/cno-*
         curl $CNO_RAW_REPOSITORY/$VERSION/scripts/data-plane/install.sh > cnodataplane.sh
         chmod +x cnodataplane.sh
-        ./cnodataplane.sh -n $NAMESPACE
+        ./cnodataplane.sh -n $NAMESPACE -i $IMAGEPULLSECRET
         rm -rf cnodataplane.sh
     fi
 

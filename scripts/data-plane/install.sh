@@ -1,10 +1,10 @@
 #!/bin/sh
 
-while getopts n: flag
+while getopts ni: flag
 do
     case "${flag}" in
         n) NAMESPACE=${OPTARG};;
-        imagepullsecret) IMAGEPULLSECRET=${OPTARG};;
+        i) IMAGEPULLSECRET=${OPTARG};;
     esac
 done
 
