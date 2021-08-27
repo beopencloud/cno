@@ -99,7 +99,7 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka-lb.yaml | sed -e 's|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka-lb.yaml | sed -e 's|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|""|g' | kubectl -n $NAMESPACE apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
