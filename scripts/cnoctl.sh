@@ -65,7 +65,7 @@ getPackage() {
     "Linux")
         arch=$(uname -m)
         echo $arch
-        suffix="_Linux_arm64"
+        suffix="_Linux_x86_64"
     ;;
     esac
 
