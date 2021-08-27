@@ -4,6 +4,7 @@ while getopts n: flag
 do
     case "${flag}" in
         n) NAMESPACE=${OPTARG};;
+        imagepullsecret) IMAGEPULLSECRET=${OPTARG};;
     esac
 done
 
@@ -17,6 +18,9 @@ CNO_CD_OPERATOR_IMAGE="beopenit/cno-cd-operator:latest"
 
 # Set NAMESPACE to cno-system if -n flag is empty
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
+
+# Set IMAGEPULLSECRET to '' if --imagepullsecret flag is empty
+[ -z "${IMAGEPULLSECRET}" ] && IMAGEPULLSECRET=''
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
@@ -150,14 +154,14 @@ checkCnoAgentConfig(){
 installCnoDataPlane() {
     # install cno-agent
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_AGENT_IMAGE|'"$CNO_AGENT_IMAGE"'|g' |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_AGENT_IMAGE|'"$CNO_AGENT_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' |
         kubectl -n $NAMESPACE apply -f -
 
     # install cno-operator
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_ONBOARDING_OPERATOR_IMAGE|'"$CNO_ONBOARDING_OPERATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_ONBOARDING_OPERATOR_IMAGE|'"$CNO_ONBOARDING_OPERATOR_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # install cno-cd-operator
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_CD_OPERATOR_IMAGE|'"$CNO_CD_OPERATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_CD_OPERATOR_IMAGE|'"$CNO_CD_OPERATOR_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 }
 
 # waitForRessourceCreated resource resourceName
@@ -177,9 +181,12 @@ waitForRessourceCreated() {
     fi
     echo "$1 $2 successfully deployed"
 }
+
+hasKubectl
 # Create cno namespace
 kubectl create namespace $NAMESPACE > /dev/null 2>&1
-hasKubectl
+#Add imagepullsecret to default sa
+kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"$IMAGEPULLSECRET"'}]}'
 ingressControllerInstallation
 checkMetricsServer
 genAgentConfig

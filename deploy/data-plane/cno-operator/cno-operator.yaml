@@ -4,6 +4,8 @@ metadata:
   name: onboarding-operator-kubernetes
   annotations:
     namespace: $NAMESPACE
+imagePullSecrets:
+- name: $SA
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

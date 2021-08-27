@@ -4,6 +4,10 @@ metadata:
   name: cno-kafka-cluster
 spec:
   kafka:
+    template:
+      pod:
+        imagePullSecrets:
+        - name: $SA
     image: $KAFKA_BROKER_IMAGE
     version: 2.5.0
     replicas: 1
@@ -36,11 +40,19 @@ spec:
     storage:
       type: ephemeral
   zookeeper:
+    template:
+      pod:
+        imagePullSecrets:
+        - name: $SA
     image: $KAFKA_ZOOKEEPER_IMAGE
     replicas: 1
     storage:
       type: ephemeral
   entityOperator:
+    template:
+      pod:
+        imagePullSecrets:
+        - name: $SA
     topicOperator: 
       image: $KAFKA_TOPIC_OPERATOR_IMAGE
     userOperator: 

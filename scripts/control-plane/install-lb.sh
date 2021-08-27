@@ -4,6 +4,7 @@ while getopts n: flag
 do
     case "${flag}" in
         n) NAMESPACE=${OPTARG};;
+        imagepullsecret) IMAGEPULLSECRET=${OPTARG};;
     esac
 done
 
@@ -31,6 +32,9 @@ CNO_UI_IMAGE="beopenit/cno-ui:latest"
 
 # Set NAMESPACE to cno-system if -n flag is empty
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
+
+# Set IMAGEPULLSECRET to '' if --imagepullsecret flag is empty
+[ -z "${IMAGEPULLSECRET}" ] && IMAGEPULLSECRET=''
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
@@ -65,9 +69,12 @@ installCno() {
     # Create cno namespace
     kubectl create namespace $NAMESPACE > /dev/null 2>&1
 
+    #Add imagepullsecret to default sa
+    kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"$IMAGEPULLSECRET"'}]}'
+
     # Install keycloak Operator
     curl  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml |
-      sed -e 's|$KEYCLOAK_OPERATOR_IMAGE|'"$KEYCLOAK_OPERATOR_IMAGE"'|g; s|$KEYCLOAK_IMAGE|'"$KEYCLOAK_IMAGE"'|g; s|$KEYCLOAK_POSTGRESQL_IMAGE|'"$KEYCLOAK_POSTGRESQL_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+      sed -e 's|$KEYCLOAK_OPERATOR_IMAGE|'"$KEYCLOAK_OPERATOR_IMAGE"'|g; s|$KEYCLOAK_IMAGE|'"$KEYCLOAK_IMAGE"'|g; s|$KEYCLOAK_POSTGRESQL_IMAGE|'"$KEYCLOAK_POSTGRESQL_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # Deploy keycloak Cluster and patch the service
     CLIENT_CNO_API=$(openssl rand -base64 14)
@@ -88,11 +95,11 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy keycloak-postgresql # Rollout keycloak postgres
 
     # Install kafka operator
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$KAFKA_OPERATOR_IMAGE|'"$KAFKA_OPERATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/operator/kafka-strimzi/crds/kafkaOperator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$KAFKA_OPERATOR_IMAGE|'"$KAFKA_OPERATOR_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
     kubectl -n $NAMESPACE rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka-lb.yaml | sed -e 's|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka-lb.yaml | sed -e 's|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
@@ -125,7 +132,7 @@ installCno() {
 
 
     # Install Mysql Operator
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$MYSQL_OPERATOR_IMAGE|'"$MYSQL_OPERATOR_IMAGE"'|g; s|$MYSQL_SIDECAR_IMAGE|'"$MYSQL_SIDECAR_IMAGE"'|g; s|$MYSQL_EXPORTER_IMAGE|'"$MYSQL_EXPORTER_IMAGE"'|g; s|$MYSQL_OPERATOR_ORCHESTRATOR_IMAGE|'"$MYSQL_OPERATOR_ORCHESTRATOR_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/operator/mysql-operator/mysql-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$MYSQL_OPERATOR_IMAGE|'"$MYSQL_OPERATOR_IMAGE"'|g; s|$MYSQL_SIDECAR_IMAGE|'"$MYSQL_SIDECAR_IMAGE"'|g; s|$MYSQL_EXPORTER_IMAGE|'"$MYSQL_EXPORTER_IMAGE"'|g; s|$MYSQL_OPERATOR_ORCHESTRATOR_IMAGE|'"$MYSQL_OPERATOR_ORCHESTRATOR_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # Install Mysql cluster
     MYSQL_PWD=$(openssl rand -base64 14)
@@ -155,7 +162,7 @@ installCno() {
     DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n $NAMESPACE create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$KAFKA_BOOTSTRAP_IP"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|LoadBalancer|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_API_IMAGE|'"$CNO_API_IMAGE"'|g' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$KAFKA_BOOTSTRAP_IP"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|LoadBalancer|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_API_IMAGE|'"$CNO_API_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' |
         kubectl -n $NAMESPACE apply -f -
     kubectl -n $NAMESPACE rollout status deploy cno-api
     CNO_API_LB=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
