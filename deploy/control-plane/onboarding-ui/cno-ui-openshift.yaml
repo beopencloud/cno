@@ -16,6 +16,8 @@ spec:
     spec:
       containers:
       - image: $CNO_UI_IMAGE #beopenit/cno-ui:latest
+        securityContext:
+          privileged: true
         name: cno-ui
         imagePullPolicy: Always
         ports:

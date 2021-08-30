@@ -462,9 +462,30 @@ The supported flags are:
 
 List informations about all tag
 
+> if your cluster has PSPs, set the CNO_POD_POLICY_ACTIVITED variable to true before install:
+
+```
+export CNO_POD_POLICY_ACTIVITED=true
+```
+
+#### 1. install using ingress to expose applications
+
+> You must provide a domain name for the ingress resources
+
+> Replace \<namespace> with the desired target namespace. default is cno-system
+
+```
+export INGRESS_DOMAIN=cluster1.beopenit.com"
+export CNO_VERSION=main
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
 ```
 cnoctl adm get tag [tag_id]
 ```
+export CNO_VERSION=main
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
+```
+
+#### 3. install using service type NodePort to expose applications
 
 The supported arguments are:
 

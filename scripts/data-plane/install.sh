@@ -1,5 +1,27 @@
 #!/bin/sh
 
+while getopts n:i: flag
+do
+    case "${flag}" in
+        n) NAMESPACE=${OPTARG};;
+        i) IMAGEPULLSECRET=${OPTARG};;
+    esac
+done
+
+#Setting git repository
+CNO_RAW_REPOSITORY="https://raw.githubusercontent.com/beopencloud/cno"
+
+#Setting registry images
+CNO_AGENT_IMAGE="beopenit/cno-agent:latest"
+CNO_ONBOARDING_OPERATOR_IMAGE="beopenit/onboarding-operator-kubernetes:latest"
+CNO_CD_OPERATOR_IMAGE="beopenit/cno-cd-operator:latest"
+
+# Set NAMESPACE to cno-system if -n flag is empty
+[ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
+
+# Set IMAGEPULLSECRET to '' if -i flag is empty
+[ -z "${IMAGEPULLSECRET}" ] && IMAGEPULLSECRET=''
+
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
 [ -z "${CNO_VERSION}" ] && VERSION='main' || VERSION="${CNO_VERSION}"
@@ -38,7 +60,7 @@ ingressControllerInstallation(){
             done
         fi
         export IS_AN_EKS_CLUSTER=${IS_AN_EKS_CLUSTER}
-        curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
+        curl $CNO_RAW_REPOSITORY/$VERSION/deploy/ingress-controller/nginx/v1.11.1/install.sh > ingressControllerInstallation.sh
         chmod +x ingressControllerInstallation.sh
         ./ingressControllerInstallation.sh
         rm -rf ingressControllerInstallation.sh
@@ -107,11 +129,11 @@ genAgentConfig(){
         echo "============================================================"
         return
     fi
-    kubectl -n cno-system delete secret cno-agent-config
+    kubectl -n $NAMESPACE delete secret cno-agent-config
     echo $CNO_AGENT_CA_CERT | base64 -d > /tmp/cno-ca
     echo $CNO_AGENT_USER_CERT | base64 -d > /tmp/cno-kafka-cert
     echo $CNO_AGENT_USER_KEY | base64 -d > /tmp/cno-kafka-key
-    kubectl -n cno-system create secret generic cno-agent-config --from-literal=licence=$CNO_AGENT_LICENCE --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
+    kubectl -n $NAMESPACE create secret generic cno-agent-config --from-literal=licence=$CNO_AGENT_LICENCE --from-file=caFile=/tmp/cno-ca --from-file=certFile=/tmp/cno-kafka-cert --from-file=keyFile=/tmp/cno-kafka-key
     rm -rf /tmp/cno-*
 
     echo "============================================================"
@@ -120,7 +142,7 @@ genAgentConfig(){
 }
 
 checkCnoAgentConfig(){
-    hasConfig=$(kubectl -n cno-system get secrets cno-agent-config)
+    hasConfig=$(kubectl -n $NAMESPACE get secrets cno-agent-config)
     if [ -z "${hasConfig}" ]; then
         echo "============================================================"
         echo "  ERROR secrets/cno-agent is required."
@@ -131,15 +153,15 @@ checkCnoAgentConfig(){
 
 installCnoDataPlane() {
     # install cno-agent
-    curl https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
-        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g' |
-        kubectl -n cno-system apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/agent/cno-agent.yaml |
+        sed 's|$KAFKA_BROKERS|'"$KAFKA_BROKERS"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_AGENT_IMAGE|'"$CNO_AGENT_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' |
+        kubectl -n $NAMESPACE apply -f -
 
     # install cno-operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-operator/cno-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_ONBOARDING_OPERATOR_IMAGE|'"$CNO_ONBOARDING_OPERATOR_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # install cno-cd-operator
-    kubectl -n cno-system apply -f https://raw.githubusercontent.com/beopencloud/cno/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/data-plane/cno-cd/cno-cd-operator.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_CD_OPERATOR_IMAGE|'"$CNO_CD_OPERATOR_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 }
 
 # waitForRessourceCreated resource resourceName
@@ -149,7 +171,7 @@ waitForRessourceCreated() {
     resource=""
     while [ -z "${resource}" ] && [ "${timeout}" -gt 0 ];
     do
-       resource=$(kubectl -n cno-system get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
+       resource=$(kubectl -n $NAMESPACE get $1 $2 -o jsonpath='{.metadata.name}' --ignore-not-found)
        timeout=$((timeout - 5))
        sleep 5s
     done
@@ -163,6 +185,10 @@ waitForRessourceCreated() {
 kubectl create namespace cno-system > /dev/null 2>&1
 kubectl annotate namespace cno-system  openshift.io/sa.scc.supplemental-groups=999/100 openshift.io/sa.scc.uid-range=999/100 --overwrite > /dev/null 2>&1
 hasKubectl
+# Create cno namespace
+kubectl create namespace $NAMESPACE > /dev/null 2>&1
+#Add imagepullsecret to default sa
+kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"\"$IMAGEPULLSECRET\""'}]}'
 ingressControllerInstallation
 checkMetricsServer
 genAgentConfig
