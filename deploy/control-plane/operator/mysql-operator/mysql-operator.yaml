@@ -6,9 +6,8 @@ metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
+imagePullSecrets:
+- name: $SA
 ---
 # Source: mysql-operator/templates/orc-secret.yaml
 apiVersion: v1
@@ -17,9 +16,6 @@ metadata:
   name: mysql-operator-orc
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
 data:
   TOPOLOGY_USER: "b3JjaGVzdHJhdG9y"
   TOPOLOGY_PASSWORD: "RTZZQzFTZDAyMA=="
@@ -31,9 +27,6 @@ metadata:
   name: mysql-operator-orc
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
 data:
   orchestrator.conf.json: "{\n  \"ApplyMySQLPromotionAfterMasterFailover\": false,\n  \"BackendDB\": \"sqlite\",\n  \"Debug\": false,\n  \"DetachLostReplicasAfterMasterFailover\": true,\n  \"DetectClusterAliasQuery\": \"SELECT CONCAT(SUBSTRING(@@hostname, 1, LENGTH(@@hostname) - 1 - LENGTH(SUBSTRING_INDEX(@@hostname,'-',-2))),'.',SUBSTRING_INDEX(@@report_host,'.',-1))\",\n  \"DetectInstanceAliasQuery\": \"SELECT @@hostname\",\n  \"DiscoverByShowSlaveHosts\": false,\n  \"FailMasterPromotionIfSQLThreadNotUpToDate\": true,\n  \"HTTPAdvertise\": \"http://{{ .Env.HOSTNAME }}-svc:80\",\n  \"HostnameResolveMethod\": \"none\",\n  \"InstancePollSeconds\": 5,\n  \"ListenAddress\": \":3000\",\n  \"MasterFailoverDetachReplicaMasterHost\": true,\n  \"MySQLHostnameResolveMethod\": \"@@report_host\",\n  \"MySQLTopologyCredentialsConfigFile\": \"/etc/orchestrator/orc-topology.cnf\",\n  \"OnFailureDetectionProcesses\": [\n    \"/usr/local/bin/orc-helper event -w '{failureClusterAlias}' 'OrcFailureDetection' 'Failure: {failureType}, failed host: {failedHost}, lost replcas: {lostReplicas}' || true\",\n    \"/usr/local/bin/orc-helper failover-in-progress '{failureClusterAlias}' '{failureDescription}' || true\"\n  ],\n  \"PostIntermediateMasterFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event '{failureClusterAlias}' 'OrcPostIntermediateMasterFailover' 'Failure type: {failureType}, failed hosts: {failedHost}, slaves: {countSlaves}' || true\"\n  ],\n  \"PostMasterFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event '{failureClusterAlias}' 'OrcPostMasterFailover' 'Failure type: {failureType}, new master: {successorHost}, slaves: {slaveHosts}' || true\"\n  ],\n  \"PostUnsuccessfulFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event -w '{failureClusterAlias}' 'OrcPostUnsuccessfulFailover' 'Failure: {failureType}, failed host: {failedHost} with {countSlaves} slaves' || true\"\n  ],\n  \"PreFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper failover-in-progress '{failureClusterAlias}' '{failureDescription}' || true\"\n  ],\n  \"ProcessesShellCommand\": \"sh\",\n  \"RaftAdvertise\": \"{{ .Env.HOSTNAME }}-svc\",\n  \"RaftBind\": \"{{ .Env.HOSTNAME }}\",\n  \"RaftDataDir\": \"/var/lib/orchestrator\",\n  \"RaftEnabled\": true,\n  \"RaftNodes\": [],\n  \"RecoverIntermediateMasterClusterFilters\": [\n    \".*\"\n  ],\n  \"RecoverMasterClusterFilters\": [\n    \".*\"\n  ],\n  \"RecoveryIgnoreHostnameFilters\": [],\n  \"RecoveryPeriodBlockSeconds\": 300,\n  \"RemoveTextFromHostnameDisplay\": \":3306\",\n  \"SQLite3DataFile\": \"/var/lib/orchestrator/orc.db\",\n  \"SlaveLagQuery\": \"SELECT TIMESTAMPDIFF(SECOND,ts,NOW()) as drift FROM sys_operator.heartbeat ORDER BY drift ASC LIMIT 1\",\n  \"UnseenInstanceForgetHours\": 1\n}"
   orc-topology.cnf: |
@@ -47,9 +40,6 @@ kind: ClusterRole
 metadata:
   labels:
     app: 'mysql-operator'
-    chart: 'mysql-operator-0.4.0'
-    heritage: 'Helm'
-    release: 'mysql-operator'
   name: 'mysql-operator'
 rules:
 - apiGroups:
@@ -154,16 +144,13 @@ metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: mysql-operator
 subjects:
   - name: mysql-operator
-    namespace: "cno-system"
+    namespace: $NAMESPACE
     kind: ServiceAccount
 ---
 # Source: mysql-operator/templates/orc-service.yaml
@@ -173,9 +160,6 @@ metadata:
   name: mysql-operator-0-svc
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
@@ -197,9 +181,6 @@ metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
 spec:
   type: ClusterIP
   selector:
@@ -217,9 +198,6 @@ metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
-    chart: mysql-operator-0.4.0
-    release: mysql-operator
-    heritage: Helm
 spec:
   replicas: 1
   serviceName: mysql-operator-orc
@@ -240,7 +218,7 @@ spec:
       serviceAccountName: mysql-operator
       containers:
         - name: operator
-          image: "quay.io/presslabs/mysql-operator:0.4.0"
+          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: ORC_TOPOLOGY_USER
@@ -254,10 +232,11 @@ spec:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
           args:
-            - --leader-election-namespace=cno-system
+            - --leader-election-namespace=$NAMESPACE
             # connect to orchestrator on localhost
             - --orchestrator-uri=http://127.0.0.1:3000/api
-            - --sidecar-image=quay.io/presslabs/mysql-operator-sidecar:0.4.0
+            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
+            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
           resources:
             {}
           # TODO: add livenessProbe to controller
@@ -266,7 +245,7 @@ spec:
           #     path: /health
           #     port: 80
         - name: orchestrator
-          image: quay.io/presslabs/mysql-operator-orchestrator:0.4.0
+          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
