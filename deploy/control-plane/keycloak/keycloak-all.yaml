@@ -1716,23 +1716,28 @@ spec:
     spec:
       serviceAccountName: keycloak-operator
       containers:
-        - name: keycloak-operator
-          # Replace this with the built image name
-          image: quay.io/keycloak/keycloak-operator:12.0.1
-          command:
-          - keycloak-operator
-          imagePullPolicy: Always
-          env:
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: OPERATOR_NAME
-              value: "keycloak-operator"
+      - name: keycloak-operator
+        # Replace this with the built image name
+        image: $KEYCLOAK_OPERATOR_IMAGE #quay.io/keycloak/keycloak-operator:12.0.1
+        command:
+        - keycloak-operator
+        imagePullPolicy: Always
+        env:
+          - name: WATCH_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: OPERATOR_NAME
+            value: "keycloak-operator"
+          - name: RELATED_IMAGE_KEYCLOAK
+            value: $KEYCLOAK_IMAGE #"quay.io/keycloak/keycloak:12.0.1"
+          - name: RELATED_IMAGE_POSTGRESQL
+            value: $KEYCLOAK_POSTGRESQL_IMAGE #"registry.access.redhat.com/rhscl/postgresql-10-rhel7:1"
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -1882,3 +1887,5 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: keycloak-operator
+imagePullSecrets:
+- name: $SA
