@@ -5,7 +5,7 @@ metadata:
     app: cno-notification
   name: cno-notification
 spec:
-  host: cno-notification.apps.openshifttest.beopenit.com
+  host: cno-api.cluster.beopenit.com
   to:
     kind: Service
     name: cno-notification

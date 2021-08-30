@@ -5,7 +5,7 @@ metadata:
     app: cno-ui
   name: cno-ui
 spec:
-  host: cno-ui.apps.openshifttest.beopenit.com
+  host: cno-api.cluster.beopenit.com
   to:
     kind: Service
     name: cno-ui
