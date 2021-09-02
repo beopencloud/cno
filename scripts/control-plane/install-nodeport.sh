@@ -26,9 +26,9 @@ MYSQL_OPERATOR_ORCHESTRATOR_IMAGE="quay.io/presslabs/mysql-operator-orchestrator
 MYSQL_IMAGE="percona@sha256:713c1817615b333b17d0fbd252b0ccc53c48a665d4cfcb42178167435a957322"
 MYSQL_SIDECAR_IMAGE="quay.io/presslabs/mysql-operator-sidecar:0.4.0"
 MYSQL_EXPORTER_IMAGE="prom/mysqld-exporter:v0.11.0"
-CNO_API_IMAGE="beopenit/cno-api:latest"
-CNO_NOTIFICATION_IMAGE="beopenit/cno-notification:v0.0.1-alpha"
-CNO_UI_IMAGE="beopenit/cno-ui:latest"
+CNO_API_IMAGE="beopenit/cno-api:1.0.0-rc"
+CNO_NOTIFICATION_IMAGE="beopenit/cno-notification:1.0.0-rc"
+CNO_UI_IMAGE="beopenit/cno-ui:1.0.0-rc"
 
 # Set NAMESPACE to cno-system if -n flag is empty
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
