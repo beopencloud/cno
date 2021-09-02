@@ -92,7 +92,7 @@ export CNO_POD_POLICY_ACTIVITED=true
 
 ```
 export INGRESS_DOMAIN=cluster1.beopenit.com"
-export CNO_VERSION=main
+export CNO_VERSION=1.0.0-rc
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
 ```
 
@@ -101,7 +101,7 @@ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts
 > Replace \<namespace> with the desired target namespace. default is cno-system
 
 ```
-export CNO_VERSION=main
+export CNO_VERSION=1.0.0-rc
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
 ```
 
@@ -112,7 +112,7 @@ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts
 > Replace \<namespace> with the desired target namespace. default is cno-system
 
 ```
-export CNO_VERSION=main
+export CNO_VERSION=1.0.0-rc
 export LOADBALANCER_IP=x.x.x.x
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-nodeport.sh | sh -s -- -n <namespace>
 ```
