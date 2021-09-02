@@ -12,9 +12,9 @@ done
 CNO_RAW_REPOSITORY="https://raw.githubusercontent.com/beopencloud/cno"
 
 #Setting registry images
-CNO_AGENT_IMAGE="beopenit/cno-agent:latest"
-CNO_ONBOARDING_OPERATOR_IMAGE="beopenit/onboarding-operator-kubernetes:latest"
-CNO_CD_OPERATOR_IMAGE="beopenit/cno-cd-operator:latest"
+CNO_AGENT_IMAGE="beopenit/cno-agent:1.0.0-rc"
+CNO_ONBOARDING_OPERATOR_IMAGE="beopenit/onboarding-operator-kubernetes:1.0.0-rc"
+CNO_CD_OPERATOR_IMAGE="beopenit/cno-cd-operator:1.0.0-rc"
 
 # Set NAMESPACE to cno-system if -n flag is empty
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
