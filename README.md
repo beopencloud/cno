@@ -476,12 +476,12 @@ export CNO_POD_POLICY_ACTIVITED=true
 
 ```
 export INGRESS_DOMAIN=cluster1.beopenit.com"
-export CNO_VERSION=main
+export CNO_VERSION=1.0.0-rc
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
 ```
 cnoctl adm get tag [tag_id]
 ```
-export CNO_VERSION=main
+export CNO_VERSION=1.0.0-rc
 curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
 ```
 
