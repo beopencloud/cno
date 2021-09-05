@@ -122,7 +122,7 @@ installCno() {
         fi                                                                             
     done
     echo "  The bootstrap load balancer address is $KAFKA_BOOTSTRAP"
-    echo "  The bootstrap load balancer is $KAFKA_BOOTSTRAP_IP"
+    echo "  The bootstrap load balancer ip is $KAFKA_BOOTSTRAP_IP"
 
     # Restart keycloak to reload realm cno
     sleep 30s
