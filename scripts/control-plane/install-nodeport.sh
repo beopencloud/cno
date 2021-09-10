@@ -34,7 +34,7 @@ CNO_UI_IMAGE="beopenit/cno-ui:1.0.0-rc"
 [ -z "${NAMESPACE}" ] && NAMESPACE='cno-system'
 
 # Set IMAGEPULLSECRET to '' if -i flag is empty
-[ -z "${IMAGEPULLSECRET}" ] && IMAGEPULLSECRET=''
+[ -z "${IMAGEPULLSECRET}" ] && IMAGEPULLSECRET='""'
 
 # Set VERSION to main if CNO_VERSION env variable is not set
 # Ex: export CNO_VERSION="feature/mysql-operator"
