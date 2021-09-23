@@ -204,7 +204,7 @@ installCno() {
     echo
     echo "============================================================================================="
     echo "  INFO CNO installation success."
-    echo "  You can access CNO at https://$CNO_UI_LB"
+    echo "  You can access CNO at http://$CNO_UI_LB"
     echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
     echo "============================================================================================="
     echo
