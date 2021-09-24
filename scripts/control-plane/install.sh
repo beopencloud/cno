@@ -164,9 +164,9 @@ installCno() {
     kubectl -n $NAMESPACE patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n $NAMESPACE rollout status deploy cno-api
     # Install CNO NOTIFICATION
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
-    kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/notification-ingress.yaml
-    kubectl -n $NAMESPACE patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
+    #curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    #kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/notification-ingress.yaml
+    #kubectl -n $NAMESPACE patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
 
     # Install CNO UI
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
