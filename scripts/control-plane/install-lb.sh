@@ -167,8 +167,8 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy cno-api
     CNO_API_LB=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
     # Install CNO NOTIFICATION
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g; s|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g'  | kubectl -n $NAMESPACE apply -f -
-    CNO_NOTIFICATION_LB=$(kubectl -n $NAMESPACE get service cno-notification -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    #curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g; s|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g'  | kubectl -n $NAMESPACE apply -f -
+    #CNO_NOTIFICATION_LB=$(kubectl -n $NAMESPACE get service cno-notification -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
 
     # Install CNO UI
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |

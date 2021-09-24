@@ -169,8 +169,8 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy cno-api
     CNO_API_NODEPORT=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
     # Install CNO NOTIFICATION
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g; s|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
-    CNO_NOTIFICATION_NODEPORT=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
+    #curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g; s|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
+    #CNO_NOTIFICATION_NODEPORT=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
 
     # Install CNO UI
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
