@@ -1738,7 +1738,7 @@ spec:
           - name: RELATED_IMAGE_POSTGRESQL
             value: $KEYCLOAK_POSTGRESQL_IMAGE #"registry.access.redhat.com/rhscl/postgresql-10-rhel7:1"
           - name: RELATED_IMAGE_KEYCLOAK_INIT_CONTAINER
-            value: $RELATED_IMAGE_KEYCLOAK_INIT_CONTAINER
+            value: $KEYCLOAK_INIT_CONTAINER
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
