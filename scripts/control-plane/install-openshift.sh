@@ -14,7 +14,7 @@ CNO_RAW_REPOSITORY="https://raw.githubusercontent.com/beopencloud/cno"
 #Setting registry images
 KEYCLOAK_OPERATOR_IMAGE="quay.io/keycloak/keycloak-operator:12.0.1"
 KEYCLOAK_IMAGE="quay.io/keycloak/keycloak:12.0.1"
-KEYCLOAK_INIT_CONTAINER_IMAGE="quay.io/keycloak/keycloak-init-container:master"
+KEYCLOAK_INIT_CONTAINER="quay.io/keycloak/keycloak-init-container:master"
 KEYCLOAK_POSTGRESQL_IMAGE="registry.access.redhat.com/rhscl/postgresql-10-rhel7:1"
 KAFKA_OPERATOR_IMAGE="strimzi/operator:0.20.0"
 KAFKA_TOPIC_OPERATOR_IMAGE="strimzi/operator:0.20.0"
@@ -90,7 +90,7 @@ installCno() {
 
     # Install keycloak Operator
     curl  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml |
-      sed -e 's|$KEYCLOAK_OPERATOR_IMAGE|'"$KEYCLOAK_OPERATOR_IMAGE"'|g; s|$KEYCLOAK_IMAGE|'"$KEYCLOAK_IMAGE"'|g; s|$KEYCLOAK_POSTGRESQL_IMAGE|'"$KEYCLOAK_POSTGRESQL_IMAGE"'|g; s|$KEYCLOAK_INIT_CONTAINER_IMAGE|'"$KEYCLOAK_INIT_CONTAINER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
+      sed -e 's|$KEYCLOAK_OPERATOR_IMAGE|'"$KEYCLOAK_OPERATOR_IMAGE"'|g; s|$KEYCLOAK_IMAGE|'"$KEYCLOAK_IMAGE"'|g; s|$KEYCLOAK_POSTGRESQL_IMAGE|'"$KEYCLOAK_POSTGRESQL_IMAGE"'|g; s|$KEYCLOAK_INIT_CONTAINER|'"$KEYCLOAK_INIT_CONTAINER"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 
     # Deploy keycloak Cluster and patch the ingress
     CLIENT_CNO_API=$(openssl rand -base64 14)
