@@ -345,9 +345,7 @@ The CLI can be installed with a curl script, brew or by downloading the binary f
 ## Install with curl:
 
 ```
-
-$ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoctl.sh | sh
-
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoctl.sh | sh
 ```
 
   
@@ -355,15 +353,9 @@ $ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoct
 ## Install with brew on MacOs:
 
 ```
+brew tap beopencloud/cno
 
-$ brew tap beopencloud/cno
-
-```
-
-```
-
-$ brew install cnoctl
-
+brew install cnoctl
 ```
 
 ## Install from release:
@@ -375,21 +367,11 @@ In the cnoctl release page (https://github.com/beopencloud/cno/releases) downloa
 Example for version v0.0.1 on MacOs:
 
 ```
+wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_Darwin_x86_64.tar.gz
 
-$ wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_Darwin_x86_64.tar.gz
+tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
 
-```
-
-```
-
-$ tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
-
-```
-
-```
-
-$ mv cnoctl /usr/local/bin/
-
+mv cnoctl /usr/local/bin/
 ```
 
 ## Verify cnoctl installation
@@ -401,9 +383,7 @@ Check that cnoctl is properly installed by getting the command help:
 Example for version v0.0.1 on MacOs:
 
 ```
-
-$ cnoctl --help
-
+cnoctl --version
 ```
 
   
@@ -415,9 +395,7 @@ To install CNO you need Kubernetes v1.16 or higher.
 Once cnoctl is installed, to install CNO run the following command:
 
 ```
-
-$ cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
-
+cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
 ```
 
 The supported flags are:
@@ -461,9 +439,7 @@ Tags are elements made up of pairs (key and values) whose main purpose is to all
 Create a tag by giving elements of configuration
 
 ```
-
 cnoctl adm create tag [name] [--flags]
-
 ```
 
 The supported arguments are:
@@ -487,9 +463,7 @@ The supported flags are:
 List informations about all tag
 
 ```
-
 cnoctl adm get tag [tag_id]
-
 ```
 
 The supported arguments are:
@@ -515,9 +489,7 @@ It is the different capacities allocated to a cluster that allow it to function 
 Create a quota by giving elements of configuration
 
 ```
-
 cnoctl adm create quota [name] --cpu LimitValue,RequestValue --memory LimitValue,RequestValue --storage valueStorage
-
 ```
 
 The supported arguments are:
@@ -539,9 +511,7 @@ storage: storage value | [REQUIRED]
 List informations about all quota
 
 ```
-
 cnoctl adm get quota [name]
-
 ```
 
 The supported arguments are:
@@ -569,9 +539,7 @@ Create a tag by giving elements of configuration
 ### **- AWS**
 
 ```
-
 cnoctl adm create provider-eks [name] [--flags]
-
 ```
 
 The supported arguments are:
@@ -591,9 +559,7 @@ The supported flags are:
 ### **- AZURE**
 
 ```
-
 cnoctl adm create provider-aks [name] [--flags]
-
 ```
 
 The supported arguments are:
@@ -613,9 +579,7 @@ The supported flags are:
 ### **- GCP**
 
 ```
-
 cnoctl adm create provider-gke [name] [--flags]
-
 ```
 
 The supported arguments are:
@@ -634,9 +598,7 @@ The supported flags are:
 List informations about all cloud provider
 
 ```
-
 cnoctl adm get provider [name]
-
 ```
 
 The supported arguments are:
@@ -654,9 +616,7 @@ Ldap Account consists of creating an Ldap Server to store and use users, group.
 Creating ldap account by giving the following command
 
 ```
-
 cnoctl adm create ldap [--flags ]
-
 ```
 
 The supported flags are:
@@ -676,9 +636,7 @@ The supported flags are:
 List informations about your Ldap Account
 
 ```
-
 cnoctl adm get ldap
-
 ```
 
   
@@ -690,9 +648,7 @@ Messaging Account consists of creating an SMTP server to send emails or notifica
 Create a messaging account by giving elements of configuration
 
 ```
-
 cnoctl adm create smtp [--flags]
-
 ```
 
 The supported flags are:
@@ -712,7 +668,6 @@ The supported flags are:
 List informations about Your Messaging Account
 
 ```
-
 cnoctl adm get smtp
 
 ```
@@ -724,16 +679,7 @@ cnoctl adm get smtp
 Do a test to make sure that the smtp server configuration is correct
 
 ```
-
 cnoctl adm test smtp receivermail@mail.com -m "Your message"
-
-  
-
-or
-
-  
-
-cnoctl adm test smtp receivermail@mail.com --message "Your message"
 
 ```
 
