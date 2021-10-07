@@ -45,7 +45,7 @@ CNO_UI_IMAGE="beopenit/cno-ui:latest"
 
 # Set INGRESS to nginx if CNO_INGRESS env variable is not set
 # Ex: export CNO_INGRESS="nginx"
-[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
+#[ -z "${CNO_INGRESS}" ] && INGRESS='nginx' || INGRESS="${CNO_INGRESS}"
 
 if [ "${INSTALL_DATA_PLANE}" != 'true' ] && [ "${INSTALL_DATA_PLANE}" != 'false' ]; then
     echo "============================================================"
@@ -66,17 +66,6 @@ hasKubectl() {
     fi
 }
 
-hasSetDomainSuffix() {
-    if [ -z "${INGRESS_DOMAIN}" ]; then
-        echo "============================================================"
-        echo "  CNO installation failed."
-        echo "  Provide your cluster ingress domain suffix by exporting env variable INGRESS_DOMAIN."
-        echo "  Ex: $ export INGRESS_DOMAIN=cluster1.beopenit.com"
-        echo "============================================================"
-        exit 1
-    fi
-}
-
 installCno() {
     # Create cno namespace
     kubectl create namespace $NAMESPACE > /dev/null 2>&1
@@ -88,11 +77,11 @@ installCno() {
     curl  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml |
       sed -e 's|$KEYCLOAK_OPERATOR_IMAGE|'"$KEYCLOAK_OPERATOR_IMAGE"'|g; s|$KEYCLOAK_IMAGE|'"$KEYCLOAK_IMAGE"'|g; s|$KEYCLOAK_POSTGRESQL_IMAGE|'"$KEYCLOAK_POSTGRESQL_IMAGE"'|g; s|$KEYCLOAK_INIT_CONTAINER|'"$KEYCLOAK_INIT_CONTAINER"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
 
-    # Deploy keycloak Cluster and patch the ingress
+    # Deploy keycloak Cluster and patch the service
     CLIENT_CNO_API=$(openssl rand -base64 14)
     kubectl -n $NAMESPACE create secret generic keycloak-client-cno-api  --from-literal=OIDC_CLIENT_SECRET="${CLIENT_CNO_API}"
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/cno-realm-configmap.yml |
-      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|'"keycloak-discovery.$NAMESPACE.svc.cluster.local:8080"'|g' |
+      sed -e 's|cno-api-client-secret|'"$CLIENT_CNO_API"'|g; s|$AUTH_URL|keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g' |
       kubectl -n $NAMESPACE apply -f  -
     kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/keycloak.yaml
 
@@ -111,7 +100,7 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g; s|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka-lb.yaml | sed -e 's|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
@@ -120,6 +109,21 @@ installCno() {
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-kafka-0 --for=condition=ready pod --timeout=5m
     # Create cno kafka super-admin user
     kubectl -n $NAMESPACE  apply -f $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/cno-super-admin.yaml
+    # Get the kafka brokers lb
+    KAFKA_BOOTSTRAP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}')
+    KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    while true; do                                                                     
+        KAFKA_BOOTSTRAP_IP=$(kubectl -n $NAMESPACE get service cno-kafka-cluster-kafka-external-bootstrap -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')        
+        if [[ -z "$KAFKA_BOOTSTRAP_IP" ]]; then                                               
+            echo "Waiting for endpoint readiness..."                                   
+            sleep 10                                                                   
+        else                                                                           
+            sleep 2                                                                                                                                          
+            break                                                                      
+        fi                                                                             
+    done
+    echo "  The bootstrap load balancer address is $KAFKA_BOOTSTRAP"
+    echo "  The bootstrap load balancer ip is $KAFKA_BOOTSTRAP_IP"
 
     # Restart keycloak to reload realm cno
     sleep 30s
@@ -138,7 +142,7 @@ installCno() {
     waitForResourceCreated pod cno-api-mysql-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-api-mysql-0 --for=condition=ready pod --timeout=5m
     sleep 10s
-    kubectl -n $NAMESPACE exec -it cno-api-mysql-0 -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
+    kubectl -n $NAMESPACE exec -it cno-api-mysql-0 -c mysql -- mysql -u root -p$MYSQL_PWD -e "create database cnoapi"
 
     # Create CNO configMap
     kubectl create cm -n $NAMESPACE cno-config --from-literal OIDC_SERVER_BASE_URL=http://keycloak-discovery.$NAMESPACE.svc.cluster.local:8080 \
@@ -159,27 +163,34 @@ installCno() {
     DEFAULT_CLUSTER_API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[*].cluster.server}')
     kubectl -n $NAMESPACE create secret generic cno-super-admin-credential --from-literal=USERNAME=admin --from-literal=PASSWORD=$SUPER_ADMIN_PASSWORD
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-api/cno-api.yaml |
-        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|bootstrap-cno.'"$INGRESS_DOMAIN"':443|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_API_IMAGE|'"$CNO_API_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' |
+        sed 's|$SUPER_ADMIN_PASSWORD|'"$SUPER_ADMIN_PASSWORD"'|g; s|$SERVER_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_SERVER_BASE_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|cno-api|g; s|$KAFKA_BROKERS|cno-kafka-cluster-kafka-bootstrap:9093|g; s|$DEFAULT_EXTERNAL_BROKERS_URL|'"$KAFKA_BOOTSTRAP_IP"'|g; s|$CREATE_DEFAULT_CLUSTER|"'"$INSTALL_DATA_PLANE"'"|g; s|$DEFAULT_CLUSTER_API_SERVER_URL|"'"$DEFAULT_CLUSTER_API_SERVER_URL"'"|g; s|$DEFAULT_CLUSTER_ID|'"$DEFAULT_AGENT_ID"'|g; s|ClusterIP|LoadBalancer|g; s|$NAMESPACE|'"$NAMESPACE"'|g; s|$CNO_API_IMAGE|'"$CNO_API_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' |
         kubectl -n $NAMESPACE apply -f -
-    kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/api-ingress.yaml
-    kubectl -n $NAMESPACE patch ing/cno-api --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-api.$INGRESS_DOMAIN'}]"
     kubectl -n $NAMESPACE rollout status deploy cno-api
+    CNO_API_LB=$(kubectl -n $NAMESPACE get service cno-api -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
     # Install CNO NOTIFICATION
-    #curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g' | kubectl -n $NAMESPACE apply -f -
-    #kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/notification-ingress.yaml
-    #kubectl -n $NAMESPACE patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
+    #curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/notification/cno-notification.yaml | sed 's|ClusterIP|NodePort|g; s|$CNO_NOTIFICATION_IMAGE|'"$CNO_NOTIFICATION_IMAGE"'|g'  | kubectl -n $NAMESPACE apply -f -
+    #CNO_NOTIFICATION_LB=$(kubectl -n $NAMESPACE get service cno-notification -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
 
     # Install CNO UI
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|$CNO_UI_IMAGE|'"$CNO_UI_IMAGE"'|g' |
+        sed 's|$API_URL|https://'"$CNO_API_LB"'|g;  s|$NOTIFICATION_URL|https://'"$CNO_NOTIFICATION_LB"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|LoadBalancer|g; s|$CNO_UI_IMAGE|'"$CNO_UI_IMAGE"'|g' |
         kubectl -n $NAMESPACE apply -f -
-    kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/ui-ingress.yaml
-    kubectl -n $NAMESPACE patch ing/cno-ui --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno.$INGRESS_DOMAIN'}]"
+    CNO_UI_LB=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')
+    while true; do                                                                     
+        CNO_UI_LB=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}')        
+        if [[ -z "$CNO_UI_LB" ]]; then                                               
+            echo "Waiting for endpoint readiness..."                                   
+            sleep 10                                                                   
+        else                                                                           
+            sleep 2                                                                                                                                          
+            break                                                                      
+        fi                                                                             
+    done
 
     if [ "${INSTALL_DATA_PLANE}" = 'true' ]; then
         # deploy cno-data-plane
         export KAFKA_BROKERS="cno-kafka-cluster-kafka-bootstrap:9093"
-        #waitForResourceCreated secrets $DEFAULT_AGENT_ID
+        #swaitForResourceCreated secrets $DEFAULT_AGENT_ID
         kubectl -n $NAMESPACE get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
         kubectl -n $NAMESPACE get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.key}' | base64 -d > /tmp/cno-kafka-key
         kubectl -n $NAMESPACE  get secret/$DEFAULT_AGENT_ID -o jsonpath='{.data.user\.crt}' | base64 -d > /tmp/cno-kafka-cert
@@ -194,7 +205,8 @@ installCno() {
     echo
     echo "============================================================================================="
     echo "  INFO CNO installation success."
-    echo "  cno.$INGRESS_DOMAIN CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
+    echo "  You can access CNO at http://$CNO_UI_LB"
+    echo "  CNO Credentials USERNAME: admin    PASSWORD: $SUPER_ADMIN_PASSWORD"
     echo "============================================================================================="
     echo
 
@@ -224,6 +236,5 @@ waitForResourceCreated() {
 
 
 hasKubectl
-hasSetDomainSuffix
 installCno
 

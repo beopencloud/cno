@@ -84,6 +84,10 @@ installCno() {
     #Add imagepullsecret to default sa
     kubectl -n $NAMESPACE patch serviceaccount default -p '{"imagePullSecrets": [{"name": '"\"$IMAGEPULLSECRET\""'}]}'
 
+    #create scc
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/openshift/cno-scc.yaml | sed -e 's|$NAMESPACE|'"$NAMESPACE"'|g' |
+      kubectl -n $NAMESPACE apply -f  -
+
     # Install keycloak Operator
     curl  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/keycloak-all.yaml |
       sed -e 's|$KEYCLOAK_OPERATOR_IMAGE|'"$KEYCLOAK_OPERATOR_IMAGE"'|g; s|$KEYCLOAK_IMAGE|'"$KEYCLOAK_IMAGE"'|g; s|$KEYCLOAK_POSTGRESQL_IMAGE|'"$KEYCLOAK_POSTGRESQL_IMAGE"'|g; s|$KEYCLOAK_INIT_CONTAINER|'"$KEYCLOAK_INIT_CONTAINER"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
@@ -102,7 +106,7 @@ installCno() {
     #If PSP issue
     waitForResourceCreated deployment keycloak-postgresql
     if [ "${CNO_POD_POLICY_ACTIVITED}" = "true" ]; then
-        kubectl -n $NAMESPACE patch deployment keycloak-postgresql --patch "$(curl --silent $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql.yaml)"
+        kubectl -n $NAMESPACE patch deployment keycloak-postgresql --patch "$(curl --silent $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/keycloak/patch-psp-postgresql-openshift.yaml)"
     fi
     kubectl -n $NAMESPACE rollout status deploy keycloak-postgresql # Rollout keycloak postgres
 
@@ -111,7 +115,7 @@ installCno() {
     kubectl -n $NAMESPACE rollout status deploy strimzi-cluster-operator
 
     # Deploy a kafka cluster
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g; s|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/kafka/kafka-router.yaml | sed -e 's|INGRESS_DOMAIN|'"$INGRESS_DOMAIN"'|g; s|$KAFKA_TOPIC_OPERATOR_IMAGE|'"$KAFKA_TOPIC_OPERATOR_IMAGE"'|g; s|$KAFKA_USER_OPERATOR_IMAGE|'"$KAFKA_USER_OPERATOR_IMAGE"'|g; s|$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE|'"$KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE"'|g; s|$KAFKA_BROKER_IMAGE|'"$KAFKA_BROKER_IMAGE"'|g; s|$KAFKA_ZOOKEEPER_IMAGE|'"$KAFKA_ZOOKEEPER_IMAGE"'|g; s|$SA|'"$IMAGEPULLSECRET"'|g' | kubectl -n $NAMESPACE apply -f -
     # waiting for zookeeper deployment
     waitForResourceCreated pod cno-kafka-cluster-zookeeper-0
     kubectl -n $NAMESPACE wait -l statefulset.kubernetes.io/pod-name=cno-kafka-cluster-zookeeper-0 --for=condition=ready pod --timeout=5m
@@ -170,7 +174,7 @@ installCno() {
     #kubectl -n $NAMESPACE patch ing/cno-notification --type=json -p="[{'op': 'replace', 'path': '/spec/rules/0/host', 'value':'cno-notification.$INGRESS_DOMAIN'}]"
 
     # Install CNO UI
-    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
+    curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui-openshift.yaml |
         sed 's|$API_URL|https://cno-api.'"$INGRESS_DOMAIN"'|g;  s|$NOTIFICATION_URL|https://cno-notification.'"$INGRESS_DOMAIN"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|$CNO_UI_IMAGE|'"$CNO_UI_IMAGE"'|g' |
         kubectl -n $NAMESPACE apply -f -
     kubectl -n $NAMESPACE apply -f  $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/ingress/$INGRESS/ui-ingress.yaml
