@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello
+spec:
+  template:
+    spec:
+      containers:
+      - image: myimage
+        name: hello
+        env:
+        - name: SECRET_TOKEN
+          value: SOME_SECRET_NAME

@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-config
+  fieldPath: data.RELATED_IMAGE_KEYCLOAK
+targets:
+- select:
+    kind: Deployment
+    name: keycloak-operator
+  fieldPaths:
+  - spec.template.spec.containers.[name=keycloak-operator].env.[name=RELATED_IMAGE_KEYCLOAK].value

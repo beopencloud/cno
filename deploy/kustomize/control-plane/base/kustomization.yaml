@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cno-system
+commonLabels:
+  cno/resource: "true"
+secretGenerator:
+- name: cno-config
+  envs:
+  - env.secret
+  type: Opaque
+configMapGenerator:
+- name: cno-config
+  envs:
+  - env.config
+resources:
+- namespace.yaml
+- keycloak
+
+replacements:
+- path: keycloak/related-image-keycloak-replacements.yaml
+- path: keycloak/related-image-postgresql-replacements.yaml
+

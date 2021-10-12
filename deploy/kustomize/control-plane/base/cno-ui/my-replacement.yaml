@@ -1,0 +1,12 @@
+source:
+  kind: Pod
+  name: my-pod
+  fieldPath: spec.restartPolicy
+targets:
+- select:
+    name: hello
+    kind: Job
+  fieldPaths:
+  - spec.template.spec.restartPolicy
+  options:
+    create: true
