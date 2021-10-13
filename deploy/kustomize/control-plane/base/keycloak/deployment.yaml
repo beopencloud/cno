@@ -35,3 +35,5 @@ spec:
           value: "quay.io/keycloak/keycloak:12.0.1"
         - name: RELATED_IMAGE_POSTGRESQL
           value: "registry.access.redhat.com/rhscl/postgresql-10-rhel7:1"
+        - name: RELATED_IMAGE_KEYCLOAK_INIT_CONTAINER
+          value: "quay.io/keycloak/keycloak-init-container:master"

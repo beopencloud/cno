@@ -15,8 +15,25 @@ configMapGenerator:
 resources:
 - namespace.yaml
 - keycloak
+- kafka
 
 replacements:
-- path: keycloak/related-image-keycloak-replacements.yaml
-- path: keycloak/related-image-postgresql-replacements.yaml
+- path: keycloak/replacements-related-image-keycloak-init.yaml
+- path: keycloak/replacements-related-image-keycloak.yaml
+- path: keycloak/replacements-related-image-postgresql.yaml
+- path: keycloak/replacements-related-keycloak-operator-image.yaml
+
+- path: kafka/replacements-kafka-bootstrap-domain.yaml
+- path: kafka/replacements-kafka-broker-0-domain.yaml
+- path: kafka/replacements-kafka-broker-1-domain.yaml
+- path: kafka/replacements-kafka-broker-2-domain.yaml
+
+- path: kafka/replacements-related-kafka-image.yaml
+- path: kafka/replacements-related-kafka-tls-sidecar-image.yaml
+- path: kafka/replacements-related-kafka-topic-operator-image.yaml
+- path: kafka/replacements-related-kafka-user-operator-image.yaml
+- path: kafka/replacements-related-strimzi-operator-image.yaml
+- path: kafka/replacements-related-zookeeper-image.yaml
+
+
 

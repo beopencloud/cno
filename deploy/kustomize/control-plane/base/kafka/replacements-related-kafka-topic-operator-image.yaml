@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-config
+  fieldPath: data.STRIMZI_OPERATOR_IMAGE
+targets:
+- select:
+    kind: kafka
+    name: cno-kafka-cluster
+  fieldPaths:
+  - spec.entityOperator.topicOperator.image
