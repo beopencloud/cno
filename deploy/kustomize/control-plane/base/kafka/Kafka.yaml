@@ -63,9 +63,9 @@ spec:
       pod:
         imagePullSecrets:
         - name: $SA
-    topicOperator: 
+    topicOperator:
       image: "strimzi/operator:0.20.0"
-    userOperator: 
+    userOperator:
       image: "strimzi/operator:0.20.0"
     tlsSidecar:
       image: "strimzi/kafka:0.20.0-kafka-2.5.0"
