@@ -24,8 +24,6 @@ spec:
         env:
         - name: API_URL
           value: $API_URL
-        - name: NOTIFICATION_URL
-          value: $NOTIFICATION_URL
         - name: OIDC_URL
           value: $OIDC_URL
         - name: OIDC_REALM
