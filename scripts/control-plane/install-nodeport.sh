@@ -149,7 +149,8 @@ installCno() {
     # Create CNO configMap
     kubectl create cm -n $NAMESPACE cno-config --from-literal OIDC_SERVER_BASE_URL=http://keycloak-discovery.$NAMESPACE.svc.cluster.local:8080 \
      --from-literal OIDC_REALM=cno-realm --from-literal KAFKA_BROKERS=kafka-cluster-kafka-external-bootstrap:9094 \
-     --from-literal KAFKA_TLS_ENABLED="true"  --from-literal KAFKA_TOPIC_NOTIFICATION=cno-notification
+     --from-literal KAFKA_TLS_ENABLED="true"  
+    #--from-literal KAFKA_TOPIC_NOTIFICATION=cno-notification
 
     # kafka auth config
     kubectl -n $NAMESPACE get secret/cno-kafka-cluster-cluster-ca-cert -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/cno-ca
@@ -175,7 +176,7 @@ installCno() {
 
     # Install CNO UI
     curl $CNO_RAW_REPOSITORY/$VERSION/deploy/control-plane/onboarding-ui/cno-ui.yaml |
-        sed 's|$API_URL|https://'"$LOADBALANCER_IP"':'"$CNO_API_NODEPORT"'|g;  s|$NOTIFICATION_URL|https://'"$LOADBALANCER_IP"':'"$CNO_NOTIFICATION_NODEPORT"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|NodePort|g; s|$CNO_UI_IMAGE|'"$CNO_UI_IMAGE"'|g' |
+        sed 's|$API_URL|https://'"$LOADBALANCER_IP"':'"$CNO_API_NODEPORT"'|g; s|$OIDC_URL|http://keycloak-discovery.'"$NAMESPACE"'.svc.cluster.local:8080|g; s|$OIDC_REALM|cno|g; s|$OIDC_CLIENT_ID|public|g; s|ClusterIP|NodePort|g; s|$CNO_UI_IMAGE|'"$CNO_UI_IMAGE"'|g' |
         kubectl -n $NAMESPACE apply -f -
     CNO_UI_NODEPORT=$(kubectl -n $NAMESPACE get service cno-ui -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}')
 
