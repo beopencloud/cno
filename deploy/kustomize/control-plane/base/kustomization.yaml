@@ -3,19 +3,48 @@ kind: Kustomization
 namespace: cno-system
 commonLabels:
   cno/resource: "true"
+generatorOptions:
+  disableNameSuffixHash: true
 secretGenerator:
 - name: cno-config
   envs:
-  - env.secret
+  - cno-secret.env
+  type: Opaque
+- name: cno-api-db-secret
+  envs:
+  - cno-db-secret.env
   type: Opaque
 configMapGenerator:
 - name: cno-config
   envs:
-  - env.config
+  - cno-config.env
+
+vars:
+- name: NAMESPACE
+  objref:
+    kind: Namespace
+    name: cno-system
+    apiVersion: v1
+- name: MYSQL_SIDECAR_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.MYSQL_SIDECAR_IMAGE
+- name: MYSQL_EXPORTER_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.MYSQL_EXPORTER_IMAGE
+
 resources:
 - namespace.yaml
 - keycloak
 - kafka
+- mysql
 
 replacements:
 - path: keycloak/replacements-related-image-keycloak-init.yaml
@@ -34,6 +63,11 @@ replacements:
 - path: kafka/replacements-related-kafka-user-operator-image.yaml
 - path: kafka/replacements-related-strimzi-operator-image.yaml
 - path: kafka/replacements-related-zookeeper-image.yaml
+
+- path: mysql/replacements-mysql-operator-image.yaml
+- path: mysql/replacements-mysql-orchestrator-image.yaml
+- path: mysql/replacements-mysql-image.yaml
+- path: mysql/replacements-mysql-secretname.yaml
 
 
 

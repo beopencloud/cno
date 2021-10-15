@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-config
+  fieldPath: data.MYSQL_IMAGE
+targets:
+- select:
+    kind: MysqlCluster
+    name: cno-api
+  fieldPaths:
+  - spec.image
