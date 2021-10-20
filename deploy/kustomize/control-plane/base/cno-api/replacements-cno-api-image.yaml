@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-config
+  fieldPath: data.CNO_API_IMAGE
+targets:
+- select:
+    kind: Deployment
+    name: cno-api
+  fieldPaths:
+  - spec.template.containers.[name=cno-api].image

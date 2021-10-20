@@ -4,3 +4,7 @@ bases:
 - ../../../../base
 patchesStrategicMerge:
 - kafka-patch.yaml
+- cno-api-service-patch.yaml
+- cno-api-ingress-deletion-patch.yaml
+- cno-ui-service-patch.yaml
+- cno-ui-ingress-deletion-patch.yaml

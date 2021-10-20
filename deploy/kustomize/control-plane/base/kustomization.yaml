@@ -45,6 +45,8 @@ resources:
 - keycloak
 - kafka
 - mysql
+- cno-api
+- cno-ui
 
 replacements:
 - path: keycloak/replacements-related-image-keycloak-init.yaml
@@ -68,6 +70,9 @@ replacements:
 - path: mysql/replacements-mysql-orchestrator-image.yaml
 - path: mysql/replacements-mysql-image.yaml
 - path: mysql/replacements-mysql-secretname.yaml
+
+- path: cno-api/replacements-cno-api-image.yaml
+- path: cno-ui/replacements-cno-ui-image.yaml
 
 
 
