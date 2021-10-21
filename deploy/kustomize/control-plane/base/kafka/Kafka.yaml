@@ -30,14 +30,14 @@ spec:
           type: tls
         configuration:
           bootstrap:
-            host: bootstrap-cno.ingress-domain
+            host: bootstrap-cno.$(DOMAIN)
           brokers:
           - broker: 0
-            host: broker-0-cno.ingress-domain
+            host: broker-0-cno.$(DOMAIN)
           - broker: 1
-            host: broker-1-cno.ingress-domain
+            host: broker-1-cno.$(DOMAIN)
           - broker: 2
-            host: broker-2-cno.ingress-domain
+            host: broker-2-cno.$(DOMAIN)
     authorization:
       type: simple
       superUsers:

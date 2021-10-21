@@ -1,0 +1,5 @@
+varReference:
+- path: spec/kafka/listeners[]/configuration/bootstrap/host
+  kind: Kafka
+- path: spec/kafka/listeners[]/configuration/brokers[]/host
+  kind: Kafka

@@ -19,12 +19,57 @@ configMapGenerator:
   envs:
   - cno-config.env
 
+configurations:
+- kustomizeconfig.yaml
+
 vars:
 - name: NAMESPACE
   objref:
     kind: Namespace
     name: cno-system
     apiVersion: v1
+- name: DOMAIN
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.DOMAIN
+- name: NODE_PORT_IP
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.NODE_PORT_IP
+- name: KAFKA_BOOTSTRAP_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.KAFKA_BOOTSTRAP_NODEPORT
+- name: CNO_API_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_API_NODEPORT
+- name: KAFKA_BOOTSTRAP_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.KAFKA_BOOTSTRAP_LOADBALANCER_IP
+- name: CNO_API_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_API_LOADBALANCER_IP
 - name: MYSQL_SIDECAR_IMAGE
   objref:
     kind: ConfigMap
@@ -53,11 +98,6 @@ replacements:
 - path: keycloak/replacements-related-image-keycloak.yaml
 - path: keycloak/replacements-related-image-postgresql.yaml
 - path: keycloak/replacements-related-keycloak-operator-image.yaml
-
-- path: kafka/replacements-kafka-bootstrap-domain.yaml
-- path: kafka/replacements-kafka-broker-0-domain.yaml
-- path: kafka/replacements-kafka-broker-1-domain.yaml
-- path: kafka/replacements-kafka-broker-2-domain.yaml
 
 - path: kafka/replacements-related-kafka-image.yaml
 - path: kafka/replacements-related-kafka-tls-sidecar-image.yaml

@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cno-api
+spec:
+  template:
+    spec:
+      containers:
+      - name: cno-api
+        env:
+        - name: SERVER_URL
+          value: http://$(NODE_PORT_IP):$(CNO_API_NODEPORT)
+        - name: DEFAULT_EXTERNAL_BROKERS_URL
+          value: $(KAFKA_BOOTSTRAP_LOADBALANCER_IP):$(KAFKA_BOOTSTRAP_NODEPORT)

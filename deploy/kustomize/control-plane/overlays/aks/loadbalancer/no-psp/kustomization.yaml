@@ -8,3 +8,5 @@ patchesStrategicMerge:
 - cno-api-ingress-deletion-patch.yaml
 - cno-ui-service-patch.yaml
 - cno-ui-ingress-deletion-patch.yaml
+- cno-ui-deployment-patch.yaml
+- cno-api-deployment-patch.yaml

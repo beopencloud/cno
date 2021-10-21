@@ -12,9 +12,13 @@ metadata:
   name: cno-ui
 spec:
   rules:
-  - host: cno-ui.cluster.beopenit.com
+  - host: cno-ui.beopenit.com
     http:
       paths:
-      - backend:
-          serviceName: cno-ui
-          servicePort: 80
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: cno-ui
+            port:
+              number: 80

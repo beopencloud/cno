@@ -26,7 +26,7 @@ spec:
         run: cno-api
     spec:
       containers:
-      - image: beopenit/cno-api:latest
+      - image: beopenit/cno-api:1.0.0-rc
         imagePullPolicy: Always
         name: cno-api
         ports:
@@ -37,22 +37,20 @@ spec:
         terminationMessagePolicy: File
         env:
         - name: DEFAULT_SUPER_ADMIN_PASSWORD
-          secretKeyRef:
-            name: cno-config
-            key: DEFAULT_SUPER_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cno-config
+              key: DEFAULT_SUPER_ADMIN_PASSWORD
         - name: IN_CLUSTER
           value: "true"
         - name: SERVER_URL
-          valueFrom:
-            configMapKeyRef:
-              name: cno-config
-              key: CNO_API_DOMAIN
+          value: https://cno-api.$(DOMAIN)
         - name: SERVER_PORT
           value: "8080"
         - name: OIDC_REALM
           value: cno
         - name: OIDC_SERVER_BASE_URL
-          value: "http://keycloak-discover:8080"
+          value: http://keycloak-discovery.$(NAMESPACE).svc.cluster.local:8080
         - name: OIDC_CLIENT_ID
           value: "cno-api"
         - name: OIDC_CLIENT_SECRET
@@ -82,12 +80,9 @@ spec:
               name: cno-api-db-secret
               key: ROOT_PASSWORD
         - name: CREATE_DEFAULT_CLUSTER
-          value: true
+          value: "true"
         - name: DEFAULT_EXTERNAL_BROKERS_URL
-          valueFrom:
-            configMapKeyRef:
-              name: cno-config
-              key: KAFKA_BOOTSTRAP_DOMAIN
+          value: bootstrap-cno.$(DOMAIN)
         - name: DEFAULT_CLUSTER_ID
           value: "113d583aac3144f6b98370116a6b69e9"
         - name: DEFAULT_CLUSTER_API_SERVER_URL
@@ -96,17 +91,17 @@ spec:
               name: cno-config
               key: DEFAULT_CLUSTER_API_SERVER_URL
         - name: KAFKA_CA_CERT
-          value: /.key/ca.crt
+          value: /.key/ca/ca.crt
         - name: KAFKA_CLIENT_CERT
-          value: /.key/user.crt
+          value: /.key/user/user.crt
         - name: KAFKA_CLIENT_KEY
-          value: /.key/user.key
+          value: /.key/user/user.key
         volumeMounts:
         - name: kafkaca
-          mountPath: "/.key"
+          mountPath: "/.key/ca"
           readOnly: true
-        - name: clientcred
-          mountPath: "/.key"
+        - name: kafkaclientcred
+          mountPath: "/.key/user"
           readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -118,6 +113,6 @@ spec:
       - name: kafkaca
         secret:
           secretName: cno-kafka-cluster-cluster-ca-cert
-      - name: clientcred
+      - name: kafkaclientcred
         secret:
           secretName: cno-kafka-superadmin
