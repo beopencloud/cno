@@ -121,6 +121,7 @@ replacements:
 
 - path: cno-api/replacements-cno-api-image.yaml
 - path: cno-ui/replacements-cno-ui-image.yaml
+
 - path: dataplane/replacements-cno-agent-image.yaml
 - path: dataplane/replacements-cno-operator-image.yaml
 - path: dataplane/replacements-cnocd-image.yaml
