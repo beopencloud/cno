@@ -84,7 +84,7 @@ spec:
         - name: DEFAULT_EXTERNAL_BROKERS_URL
           value: bootstrap-cno.$(DOMAIN)
         - name: DEFAULT_CLUSTER_ID
-          value: "113d583aac3144f6b98370116a6b69e9"
+          value: $(DEFAULT_CLUSTER_ID)
         - name: DEFAULT_CLUSTER_API_SERVER_URL
           valueFrom:
             configMapKeyRef:

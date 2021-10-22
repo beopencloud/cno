@@ -84,6 +84,13 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.MYSQL_EXPORTER_IMAGE
+- name: DEFAULT_CLUSTER_ID
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.DEFAULT_CLUSTER_ID
 
 resources:
 - namespace.yaml
@@ -92,6 +99,7 @@ resources:
 - mysql
 - cno-api
 - cno-ui
+- dataplane
 
 replacements:
 - path: keycloak/replacements-related-image-keycloak-init.yaml
@@ -113,6 +121,6 @@ replacements:
 
 - path: cno-api/replacements-cno-api-image.yaml
 - path: cno-ui/replacements-cno-ui-image.yaml
-
-
-
+- path: dataplane/replacements-cno-agent-image.yaml
+- path: dataplane/replacements-cno-operator-image.yaml
+- path: dataplane/replacements-cnocd-image.yaml

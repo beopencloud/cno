@@ -1,194 +1,4 @@
----
 
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: cno-cd-operator
-imagePullSecrets:
-- name: $SA
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: cno-cd-operator
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: cno-cd-operator
-  template:
-    metadata:
-      labels:
-        name: cno-cd-operator
-    spec:
-      serviceAccountName: cno-cd-operator
-      containers:
-      - name: cno-cd-operator
-        image: $CNO_CD_OPERATOR_IMAGE #beopenit/cno-cd-operator:latest
-        imagePullPolicy: Always
-        env:
-        - name: WATCH_NAMESPACE
-          value: ""
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: OPERATOR_NAME
-          value: "cno-cd-operator"
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  creationTimestamp: null
-  name: cno-cd-operator
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  - pods
-  - services
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - daemonsets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - statefulsets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - cnocd.beopenit.com
-  resources:
-  - workloads
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - cnocd.beopenit.com
-  resources:
-  - workloads/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: cno-cd-operator
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cno-cd-operator
-subjects:
-- kind: ServiceAccount
-  name: cno-cd-operator
-  namespace: $NAMESPACE
-
----
-
-# permissions to do leader election.
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: cno-cd-operator-leader-election-role
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - configmaps/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: cno-cd-operator-leader-election-rolebinding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: cno-cd-operator-leader-election-role
-subjects:
-- kind: ServiceAccount
-  name: cno-cd-operator
-  namespace: $NAMESPACE
-
----
 
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -409,7 +219,7 @@ spec:
                                   type: integer
                                 protocol:
                                   description: The IP protocol for this port. Supports
-                                    "TCP", "UDP", and "SCTP". Default is TCP.
+                                                 "TCP", "UDP", and "SCTP". Default is TCP.
                                   type: string
                                 targetPort:
                                   anyOf:
@@ -477,7 +287,7 @@ spec:
                                   type: integer
                                 protocol:
                                   description: The IP protocol for this port. Supports
-                                    "TCP", "UDP", and "SCTP". Default is TCP.
+                                                 "TCP", "UDP", and "SCTP". Default is TCP.
                                   type: string
                                 targetPort:
                                   anyOf:
@@ -597,7 +407,7 @@ spec:
                                   type: integer
                                 protocol:
                                   description: The IP protocol for this port. Supports
-                                    "TCP", "UDP", and "SCTP". Default is TCP.
+                                                 "TCP", "UDP", and "SCTP". Default is TCP.
                                   type: string
                                 targetPort:
                                   anyOf:
@@ -665,7 +475,7 @@ spec:
                                   type: integer
                                 protocol:
                                   description: The IP protocol for this port. Supports
-                                    "TCP", "UDP", and "SCTP". Default is TCP.
+                                                 "TCP", "UDP", and "SCTP". Default is TCP.
                                   type: string
                                 targetPort:
                                   anyOf:

@@ -3,3 +3,5 @@ varReference:
   kind: Kafka
 - path: spec/kafka/listeners[]/configuration/brokers[]/host
   kind: Kafka
+- path: spec/template/spec/volumes/secret/secretName
+  kind: Deployment

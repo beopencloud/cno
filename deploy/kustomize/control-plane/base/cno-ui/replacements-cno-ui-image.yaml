@@ -7,4 +7,4 @@ targets:
     kind: Deployment
     name: cno-ui
   fieldPaths:
-  - spec.template.containers.[name=cno-ui].image
+  - spec.template.spec.containers.[name=cno-ui].image

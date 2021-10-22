@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onboarding-operator-kubernetes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: onboarding-operator-kubernetes
+  template:
+    metadata:
+      labels:
+        name: onboarding-operator-kubernetes
+    spec:
+      serviceAccountName: onboarding-operator-kubernetes
+      containers:
+      - name: onboarding-operator-kubernetes
+        image: beopenit/onboarding-operator-kubernetes:latest
+        imagePullPolicy: Always
+        env:
+        - name: WATCH_NAMESPACE
+          value: ""
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: OPERATOR_NAME
+          value: "onboarding-operator-kubernetes"
