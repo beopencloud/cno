@@ -14,7 +14,6 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cno-api
-  namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: cluster-admin
