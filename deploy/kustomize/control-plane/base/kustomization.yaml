@@ -120,7 +120,7 @@ resources:
 - mysql
 - cno-api
 - cno-ui
-#- dataplane
+- dataplane
 
 replacements:
 - path: keycloak/replacements-related-image-keycloak-init.yaml
