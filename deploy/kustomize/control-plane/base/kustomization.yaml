@@ -91,6 +91,27 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.DEFAULT_CLUSTER_ID
+- name: STRIMZI_OPERATOR_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.STRIMZI_OPERATOR_IMAGE
+- name: STRIMZI_KAFKA_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.STRIMZI_KAFKA_IMAGE
+- name: IMAGE_PULL_SECRETS_NAME
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.IMAGE_PULL_SECRETS_NAME
 
 resources:
 - namespace.yaml
@@ -99,7 +120,7 @@ resources:
 - mysql
 - cno-api
 - cno-ui
-- dataplane
+#- dataplane
 
 replacements:
 - path: keycloak/replacements-related-image-keycloak-init.yaml

@@ -5,7 +5,7 @@ metadata:
     app: cno-ui
   name: cno-ui
 spec:
-  host: cno-api.cluster.beopenit.com
+  host: cno-ui.cluster.beopenit.com
   to:
     kind: Service
     name: cno-ui

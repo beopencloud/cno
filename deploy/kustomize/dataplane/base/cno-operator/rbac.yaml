@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   name: onboarding-operator-kubernetes
 imagePullSecrets:
-- name: $SA
+- name: $(IMAGE_PULL_SECRETS_NAME)
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

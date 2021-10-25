@@ -7,8 +7,8 @@ spec:
     template:
       pod:
         imagePullSecrets:
-        - name: $SA
-    image: "strimzi/kafka:0.20.0-kafka-2.5.0"
+        - name: $(IMAGE_PULL_SECRETS_NAME)
+    image: $(STRIMZI_KAFKA_IMAGE)
     version: 2.5.0
     replicas: 1
     listeners:
@@ -53,8 +53,8 @@ spec:
     template:
       pod:
         imagePullSecrets:
-        - name: $SA
-    image: "strimzi/kafka:0.20.0-kafka-2.5.0"
+        - name: $(IMAGE_PULL_SECRETS_NAME)
+    image: $(STRIMZI_KAFKA_IMAGE)
     replicas: 1
     storage:
       type: ephemeral
@@ -62,10 +62,10 @@ spec:
     template:
       pod:
         imagePullSecrets:
-        - name: $SA
+        - name: $(IMAGE_PULL_SECRETS_NAME)
     topicOperator:
-      image: "strimzi/operator:0.20.0"
+      image: $(STRIMZI_OPERATOR_IMAGE)
     userOperator:
-      image: "strimzi/operator:0.20.0"
+      image: $(STRIMZI_OPERATOR_IMAGE)
     tlsSidecar:
-      image: "strimzi/kafka:0.20.0-kafka-2.5.0"
+      image: $(STRIMZI_KAFKA_IMAGE)

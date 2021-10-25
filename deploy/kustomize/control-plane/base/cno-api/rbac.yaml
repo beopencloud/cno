@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   name: cno-api
 imagePullSecrets:
-- name: $SA
+- name: $(IMAGE_PULL_SECRETS_NAME)
 
 ---
 

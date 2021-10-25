@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   name: cno-agent
 imagePullSecrets:
-- name: $SA
+- name: $(IMAGE_PULL_SECRETS_NAME)
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

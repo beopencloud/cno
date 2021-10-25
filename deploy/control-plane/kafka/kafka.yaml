@@ -63,9 +63,9 @@ spec:
       pod:
         imagePullSecrets:
         - name: $SA
-    topicOperator: 
+    topicOperator:
       image: $KAFKA_TOPIC_OPERATOR_IMAGE
-    userOperator: 
+    userOperator:
       image: $KAFKA_USER_OPERATOR_IMAGE
     tlsSidecar:
       image: $KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE

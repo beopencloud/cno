@@ -149,4 +149,4 @@ kind: ServiceAccount
 metadata:
   name: keycloak-operator
 imagePullSecrets:
-- name: $SA
+- name: $(IMAGE_PULL_SECRETS_NAME)

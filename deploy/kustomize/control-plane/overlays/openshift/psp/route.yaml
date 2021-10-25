@@ -1,0 +1,31 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: cno-api
+  name: cno-api
+spec:
+  host: cno-api.$(DOMAIN)
+  to:
+    kind: Service
+    name: cno-api
+    weight: 100
+  wildcardPolicy: None
+  tls:
+    termination: edge
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+spec:
+  host: cno-ui.$(DOMAIN)
+  to:
+    kind: Service
+    name: cno-ui
+    weight: 100
+  wildcardPolicy: None
+  tls:
+    termination: edge
