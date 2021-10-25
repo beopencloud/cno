@@ -4,6 +4,7 @@ metadata:
   labels:
     app: cno-api
   name: cno-api
+  namespace: $(NAMESPACE)
 spec:
   host: cno-api.$(DOMAIN)
   to:
@@ -20,6 +21,7 @@ metadata:
   labels:
     app: cno-ui
   name: cno-ui
+  namespace: $(NAMESPACE)
 spec:
   host: cno-ui.$(DOMAIN)
   to:

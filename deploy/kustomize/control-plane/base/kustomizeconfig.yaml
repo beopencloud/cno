@@ -27,12 +27,11 @@ varReference:
 - path: spec/entityOperator/template/pod/imagePullSecrets[]/name
   kind: Kafka
 
-
-
 - path: spec/template/spec/volumes/secret/secretName
   kind: Deployment
 - path: users
   kind: SecurityContextConstraints
 - path: spec
   kind: Route
-  apiVersion: route.openshift.io/v1
+- path: metadata
+  kind: Route
