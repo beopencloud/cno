@@ -55,7 +55,7 @@ spec:
         imagePullSecrets:
         - name: $(IMAGE_PULL_SECRETS_NAME)
     image: $(STRIMZI_KAFKA_IMAGE)
-    replicas: 1
+    replicas: 3
     storage:
       type: ephemeral
   entityOperator:
