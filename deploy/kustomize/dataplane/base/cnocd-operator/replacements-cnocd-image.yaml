@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: cno-config-dataplane
-  fieldPath: data.CNO_ONBOARDING_OPERATOR_IMAGE
+  fieldPath: data.CNO_CD_OPERATOR_IMAGE
 targets:
 - select:
     kind: Deployment
