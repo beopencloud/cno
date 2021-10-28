@@ -317,15 +317,56 @@ $ cnoctl --help
 To install CNO you need Kubernetes v1.16 or higher.
 Once cnoctl is installed, to install CNO run the following command:
 ```
-$ cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
+$ cnoctl init --type aks --domain cno-dev.beopenit.com --expose ingress --psp true --ingress-type nginx
 ```
-The supported flags are:
-* --domain: The wirldcard domain configured in the cluster
-* --ingress-type: The ingress type used in the cluster: nodeport, nginx, router, loadbalancer
-* --namespace: cno install namespace (default "cno-system")
-* --type: The kubernetes in which cno is been install type: vanilla, aks, eks, gke (default "vanilla")
-* --version: cno version to install (default "1.0.0-rc")
-* --with-dataplane: install cno with a default dataplane (default true)
+
+The supported flags are:    
+- type: The control plane type: vanilla,aks,eks,gke (default "vanilla") |  [ REQUIRED ]
+- cno-row-repository-url: cno repository |  [ REQUIRED ]
+- psp: is pod policy security enabled on your cluster |  [ REQUIRED ]
+- expose: The exposition type used in the cluster: nodeport,ingress,router,loadbalancer|  [ REQUIRED ]  
+- domain:  The wirldcard domain configured in the cluster |  [ REQUIRED ]  
+- ingress-type: The ingress type used in the cluster: nodeport,nginx,router,loadbalancer |  [ OPTIONAL ]  
+- kubeconfig: use an kubeconfig |  [ OPTIONAL ]  
+- namespace: Cno install namespace (default "cno-system") |  [ OPTIONAL ]  
+- version: Cno version to install (default "1.0.0-rc") |  [ OPTIONAL ]  
+- with-dataplane: Install cno with a default dataplane (default true) |  [ OPTIONAL ]
+
+DEFAULT FLAG VARIABLE
+
+| VARIABLES  |  VALUES |
+|---|---|
+| CNO_ROW_REPOSITORY_URL | https://raw.githubusercontent.com/beopencloud/cno  |
+| KEYCLOAK_OPERATOR_IMAGE  |  quay.io/keycloak/keycloak-operator:12.0.1 |
+| KEYCLOAK_IMAGE |  quay.io/keycloak/keycloak:12.0.1 |
+| KEYCLOAK_INIT_CONTAINER  |  quay.io/keycloak/keycloak-init-container:master |
+| KEYCLOAK_POSTEGRESQL_IMAGE  |  registry.access.redhat.com/rhscl/postgresql-10-rhel7:1 |
+| STRIMZI_OPERATOR_IMAGE |  strimzi/operator:0.20.0 |
+| STRIMZI_KAFKA_IMAGE | strimzi/kafka:0.20.0-kafka-2.5.0  |
+| MYSQL_PRESSLABS_OPERATOR_IMAGE  | quay.io/presslabs/mysql-operator:0.4.0  |
+| MYSQL_PRESSLABS_ORCHESTRATOR_IMAGE | quay.io/presslabs/mysql-operator-orchestrator:0.4.0  |
+| MYSQL_IMAGE  | percona@sha256:713c1817615b333b17d0fbd252b0ccc53c48a665d4cfcb42178167435a957322  |
+| MYSQL_PRESSLABS_OPERATOR_SIDECAR_IMAGE  |  quay.io/presslabs/mysql-operator-sidecar:0.4.0 |
+| MYSQL_EXPORTER_IMAGE  |  prom/mysqld-exporter:v0.11.0 |
+| CNO_API_IMAGE | beopenit/cno-api  |
+| CNO_UI_IMAGE  | beopenit/cno-ui  |
+| CNO_NOTIFICATION_IMAGE  | beopenit/cno-notification  |
+| BEOPENIT/CNO-NOTIFICATION | beopenit/cno-agent  |
+| CNO_ONBOARDING_OPERATOR_IMAGE  | beopenit/onboarding-operator-kubernetes  |
+| CNO_CD_OPERATOR_IMAGE  | beopenit/cno-cd-operator  |
+
+YOU CAN CHANGE INFORMATION VARIABLES NEAR EXCUTE INSTALL COMMANDE   
+```
+export VARIABLE_NAME = VARIABLE_VALUES   
+```
+Examples:
+```
+export MYSQL_IMAGE = my_docker_registry_url/mysql:latest
+export CNO_ROW_REPOSITORY_URL = https://github.com/my_row_repository
+export KEYCLOAK_IMAGE = my_docker_registry_url/keycloak:tag
+cnoctl init --type aks --domain cno-dev.beopenit.com --expose ingress --psp true --ingress-type nginx
+  
+```
 
 # Configuration
 
