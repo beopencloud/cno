@@ -1,6 +1,6 @@
 source:
   kind: ConfigMap
-  name: cno-config
+  name: cno-images-config
   fieldPath: data.MYSQL_OPERATOR_IMAGE
 targets:
 - select:

@@ -1,6 +1,6 @@
 source:
   kind: ConfigMap
-  name: cno-config
+  name: cno-images-config
   fieldPath: data.CNO_ONBOARDING_OPERATOR_IMAGE
 targets:
 - select:

@@ -9,15 +9,35 @@ secretGenerator:
 - name: cno-config
   envs:
   - cno-secret.env
+  literals:
+  - OIDC_CLIENT_SECRET=cno-api-client-secret
   type: Opaque
 - name: cno-api-db-secret
   envs:
   - cno-db-secret.env
+  literals:
+  - DATABASE=cnoapi
   type: Opaque
+
+
 configMapGenerator:
 - name: cno-config
   envs:
-  - cno-config.env
+  - cno-images-config.env
+  literals:
+  - DEFAULT_CLUSTER_ID=113d583aac3144f6b98370116a6b69e9
+- name: cno-images-config
+  envs:
+  - cno-images-config.env
+- name: cno-ingress-route-config
+  envs:
+  - cno-ingress-route-config.env
+- name: cno-loadbalancer-config
+  envs:
+  - cno-loadbalancer-config.env
+- name: cno-nodeport-config
+  envs:
+  - cno-nodeport-config.env
 
 configurations:
 - kustomizeconfig.yaml
@@ -28,62 +48,6 @@ vars:
     kind: Namespace
     name: cno-system
     apiVersion: v1
-- name: DOMAIN
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.DOMAIN
-- name: NODE_PORT_IP
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.NODE_PORT_IP
-- name: KAFKA_BOOTSTRAP_NODEPORT
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.KAFKA_BOOTSTRAP_NODEPORT
-- name: CNO_API_NODEPORT
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.CNO_API_NODEPORT
-- name: KAFKA_BOOTSTRAP_LOADBALANCER_IP
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.KAFKA_BOOTSTRAP_LOADBALANCER_IP
-- name: CNO_API_LOADBALANCER_IP
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.CNO_API_LOADBALANCER_IP
-- name: MYSQL_SIDECAR_IMAGE
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.MYSQL_SIDECAR_IMAGE
-- name: MYSQL_EXPORTER_IMAGE
-  objref:
-    kind: ConfigMap
-    name: cno-config
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.MYSQL_EXPORTER_IMAGE
 - name: DEFAULT_CLUSTER_ID
   objref:
     kind: ConfigMap
@@ -91,24 +55,80 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.DEFAULT_CLUSTER_ID
+- name: DOMAIN
+  objref:
+    kind: ConfigMap
+    name: cno-ingress-route-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.DOMAIN
+- name: NODE_PORT_IP
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.NODE_PORT_IP
+- name: KAFKA_BOOTSTRAP_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.KAFKA_BOOTSTRAP_NODEPORT
+- name: CNO_API_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_API_NODEPORT
+- name: KAFKA_BOOTSTRAP_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-loadbalancer-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.KAFKA_BOOTSTRAP_LOADBALANCER_IP
+- name: CNO_API_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-loadbalancer-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_API_LOADBALANCER_IP
+- name: MYSQL_SIDECAR_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.MYSQL_SIDECAR_IMAGE
+- name: MYSQL_EXPORTER_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.MYSQL_EXPORTER_IMAGE
 - name: STRIMZI_OPERATOR_IMAGE
   objref:
     kind: ConfigMap
-    name: cno-config
+    name: cno-images-config
     apiVersion: v1
   fieldref:
     fieldpath: data.STRIMZI_OPERATOR_IMAGE
 - name: STRIMZI_KAFKA_IMAGE
   objref:
     kind: ConfigMap
-    name: cno-config
+    name: cno-images-config
     apiVersion: v1
   fieldref:
     fieldpath: data.STRIMZI_KAFKA_IMAGE
 - name: IMAGE_PULL_SECRETS_NAME
   objref:
     kind: ConfigMap
-    name: cno-config
+    name: cno-images-config
     apiVersion: v1
   fieldref:
     fieldpath: data.IMAGE_PULL_SECRETS_NAME

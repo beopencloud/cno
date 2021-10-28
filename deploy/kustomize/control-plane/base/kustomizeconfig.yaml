@@ -29,6 +29,8 @@ varReference:
 
 - path: spec/template/spec/volumes/secret/secretName
   kind: Deployment
+- path: imagePullSecrets[]/name
+  kind: ServiceAccount
 - path: users
   kind: SecurityContextConstraints
 - path: spec

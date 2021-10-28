@@ -8,7 +8,7 @@ resources:
 configMapGenerator:
 - name: cno-config-dataplane
   envs:
-  - cno-config.env
+  - cno-images-config.env
 replacements:
 - path: base/cno-agent/replacements-cno-agent-image.yaml
 - path: base/cno-operator/replacements-cno-operator-image.yaml
