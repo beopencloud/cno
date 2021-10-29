@@ -23,7 +23,7 @@ secretGenerator:
 configMapGenerator:
 - name: cno-config
   envs:
-  - cno-images-config.env
+  - cno-config.env
   literals:
   - DEFAULT_CLUSTER_ID=113d583aac3144f6b98370116a6b69e9
 - name: cno-images-config
