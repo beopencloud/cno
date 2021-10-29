@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+spec:
+  template:
+    spec:
+      containers:
+      - name: cno-ui
+        securityContext:
+          privileged: true
