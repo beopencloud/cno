@@ -317,7 +317,7 @@ $ cnoctl --help
 To install CNO you need Kubernetes v1.16 or higher.
 Once cnoctl is installed, to install CNO run the following command:
 ```
-$ cnoctl init --type aks --domain cno-dev.beopenit.com --expose ingress --psp true --ingress-type nginx
+$ cnoctl init --type aks --domain cno-dev.beopenit.com --expose ingress --psp true 
 ```
 
 The supported flags are:    
@@ -326,7 +326,6 @@ The supported flags are:
 - psp: is pod policy security enabled on your cluster |  [ REQUIRED ]
 - expose: The exposition type used in the cluster: nodeport,ingress,router,loadbalancer|  [ REQUIRED ]  
 - domain:  The wirldcard domain configured in the cluster |  [ REQUIRED ]  
-- ingress-type: The ingress type used in the cluster: nodeport,nginx,router,loadbalancer |  [ OPTIONAL ]  
 - kubeconfig: use an kubeconfig |  [ OPTIONAL ]  
 - namespace: Cno install namespace (default "cno-system") |  [ OPTIONAL ]  
 - version: Cno version to install (default "1.0.0-rc") |  [ OPTIONAL ]  
