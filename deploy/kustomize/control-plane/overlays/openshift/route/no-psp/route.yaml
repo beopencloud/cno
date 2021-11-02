@@ -23,7 +23,7 @@ metadata:
   name: cno-ui
   namespace: $(NAMESPACE)
 spec:
-  host: cno-ui.$(DOMAIN)
+  host: cno.$(DOMAIN)
   to:
     kind: Service
     name: cno-ui
