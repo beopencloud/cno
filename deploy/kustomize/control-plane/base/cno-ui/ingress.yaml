@@ -12,7 +12,7 @@ metadata:
   name: cno-ui
 spec:
   rules:
-  - host: cno-ui.beopenit.com
+  - host: cno.$(DOMAIN)
     http:
       paths:
       - pathType: Prefix
