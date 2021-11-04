@@ -1,0 +1,9 @@
+dependencies:
+- name: strimzi-kafka-operator
+  repository: https://strimzi.io/charts/
+  version: 0.26.0
+- name: mysql-operator
+  repository: https://presslabs.github.io/charts
+  version: 0.4.0
+digest: sha256:763def1540efd337e9c6cce5e467e47436d1eb38987d4c97cfef6f094efc7ce9
+generated: "2021-11-02T16:49:38.644708Z"

@@ -1,0 +1,99 @@
+
+cno_super_admin_password: beopenit
+# url of the api server of your k8s cluster
+default_cluster_api_server_url: https://domainOfYourk8sApiServer
+
+expose:
+  # ingress | route | loadbalancer | nodeport
+  type: loadbalancer
+  # For ingress or route exposition type
+  domain: yourdomain.com
+  # for nodeport exposition type
+  nodeport_ip_address: xx.xx.xx.xx
+
+
+cno-api:
+  image: docker.io/beopenit/cno-api:1.0.0-rc
+
+cno-ui:
+  image: docker.io/beopenit/cno-api:1.0.0-rc
+
+cno-notification:
+  image: docker.io/beopenit/cno-api:1.0.0-rc
+
+cno-agent:
+  image: docker.io/beopenit/cno-api:1.0.0-rc
+
+cno-operator:
+  image: docker.io/beopenit/cno-api:1.0.0-rc
+
+cnocd-operator:
+  image: docker.io/beopenit/cno-api:1.0.0-rc
+
+keycloak:
+  image: quay.io/keycloak/keycloak:12.0.1
+  databaseImage: registry.access.redhat.com/rhscl/postgresql-10-rhel7:1
+  operatorImage: quay.io/keycloak/keycloak-operator:12.0.1
+  initContainerImage: quay.io/keycloak/keycloak-init-container:master
+
+cno_mysql_db:
+  image: percona@sha256:713c1817615b333b17d0fbd252b0ccc53c48a665d4cfcb42178167435a957322
+  storage: 5Gi
+
+strimzi-kafka-operator:
+  defaultImageRegistry: quay.io
+  defaultImageRepository: strimzi
+  defaultImageTag: 0.26.0
+  watchNamespaces: []
+  watchAnyNamespace: false
+  podSecurityContext: {}
+  securityContext: {}
+  createGlobalResources: true
+  resources:
+    limits:
+      memory: 384Mi
+      cpu: 1000m
+    requests:
+      memory: 384Mi
+      cpu: 200m
+
+
+mysql-operator:
+  image: quay.io/presslabs/mysql-operator:0.4.0
+  sidecarImage: quay.io/presslabs/mysql-operator-sidecar:0.4.0
+  replicas: 1
+  imagePullPolicy: IfNotPresent
+  installCRDs: true
+  nodeSelector: {}
+  tolerations: []
+  resources: {}
+  securityContext:
+    runAsNonRoot: true
+    # 65532 is the UID for nonroot user from distroless image
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
+  extraArgs: []
+  rbac:
+    create: true
+    # if rbac is false this service account is used
+    serviceAccountName: default
+
+  orchestrator:
+    image: quay.io/presslabs/mysql-operator-orchestrator:0.4.0
+    # orchestrator user and password to manage MySQL clusters
+    topologyUser: orchestrator
+    topologyPassword:  # this is empty and will be random generated if not specified
+    # secretName:  # you can specify which secret to use for orchestrator topology credentials
+    resources: {}
+    persistence:
+      enabled: true
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: "ReadWriteOnce"
+      size: 5Gi
