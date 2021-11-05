@@ -1,4 +1,4 @@
-
+ 
 # CNO<br/>Cloud Native Onboarding - DOCUMENTATION
 
 Onboard, Deploy, Manage and Secure microservices on Kubernetes
@@ -297,7 +297,6 @@ $ wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_
 ```
 $ tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
 ```
-
 ```
 $ mv cnoctl /usr/local/bin/
 ```
@@ -326,6 +325,107 @@ The supported flags are:
 * --type: The kubernetes in which cno is been install type: vanilla, aks, eks, gke (default "vanilla")
 * --version: cno version to install (default "1.0.0-rc")
 * --with-dataplane: install cno with a default dataplane (default true)
+
+## **Quick Installation of CNO with Kustomize**
+To install CNO, you need Kubernetes v1.16 or higher. Clone the cno repository:
+```
+$ git clone [https://github.com/beopencloud/cno.git](https://github.com/beopencloud/cno.git)
+```
+Go to the control-plane Kustomize directory:
+```
+cd deploy/kustomize/control-plane
+```
+Prerequisites:
+
+Edit the following files for configuration:
+
+1.  Put the api server url of your cluster on file base/cno-config.env [REQUIRED]
+ ```
+$ vi base/cno-config.env
+```
+2.  Edit the root password of CNO db base/cno-db-secret.env [OPTIONAL]
+  ```
+$ vi base/cno-db-secret.env
+```
+ 
+3.  You can set images name/version of CNO’s components if you have a private registry and want to do an installation in disconnected mode [OPTIONAL]
+```
+$ vi  base/cno-images-config.env
+```
+4. Set the CNO admin user password on file base/cno-secret.env [OPTIONAL]
+```
+$ vi base/cno-secret.env
+```
+5.  You must have an ingress or route controller correctly installed and configured
+- You must have an ingress or route controller correctly installed and configured
+- Edit the following file and set your ingress or route controller domain
+```
+$ vi base/cno-ingress-route-config.env
+```
+6. ONLY FOR LoadBalancer exposition type. [REQUIRED]
+- Deploy a service LoadBalancer for cno-api and another for the kafka with the following command
+```
+$ kubectl create namespace cno-system
+$ kubectl create -n cno-system -f overlays/loadbalancer/prerequisite.yaml
+```
+- After that, wait for the allocation of external IPs of the services
+```
+$ kubectl -n cno-system get svc
+```
+- Edit the following file and set the IP addresses of kafka_boostrap and cno-api services
+```
+$ vi base/cno-loadbalancer-config.env
+```
+7. ONLY FOR NodPort exposition type. [REQUIRED]
+- Deploy a service NodPort for cno-api and another for the kafka with the following command
+```
+$ kubectl create namespace cno-system
+$ kubectl create -n cno-system -f overlays/nodeport/prerequisite.yaml
+```
+- Get the nodePort of the cno-api and the kafka_boostrap service
+```
+$ kubectl -n cno-system get svc
+```
+- Edit the following file and set an external IP node of your cluster and the nodePort of kafka_boostrap and cno-api services
+```
+$ vi base/cno-nodeport-config.env
+```
+After that you can install cno with this following generic commande.
+```
+$ Kubectl apply -k overlays/ingress|loadbalancer|nodeport/psp|no-psp
+```
+**NB: For Openshift the generic command for installation is:**
+```
+$ Kubectl apply -k overlays/openshif/tingress|loadbalancer|nodeport/psp|no-psp
+```
+Or if your kubectl version is not compatible with the kustomize, you can install the latest version of kustomize with this command.
+```
+$ curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+```
+And use the following command to install CNO
+```
+$ Kustomize build overlays/ingress|loadbalancer|nodeport/psp|no-psp | kubectl apply -f -
+```
+For example if you want to install CNO with LoadBalancer exposition type on a cluster with Pod Security Policy activated, you have to run the following command:
+```
+$ Kubectl apply -k overlays/loadbalancer/psp
+Or
+$ kustomize build overlays/loadbalancer/psp | kubectl apply -f -
+```
+after that wait until the pods are running then connect to the dashboard with the following accesses.
+url: 
+-  For Ingress or Route exposition type: https://cno.YOUR_DOMAIN
+- For Loadbalancer exposition type: [http://external_ip_addr_of_cno-ui_service](http://external_ip_addr_of_cno-ui_service)
+-   For NodePort exposition type: http://node_ip:node_port
+Username : admin
+password : get it on file base/cno-secret.env (default: beopenit)
+** NB: For Openshift the generic command for installation is: **
+```
+$ Kubectl apply -k overlays/openshif/tingress|loadbalancer|nodeport/psp|no-psp
+Or
+$ kustomize build overlays/openshif/ingress|loadbalancer|nodeport/psp|no-psp | kubectl apply -f -
+```
+
 
 # Configuration
 
