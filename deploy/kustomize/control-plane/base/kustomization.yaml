@@ -83,6 +83,13 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.CNO_API_NODEPORT
+- name: CNO_UI_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_UI_NODEPORT
 - name: KAFKA_BOOTSTRAP_LOADBALANCER_IP
   objref:
     kind: ConfigMap
@@ -97,6 +104,13 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.CNO_API_LOADBALANCER_IP
+- name: CNO_UI_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-loadbalancer-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_UI_LOADBALANCER_IP
 - name: MYSQL_SIDECAR_IMAGE
   objref:
     kind: ConfigMap

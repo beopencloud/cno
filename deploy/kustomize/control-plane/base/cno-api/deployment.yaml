@@ -45,6 +45,8 @@ spec:
           value: "true"
         - name: SERVER_URL
           value: https://cno-api.$(DOMAIN)
+        - name: UI_URL
+          value: https://cno.$(DOMAIN)
         - name: SERVER_PORT
           value: "8080"
         - name: OIDC_REALM
