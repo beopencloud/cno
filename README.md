@@ -329,7 +329,7 @@ The supported flags are:
 ## **Quick Installation of CNO with Kustomize**
 To install CNO, you need Kubernetes v1.16 or higher. Clone the cno repository:
 ```
-$ git clone [https://github.com/beopencloud/cno.git](https://github.com/beopencloud/cno.git)
+$ git clone https://github.com/beopencloud/cno.git
 ```
 Go to the control-plane Kustomize directory:
 ```
