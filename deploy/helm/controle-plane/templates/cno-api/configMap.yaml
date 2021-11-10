@@ -1,0 +1,9 @@
+{{- if not (lookup "v1" "secret" .Release.Namespace "cno-config") -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cno-config
+data:
+  defaultClusterApiServerUrl: '"true"'
+  default_cluster_id: {{ uuidv4 }}
+{{- end -}}

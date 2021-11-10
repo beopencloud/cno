@@ -11,4 +11,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: {{ .Values.cno_mysql_db.storage }}
+          storage: {{ .Values.cno_mysql_db.storage | default "20Gi" }}

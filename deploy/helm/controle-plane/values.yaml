@@ -1,16 +1,15 @@
 
-cno_super_admin_password: beopenit
+cnoSuperAdminPassword: beopenit
 # url of the api server of your k8s cluster
-default_cluster_api_server_url: https://domainOfYourk8sApiServer
+defaultClusterApiServerUrl: https://domainOfYourk8sApiServer
 
 expose:
   # ingress | route | loadbalancer | nodeport
-  type: loadbalancer
+  type: ingress
   # For ingress or route exposition type
   domain: yourdomain.com
   # for nodeport exposition type
-  nodeport_ip_address: xx.xx.xx.xx
-
+  nodePortIPAddress: xx.xx.xx.xx
 
 cno-api:
   image: docker.io/beopenit/cno-api:1.0.0-rc
@@ -31,14 +30,15 @@ cnocd-operator:
   image: docker.io/beopenit/cno-api:1.0.0-rc
 
 keycloak:
-  image: quay.io/keycloak/keycloak:12.0.1
+  image: quay.io/keycloak/keycloak:15.0.1
   databaseImage: registry.access.redhat.com/rhscl/postgresql-10-rhel7:1
-  operatorImage: quay.io/keycloak/keycloak-operator:12.0.1
+  operatorImage: quay.io/keycloak/keycloak-operator:15.0.1
   initContainerImage: quay.io/keycloak/keycloak-init-container:master
+  dbstorage: 5Gi
 
 cno_mysql_db:
   image: percona@sha256:713c1817615b333b17d0fbd252b0ccc53c48a665d4cfcb42178167435a957322
-  storage: 5Gi
+  storage: 6Gi
 
 strimzi-kafka-operator:
   defaultImageRegistry: quay.io
