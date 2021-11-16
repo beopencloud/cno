@@ -24,24 +24,3 @@ spec:
       env:
       - name: KEYCLOAK_IMPORT
         value: /cno/cno-realm.json
-
----
-
-{{- if not (lookup "v1" "secret" .Release.Namespace "keycloak-db-secret") -}}
-apiVersion: v1
-data:
-  POSTGRES_EXTERNAL_ADDRESS: {{ printf "%s.%s.%s" "keycloak-db" .Release.Namespace "svc.cluster.local" | b64enc }}
-  POSTGRES_EXTERNAL_PORT: NTQzMgo=
-  POSTGRES_SUPERUSER: dHJ1ZQo=
-  POSTGRES_DATABASE: cm9vdA==
-  POSTGRES_HOST: {{ printf "%s.%s.%s" "keycloak-postgresql" .Release.Namespace "svc.cluster.local" | b64enc }}
-  POSTGRES_PASSWORD: {{ randAlphaNum 20 | b64enc }}
-  POSTGRES_USERNAME: a2V5Y2xvYWs=
-  POSTGRES_VERSION: MTA=
-kind: Secret
-metadata:
-  labels:
-    app: keycloak
-  name: keycloak-db-secret
-type: Opaque
-{{- end -}}

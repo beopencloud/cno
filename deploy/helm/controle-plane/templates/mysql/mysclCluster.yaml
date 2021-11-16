@@ -4,11 +4,11 @@ metadata:
   name: cno-api
 spec:
   replicas: 1
-  #image: {{ .Values.cno_mysql_db.image }}
+  #image: {{ .Values.cnoMysqlDb.image }}
   secretName: cno-api-db-secret
   volumeSpec:
     persistentVolumeClaim:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: {{ .Values.cno_mysql_db.storage | default "20Gi" }}
+          storage: {{ .Values.cnoMysqlDb.storage | default "20Gi" }}

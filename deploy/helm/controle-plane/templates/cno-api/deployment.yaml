@@ -22,7 +22,7 @@ spec:
         run: cno-api
     spec:
       containers:
-      - image: beopenit/cno-api:1.0.0-rc
+      - image: {{ .Values.cnoApi.image | default "beopenit/cno-api:1.0.0-rc" }}
         imagePullPolicy: Always
         name: cno-api
         ports:
@@ -80,7 +80,7 @@ spec:
         - name: CREATE_DEFAULT_CLUSTER
           value: "true"
         - name: DEFAULT_EXTERNAL_BROKERS_URL
-          value: {{ printf "%s.%s" "bootstrap-cno"  .Values.expose.domain }}
+          value: {{ printf "%s.%s:443" "bootstrap-cno"  .Values.expose.domain }}
         - name: DEFAULT_CLUSTER_ID
           valueFrom:
             configMapKeyRef:
@@ -91,6 +91,8 @@ spec:
             configMapKeyRef:
               name: cno-config
               key: defaultClusterApiServerUrl
+        - name: KAFKA_CLUSTER_NAMESPACE
+          value: {{ .Release.Namespace }}
         - name: KAFKA_CA_CERT
           value: /.key/ca/ca.crt
         - name: KAFKA_CLIENT_CERT

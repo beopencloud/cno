@@ -15,7 +15,7 @@ spec:
         app: cno-ui
     spec:
       containers:
-      - image: beopenit/cno-ui:1.0.0-rc
+      - image: {{ .Values.cnoUi.image | default "beopenit/cno-ui:1.0.0-rc" }}
         name: cno-ui
         imagePullPolicy: Always
         ports:
@@ -23,9 +23,9 @@ spec:
         resources: {}
         env:
         - name: API_URL
-          value: https://cno-api.$(DOMAIN)
+          value: https://cno-api.{{ $.Values.expose.domain }}
         - name: NOTIFICATION_URL
-          value: https://cno-notification.$(DOMAIN)
+          value: https://cno-notification.{{ $.Values.expose.domain }}
         - name: OIDC_URL
           value: OIDC_URL
         - name: OIDC_REALM

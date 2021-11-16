@@ -1,9 +1,14 @@
-{{- if not (lookup "v1" "secret" .Release.Namespace "cno-config") -}}
+{{- $cluster_id := uuidv4 | quote }}
+{{- $secret := (lookup "v1" "ConfigMap" .Release.Namespace "cno-config") }}
+{{- if $secret }}
+{{- $cluster_id = index $secret.data "default_cluster_id" }}
+{{- end -}}
+{{- if not (lookup "v1" "configmap" .Release.Namespace "cno-config") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cno-config
 data:
-  defaultClusterApiServerUrl: '"true"'
-  default_cluster_id: {{ uuidv4 }}
+  defaultClusterApiServerUrl: {{ .Values.defaultClusterApiServerUrl }}
+  default_cluster_id: {{ $cluster_id }}
 {{- end -}}

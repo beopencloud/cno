@@ -84,7 +84,7 @@ spec:
         - name: CREATE_DEFAULT_CLUSTER
           value: "true"
         - name: DEFAULT_EXTERNAL_BROKERS_URL
-          value: bootstrap-cno.$(DOMAIN)
+          value: bootstrap-cno.$(DOMAIN):443
         - name: DEFAULT_CLUSTER_ID
           value: $(DEFAULT_CLUSTER_ID)
         - name: DEFAULT_CLUSTER_API_SERVER_URL
@@ -92,6 +92,8 @@ spec:
             configMapKeyRef:
               name: cno-config
               key: DEFAULT_CLUSTER_API_SERVER_URL
+        - name: KAFKA_CLUSTER_NAMESPACE
+          value: $(NAMESPACE)
         - name: KAFKA_CA_CERT
           value: /.key/ca/ca.crt
         - name: KAFKA_CLIENT_CERT

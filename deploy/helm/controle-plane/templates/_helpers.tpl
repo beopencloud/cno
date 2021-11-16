@@ -1,6 +1,12 @@
 {{/*
 Expand the name of the chart.
 */}}
+
+
+{{- define "controle-plane.OidcClientSecret" -}}
+{{- randAlphaNum 20 | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
 {{- define "controle-plane.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}

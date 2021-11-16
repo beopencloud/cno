@@ -1,33 +1,35 @@
 
 cnoSuperAdminPassword: beopenit
 # url of the api server of your k8s cluster
-defaultClusterApiServerUrl: https://domainOfYourk8sApiServer
+defaultClusterApiServerUrl: https://tools.beopenit.com
 
 expose:
   # ingress | route | loadbalancer | nodeport
   type: ingress
+  ingressClass: nginx
   # For ingress or route exposition type
-  domain: yourdomain.com
+  domain: tools.beopenit.com
   # for nodeport exposition type
   nodePortIPAddress: xx.xx.xx.xx
 
-cno-api:
+cnoApi:
   image: docker.io/beopenit/cno-api:1.0.0-rc
 
-cno-ui:
+cnoUi:
+  image: docker.io/beopenit/cno-ui:1.0.0-rc
+
+cnoNotification:
   image: docker.io/beopenit/cno-api:1.0.0-rc
 
-cno-notification:
-  image: docker.io/beopenit/cno-api:1.0.0-rc
+data-plane:
+  cnoAgent:
+    image: docker.io/beopenit/cno-agent:1.0.0-rc
 
-cno-agent:
-  image: docker.io/beopenit/cno-api:1.0.0-rc
+  cnoOperator:
+    image: docker.io/beopenit/onboarding-operator-kubernetes:1.0.0-rc
 
-cno-operator:
-  image: docker.io/beopenit/cno-api:1.0.0-rc
-
-cnocd-operator:
-  image: docker.io/beopenit/cno-api:1.0.0-rc
+  cnocdOperator:
+    image: docker.io/beopenit/cno-cd-operator:1.0.0-rc
 
 keycloak:
   image: quay.io/keycloak/keycloak:15.0.1
@@ -36,7 +38,7 @@ keycloak:
   initContainerImage: quay.io/keycloak/keycloak-init-container:master
   dbstorage: 5Gi
 
-cno_mysql_db:
+cnoMysqlDb:
   image: percona@sha256:713c1817615b333b17d0fbd252b0ccc53c48a665d4cfcb42178167435a957322
   storage: 6Gi
 
@@ -59,8 +61,8 @@ strimzi-kafka-operator:
 
 
 mysql-operator:
-  image: quay.io/presslabs/mysql-operator:0.4.0
-  sidecarImage: quay.io/presslabs/mysql-operator-sidecar:0.4.0
+  image: docker.io/bitpoke/mysql-operator:v0.5.1
+  sidecarImage: docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.5.1
   replicas: 1
   imagePullPolicy: IfNotPresent
   installCRDs: true
@@ -73,17 +75,18 @@ mysql-operator:
     runAsUser: 65532
     runAsGroup: 65532
     fsGroup: 65532
-  extraArgs: []
+  extraArgs:
+    - --metrics-exporter-image=docker.io/prom/mysqld-exporter:v0.13.0
   rbac:
     create: true
     # if rbac is false this service account is used
     serviceAccountName: default
 
   orchestrator:
-    image: quay.io/presslabs/mysql-operator-orchestrator:0.4.0
+    image: docker.io/bitpoke/mysql-operator-orchestrator:v0.5.1
     # orchestrator user and password to manage MySQL clusters
     topologyUser: orchestrator
-    topologyPassword:  # this is empty and will be random generated if not specified
+    topologyPassword:  sfndsodnfsf
     # secretName:  # you can specify which secret to use for orchestrator topology credentials
     resources: {}
     persistence:

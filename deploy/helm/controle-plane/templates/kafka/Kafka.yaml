@@ -25,6 +25,9 @@ spec:
           type: tls
         {{- if or (eq .Values.expose.type "ingress") (eq .Values.expose.type "route") }}
         configuration:
+          {{ if and (eq .Values.expose.type "ingress") .Values.expose.ingressClass }}
+          class: {{ .Values.expose.ingressClass }}
+          {{ end }}
           bootstrap:
             host: bootstrap-cno.{{ .Values.expose.domain }}
           brokers:

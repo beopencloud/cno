@@ -23,7 +23,7 @@ spec:
         run: cno-agent
     spec:
       containers:
-      - image: beopenit/cno-agent:latest
+      - image: {{ .Values.cnoAgent.image | default "beopenit/cno-agent:1.0.0-rc" }}
         imagePullPolicy: Always
         name: cno-agent
         resources: {}
@@ -35,7 +35,7 @@ spec:
         - name: KAFKA_TlS_ENABLED
           value: "true"
         - name: KAFKA_BROKERS
-          value: "cno-kafka-cluster-kafka-bootstrap:9093"
+          value: {{ .Values.brockerUrl | default "cno-kafka-cluster-kafka-bootstrap:9093" }}
         - name: KAFKA_CA_CERT
           value: /.key/caFile
         - name: KAFKA_CLIENT_CERT
@@ -45,7 +45,7 @@ spec:
         - name: LICENCE
           valueFrom:
             secretKeyRef:
-              name: cno-agent-config
+              name: {{ .Values.secretRef | default "cno-agent-config" }}
               key: licence
         volumeMounts:
         - name: kafkaconfig
@@ -60,4 +60,4 @@ spec:
       volumes:
       - name: kafkaconfig
         secret:
-          secretName: cno-agent-config
+          secretName: {{ .Values.secretRef | default "cno-agent-config" }}

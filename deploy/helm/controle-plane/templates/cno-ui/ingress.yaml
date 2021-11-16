@@ -9,18 +9,18 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   labels:
-    app: cno-api
-  name: cno-api
+    app: cno-ui
+  name: cno-ui
 spec:
   rules:
-  - host: {{ printf "%s.%s" "cno-api"  .Values.expose.domain }}
+  - host: {{ printf "%s.%s" "cno"  .Values.expose.domain }}
     http:
       paths:
       - pathType: Prefix
         path: /
         backend:
           service:
-            name: cno-api
+            name: cno-ui
             port:
               number: 80
 {{ end }}
