@@ -1,0 +1,14 @@
+apiVersion: mysql.presslabs.org/v1alpha1
+kind: MysqlCluster
+metadata:
+  name: cno-api
+spec:
+  replicas: 1
+  #image: {{ .Values.mysqlDBImage }}
+  secretName: cno-api-db-secret
+  volumeSpec:
+    persistentVolumeClaim:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.dbStorage | default "20Gi" }}

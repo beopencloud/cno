@@ -1,21 +1,21 @@
 
-cnoSuperAdminPassword: beopenit
 # url of the api server of your k8s cluster
-defaultClusterApiServerUrl: https://tools.beopenit.com
-PodSecurityPolicyEnabled: true
-# On openshift environment you have to set this variable to true
-SecurityContextConstraintsEnabled: false
-
-expose:
-  # ingress | route | loadbalancer | nodeport
-  type: ingress
-  ingressClass: nginx
-  # For ingress or route exposition type
-  domain: tools.beopenit.com
-  # for nodeport exposition type
-  nodePortIPAddress: xx.xx.xx.xx
+global:
+  podSecurityPolicyEnabled: true
+  # On openshift environment you have to set this variable to true
+  securityContextConstraintsEnabled: false
+  expose:
+    # ingress | route | loadbalancer | nodeport
+    type: ingress
+    ingressClass: nginx
+    # For ingress or route exposition type
+    domain: tools.beopenit.com
+    # for nodeport exposition type
+    nodePortIPAddress: xx.xx.xx.xx
 
 cnoApi:
+  defaultClusterApiServerUrl: https://tools.beopenit.com
+  cnoSuperAdminPassword: beopenit
   image: docker.io/beopenit/cno-api:1.0.0-rc
   mysqlDBImage: docker.io/percona:5.7.35
   dbStorage: 15Gi
@@ -30,7 +30,7 @@ data-plane:
   cnoAgent:
     image: docker.io/beopenit/cno-agent:1.0.0-rc
 
-  cnoOperator:
+  cnoOnboardingOperator:
     image: docker.io/beopenit/onboarding-operator-kubernetes:1.0.0-rc
 
   cnocdOperator:

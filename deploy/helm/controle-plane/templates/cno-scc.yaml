@@ -1,4 +1,4 @@
-{{ if .Values.SecurityContextConstraintsEnabled }}
+{{ if .Values.global.securityContextConstraintsEnabled }}
 allowHostDirVolumePlugin: false
 allowHostIPC: false
 allowHostNetwork: false

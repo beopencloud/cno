@@ -1,4 +1,4 @@
-{{ if or (eq .Values.expose.type "loadbalancer") (eq .Values.expose.type "nodeport") }}
+{{ if or (eq .Values.global.expose.type "loadbalancer") (eq .Values.global.expose.type "nodeport") }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -16,11 +16,11 @@ spec:
         - name: NAMESPACE
           value: {{ .Release.Namespace }}
         - name: NODEPORT_IP_ADDRESS
-          value: {{ .Values.expose.nodePortIPAddress }}
+          value: {{ .Values.global.expose.nodePortIPAddress }}
         image: bitnami/kubectl
-        {{ if eq .Values.expose.type "loadbalancer" }}
+        {{ if eq .Values.global.expose.type "loadbalancer" }}
         command: ['/bin/sh', '-c', '{{ $.Files.Get "scripts/loadbalancer-ingress-ip-patch.sh" }}' ]
-        {{ else if eq .Values.expose.type "nodeport"  }}
+        {{ else if eq .Values.global.expose.type "nodeport"  }}
         command: ['/bin/sh', '-c', '{{ $.Files.Get "scripts/noadport-patch.sh" }}' ]
         {{ end }}
       restartPolicy: Never
