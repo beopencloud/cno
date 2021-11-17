@@ -1,0 +1,9 @@
+brockerUrl:
+cnoAgent:
+  image: docker.io/beopenit/cno-agent:1.0.0-rc
+
+  cnoOperator:
+    image: docker.io/beopenit/onboarding-operator-kubernetes:1.0.0-rc
+
+  cnocdOperator:
+    image: docker.io/beopenit/cno-cd-operator:1.0.0-rc

@@ -2,6 +2,9 @@
 cnoSuperAdminPassword: beopenit
 # url of the api server of your k8s cluster
 defaultClusterApiServerUrl: https://tools.beopenit.com
+PodSecurityPolicyEnabled: true
+# On openshift environment you have to set this variable to true
+SecurityContextConstraintsEnabled: false
 
 expose:
   # ingress | route | loadbalancer | nodeport
@@ -14,6 +17,8 @@ expose:
 
 cnoApi:
   image: docker.io/beopenit/cno-api:1.0.0-rc
+  mysqlDBImage: docker.io/percona:5.7.35
+  dbStorage: 15Gi
 
 cnoUi:
   image: docker.io/beopenit/cno-ui:1.0.0-rc
@@ -36,11 +41,7 @@ keycloak:
   databaseImage: registry.access.redhat.com/rhscl/postgresql-10-rhel7:1
   operatorImage: quay.io/keycloak/keycloak-operator:15.0.1
   initContainerImage: quay.io/keycloak/keycloak-init-container:master
-  dbstorage: 5Gi
-
-cnoMysqlDb:
-  image: percona@sha256:713c1817615b333b17d0fbd252b0ccc53c48a665d4cfcb42178167435a957322
-  storage: 6Gi
+  dbStorage: 5Gi
 
 strimzi-kafka-operator:
   defaultImageRegistry: quay.io

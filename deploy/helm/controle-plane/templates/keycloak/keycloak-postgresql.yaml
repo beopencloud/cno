@@ -69,10 +69,12 @@ spec:
         - mountPath: /var/lib/pgsql/data
           name: keycloak-postgresql-claim
       dnsPolicy: ClusterFirst
+      {{ if .Values.PodSecurityPolicyEnabled }}
       securityContext:
         fsGroup: 2000
         runAsNonRoot: true
         runAsUser: 1000
+      {{ end }}
       restartPolicy: Always
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
@@ -94,7 +96,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.keycloak.dbstorage | default "15Gi" }}
+      storage: {{ .Values.keycloak.dbStorage | default "15Gi" }}
   volumeMode: Filesystem
 
 
