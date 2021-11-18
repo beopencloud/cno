@@ -1,4 +1,3 @@
-
 # url of the api server of your k8s cluster
 global:
   podSecurityPolicyEnabled: true
@@ -59,7 +58,6 @@ strimzi-kafka-operator:
     requests:
       memory: 384Mi
       cpu: 200m
-
 
 mysql-operator:
   image: docker.io/bitpoke/mysql-operator:v0.5.1
