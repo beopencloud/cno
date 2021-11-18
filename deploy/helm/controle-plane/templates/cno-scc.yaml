@@ -24,7 +24,7 @@ supplementalGroups:
   type: RunAsAny
 users:
 - system:serviceaccount:{{ $.Release.Namespace }}:default
-- system:serviceaccount:{{ $.Release.Namespace }}:mysql-operator
+- system:serviceaccount:{{ $.Release.Namespace }}:cno-mysql-operator
 - system:serviceaccount:{{ $.Release.Namespace }}:cno-ui
 - system:serviceaccount:{{ $.Release.Namespace }}:postgresql
 volumes:
