@@ -1,5 +1,5 @@
  
-# CNO<br/>Cloud Native Onboarding - DOCUMENTATION
+# CNO<br/>Cloud Native Onboarding 
 
 Onboard, Deploy, Manage and Secure microservices on Kubernetes.
 
@@ -7,7 +7,6 @@ CNO is an open source platform to onboard easily and securely organizational tea
 
 *  [Installation](#Installation)
 *  [Configuration](#Configuration)
-*  [Tutorials](#Tutorials)
 
 # Installation
 
@@ -175,4 +174,78 @@ $ kustomize build overlays/openshif/ingress|loadbalancer|nodeport/psp|no-psp | k
 ```
 
 # Configuration
-# Tutorials
+
+## Cloud Providers:
+CNO Hub, the hub of Kubernetes clusters, helps you centralize the management, governance, and monitoring of your entire Kubernetes ecosystem. You can register clusters into CNO Hub in two different ways: Standard registration and Cloud-based registration. 
+
+**Standard Registration**, you can add any existing Kubernetes clusters like VMware Tanzu, RedHat OpenShift or Rancher RKE. To do so, go directly to Day 2 Operations with CNO Hub.
+
+
+**Cloud-based Registration**, CNO Hub can register automatically your Kubernetes clusters from AWS, Azure or GCP. To do so, you need to create cloud providers into CNO first. You can create cloud providers via CNOCTL with the following commands:
+
+#### AWS
+```
+cnoctl adm create provider eks [name] [--flags]
+```
+The supported arguments are:
+* name: The name of the cloud provider you want to create | [REQUIRED]
+
+The supported flags are:
+* --default-region: The region of the provider | [REQUIRED] 
+* --access-key: Access key for EKS cloud provider | [REQUIRED]
+* --secret-key: Secret key for EKS cloud provider | [REQUIRED]
+* --session-token: Session Token for EKS cloud provider | [REQUIRED]
+
+#### AZURE
+
+
+```cnoctl adm create provider aks [name] [--flags]```
+
+The supported arguments are:
+* name: The name of the cloud provider you want to create | [REQUIRED]
+
+The supported flags are:
+* --client-id: The client-id for AKS provider | [REQUIRED] 
+* --client-secret: The client secret for AKS provider | [REQUIRED]
+* --subscription-id: The subscription id for AKS provider | [REQUIRED]
+* --tenant-id: The tenant id of the AKS provider | [REQUIRED]
+
+#### GCP
+
+
+```cnoctl adm create provider gke [name] [--flags]```
+
+The supported arguments are:
+* name: The name of the cloud provider you want to create | [REQUIRED]
+
+The supported flags are:
+* --json-file: The JSON file that contains the configuration of the GKE provider | [REQUIRED] 
+
+## LDAP Configuration
+
+This section provides how to configure your ldap identity provider to validate usernames and passwords using bind authentication. 
+
+```
+cnoctl adm create ldap [--flags ]
+```
+
+The supported flags are:
+* --url: The URL of your LDAP account | [REQUIRED]
+* --Port: The port of the LDAP account (389 for LDAP, 634 for LDAPs)| [REQUIRED]
+* --cn: The common name for the LDAP server | [REQUIRED]
+* --basedn: The base domain name | [REQUIRED]
+* --admin-password: define the LDAP admin password | [REQUIRED]
+
+
+## Configure Messaging 
+
+To configure SMTP settings to send emails or notifications to CNO users, you have to create a messaging account through CNOCTL.
+
+```
+cnoctl adm create smtp [--flags]
+```
+The supported flags are:
+* --email: The sender email of your organization | [REQUIRED]
+* --smtp-password: The sender email account password | [REQUIRED]
+* --smtp-server:  SMTP address server. | [REQUIRED]
+* --smtp-port: The port of the email providers' servers. | [REQUIRED]
