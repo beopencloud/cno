@@ -38,20 +38,7 @@ spec:
       served: true
       storage: false
   version: v1beta1
-    schema:
-          openAPIV3Schema:
-            type: object
-            properties:
-              spec:
-                type: object
-                properties:
-                  cronSpec:
-                    type: string
-                  image:
-                    type: string
-                  replicas:
-                    type: integer
-  validation:
+  schema:
     openAPIV3Schema:
       properties:
         spec:
@@ -8338,7 +8325,7 @@ spec:
       served: true
       storage: false
   version: v1beta1
-  validation:
+  schema:
     openAPIV3Schema:
       properties:
         spec:
