@@ -15724,7 +15724,7 @@ roleRef:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: strimzi-cluster-operator
+  name: strimzi-cluster-operator-cm
   labels:
     app: strimzi
 data:
@@ -15760,7 +15760,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: strimzi-cluster-operator
+  name: strimzi-cluster-operator-deploy
   labels:
     app: strimzi
 spec:
@@ -15786,7 +15786,7 @@ spec:
             name: strimzi-cluster-operator
       containers:
         - name: strimzi-cluster-operator
-          image: quay.io/strimzi/operator:0.27.1
+          image: $KAFKA_OPERATOR_IMAGE
           ports:
             - containerPort: 8080
               name: http
