@@ -15858,13 +15858,13 @@ spec:
             httpGet:
               path: /healthy
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /ready
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 30
           resources:
             limits:
