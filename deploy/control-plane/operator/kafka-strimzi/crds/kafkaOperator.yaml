@@ -31,7 +31,7 @@ spec:
   conversion:
     strategy: None
   versions:
-    - name: v1beta1
+    - name: v1beta2
       served: true
       storage: true
     - name: v1alpha1
