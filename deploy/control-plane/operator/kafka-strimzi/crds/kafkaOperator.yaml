@@ -15724,7 +15724,7 @@ roleRef:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: strimzi-cluster-operator-cm
+  name: strimzi-cluster-operator
   labels:
     app: strimzi
 data:
@@ -15760,7 +15760,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: strimzi-cluster-operator-deploy
+  name: strimzi-cluster-operator
   labels:
     app: strimzi
 spec:
