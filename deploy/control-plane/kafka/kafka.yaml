@@ -15,7 +15,7 @@ spec:
       - name: plain
         port: 9092
         type: internal
-        tls: false
+        tls:  true
       - name: tls
         port: 9093
         type: internal
@@ -59,7 +59,7 @@ spec:
         imagePullSecrets:
         - name: $SA
     image: $KAFKA_ZOOKEEPER_IMAGE
-    replicas: 1
+    replicas: 3
     storage:
       type: ephemeral
   entityOperator:
