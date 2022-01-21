@@ -15,11 +15,15 @@ metadata:
     app: keycloak
   name: cno-keycloak
 spec:
+  ingressClassName: nginx
   rules:
   - host: cno-auth.cluster.beopenit.com
     http:
       paths:
       - backend:
-          serviceName: keycloak
-          servicePort: 8443
+          service:
+            name: keycloak
+            port:
+              number: 8443
         path: /
+        pathType: Prefix

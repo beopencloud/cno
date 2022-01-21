@@ -11,10 +11,13 @@ metadata:
     app: cno-notification
   name: cno-notification
 spec:
+  ingressClassName: nginx
   rules:
   - host: cno-notification.cluster.beopenit.com
     http:
       paths:
-      - backend:
-          serviceName: cno-notification
-          servicePort: 3000
+      - backend: 
+          service:
+            name: cno-notification
+            port:
+              number: 3000

@@ -11,10 +11,13 @@ metadata:
     app: cno-api
   name: cno-api
 spec:
+  ingressClassName: nginx
   rules:
   - host: cno-api.cluster.beopenit.com
     http:
       paths:
       - backend:
-          serviceName: cno-api
-          servicePort: 80
+          service:
+            name: cno-api
+            port:
+              number: 80
