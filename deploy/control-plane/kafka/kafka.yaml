@@ -29,6 +29,7 @@ spec:
         authentication:
           type: tls
         configuration:
+          class: nginx
           bootstrap:
             host: bootstrap-cno.INGRESS_DOMAIN
           brokers:
