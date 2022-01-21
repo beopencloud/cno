@@ -15757,7 +15757,7 @@ data:
     logger.netty.level = INFO
     logger.netty.additivity = false
 ---
-apiVersion: apps/v1
+aapiVersion: apps/v1
 kind: Deployment
 metadata:
   name: strimzi-cluster-operator
@@ -15777,27 +15777,21 @@ spec:
     spec:
       serviceAccountName: strimzi-cluster-operator
       volumes:
-        - name: strimzi-tmp
-          emptyDir:
-            medium: Memory
-            sizeLimit: 1Mi
         - name: co-config-volume
           configMap:
             name: strimzi-cluster-operator
       containers:
         - name: strimzi-cluster-operator
-          image: $KAFKA_OPERATOR_IMAGE
+          image: $KAFKA_OPERATOR_IMAGE #'strimzi/operator:0.20.0'
           ports:
             - containerPort: 8080
               name: http
           args:
             - /opt/strimzi/bin/cluster_operator_run.sh
           volumeMounts:
-            - name: strimzi-tmp
-              mountPath: /tmp
             - name: co-config-volume
               mountPath: /opt/strimzi/custom-config/
-            env:
+          env:
             - name: STRIMZI_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -15849,11 +15843,6 @@ spec:
               value: 'strimzi/kafka-bridge:0.19.0'
             - name: STRIMZI_DEFAULT_JMXTRANS_IMAGE
               value: 'strimzi/jmxtrans:0.20.0'
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: STRIMZI_FEATURE_GATES
-              value: ""
           livenessProbe:
             httpGet:
               path: /healthy
