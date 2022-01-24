@@ -15585,7 +15585,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: myproject
+    namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-global

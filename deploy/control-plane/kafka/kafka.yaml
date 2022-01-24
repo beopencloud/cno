@@ -59,7 +59,7 @@ spec:
         imagePullSecrets:
         - name: $SA
     image: $KAFKA_ZOOKEEPER_IMAGE
-    replicas: 3
+    replicas: 1
     storage:
       type: ephemeral
   entityOperator:
