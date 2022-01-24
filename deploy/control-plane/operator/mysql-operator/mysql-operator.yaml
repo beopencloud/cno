@@ -5,7 +5,7 @@ metadata:
 spec:
   group: mysql.presslabs.org
   versions:
-    - name: v1alpha1
+    - name: v2alpha1
       served: true
       storage: true
       schema:
@@ -172,7 +172,7 @@ spec:
     shortNames:
       - mbk
   versions:
-    - name: v1alpha1
+    - name: v2alpha1
       served: true
       storage: true
       schema:
