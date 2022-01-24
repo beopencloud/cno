@@ -469,12 +469,12 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD   
-          #args:  ["--leader-election-namespace","cno-system","--orchestrator-uri","http://mysql-operator-0-svc:80/api","--sidecar-image","$MYSQL_SIDECAR_IMAGE","--metrics-exporter-image","$MYSQL_EXPORTER_IMAGE"] 
-            #- --leader-election-namespace=$NAMESPACE
+          args:  
+            - --leader-election-namespace=$NAMESPACE
             # connect to orchestrator on localhost
-            #- --orchestrator-uri=http://mysql-operator-0-svc:80/api
-           # - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-           # - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
+            - --orchestrator-uri=http://mysql-operator-0-svc:80/api
+            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
+            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
           global:
             leaderElection:
               # 
