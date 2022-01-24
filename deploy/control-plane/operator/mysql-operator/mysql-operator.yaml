@@ -469,7 +469,6 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          command: ["/bin/sh","-c"]
           args:  
             - --leader-election-namespace=$NAMESPACE
             # connect to orchestrator on localhost
