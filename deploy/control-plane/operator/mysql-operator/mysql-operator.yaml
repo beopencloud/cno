@@ -470,7 +470,7 @@ spec:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
           args:
-            - --leader-election-namespace=$NAMESPACE
+           # - --leader-election-namespace=$NAMESPACE
             # connect to orchestrator on localhost
             - --orchestrator-uri=http://127.0.0.1:3000/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
