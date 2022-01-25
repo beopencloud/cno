@@ -547,6 +547,9 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: default
+  volumeMode: Filesystem
 
 ---
 apiVersion: v1
@@ -557,6 +560,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: default
   volumeMode: Filesystem
   resources:
     requests:
