@@ -500,12 +500,11 @@ spec:
             name: mysql-operator-orc
         - name: etc-orchestrator
           emptyDir: {}
+        - name: data
+          persistentVolumeClaim:
+            claimName: mysql-operator-pvc
       securityContext:
         fsGroup: 777
-  volumes:
-    - name: data
-      persistentVolumeClaim:
-        claimName: mysql-operator-pvc
 #  volumeClaimTemplates:
 #    - metadata:
 #        name: data
