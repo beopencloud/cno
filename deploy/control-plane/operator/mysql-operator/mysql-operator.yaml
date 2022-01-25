@@ -411,7 +411,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-operator
-  namespace: cno-system
+  namespace: $NAMESPACE
   labels:
     app: mysql-operator
     version: "8.0.26-2.0.2"
@@ -438,10 +438,10 @@ spec:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
         checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
-      serviceAccountName: mysql-operator
+      serviceAccountName: mysql-operator 
       containers:
         - name: operator
-          image: $MYSQL_OPERATOR_IMAGE
+          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
           imagePullPolicy: IfNotPresent
           args: ["--leader-election-namespace=$NAMESPACE", "--orchestrator-uri=http://mysql-operator-0-svc:80/api", "--sidecar-image=$MYSQL_SIDECAR_IMAGE", "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"]
           ressources:
@@ -532,6 +532,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql-operator-0-svc
+  namespace: $NAMESPACE
   labels:
     app: mysql-operator
   annotations:
@@ -546,13 +547,14 @@ spec:
     port: 10008
     targetPort: 10008
   selector:
-    deployment.kubernetes.io/pod-name: mysql-operator-0
+    app: mysql-operator
 ---
 # Source: mysql-operator/templates/orc-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql-operator
+  namespace: $NAMESPACE
   labels:
     app: mysql-operator
 spec:
