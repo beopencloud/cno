@@ -477,8 +477,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mysql-operator-orc
-                  key: TOPOLOGY_PASSWORDt
-          
+                  key: TOPOLOGY_PASSWORDt          
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
@@ -525,11 +524,40 @@ spec:
           emptyDir: {}
       securityContext:
         fsGroup: 777
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: [ ReadWriteOnce ]
-        resources:
-          requests:
-            storage: 1Gi
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: mysql-operator-pvc
+#  volumeClaimTemplates:
+#    - metadata:
+#        name: data
+#      spec:
+#        accessModes: [ ReadWriteOnce ]
+#        resources:
+#          requests:
+#            storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-operator-pv
+  namespace: $NAMESPACE
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-operator-pvc
+  namespace: $NAMESPACE
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
