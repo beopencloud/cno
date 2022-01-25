@@ -429,13 +429,20 @@ spec:
     protocol: TCP
     targetPort: 3000
 ---
-# Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: mysql-operator
+  namespace: cno-system
   labels:
     app: mysql-operator
+    version: "8.0.26-2.0.2"
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
+    app.kubernetes.io/version: "8.0.26-2.0.2"
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/created-by: helm
 spec:
   replicas: 1
   serviceName: mysql-operator-orc
@@ -456,8 +463,10 @@ spec:
       serviceAccountName: mysql-operator
       containers:
         - name: operator
-          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
+          image: $MYSQL_OPERATOR_IMAGE
           imagePullPolicy: IfNotPresent
+          args: ["--leader-election-namespace=$NAMESPACE", "--orchestrator-uri=http://mysql-operator-0-svc:80/api", "--sidecar-image=$MYSQL_SIDECAR_IMAGE", "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"]
+          ressources:
           env:
             - name: ORC_TOPOLOGY_USER
               valueFrom:
@@ -468,24 +477,8 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mysql-operator-orc
-                  key: TOPOLOGY_PASSWORD   
-          args:  
-            - --leader-election-namespace=$NAMESPACE
-            # connect to orchestrator on localhost
-            - --orchestrator-uri=http://mysql-operator-0-svc:80/api
-            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
-          global:
-            leaderElection:
-              # 
-              namespace: $NAMESPACE
-          resources:
-            {}
-          # TODO: add livenessProbe to controller
-          # livenessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 80
+                  key: TOPOLOGY_PASSWORDt
+          
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
