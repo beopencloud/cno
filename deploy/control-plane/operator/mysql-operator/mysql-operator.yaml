@@ -443,9 +443,16 @@ spec:
         - name: operator
           image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
           imagePullPolicy: IfNotPresent
-          args: ["--leader-election-namespace","$NAMESPACE", "--orchestrator-uri","http://127.0.0.1:3000/api", "--sidecar-image","$MYSQL_SIDECAR_IMAGE", "--metrics-exporter-image","$MYSQL_EXPORTER_IMAGE"]
           ressources:
           env:
+            - name: LEADER
+              value: "$NAMESPACE"
+            - name: ORCHES
+              value: "http://127.0.0.1:3000/api"
+            - name: SIDECAR
+              value: "$MYSQL_SIDECAR_IMAGE"
+             - name: EXPORTER
+               value: "$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
                 secretKeyRef:
@@ -455,7 +462,8 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mysql-operator-orc
-                  key: TOPOLOGY_PASSWORD          
+                  key: TOPOLOGY_PASSWORD
+          args: ["--leader-election-namespace=$(LEADER)","--orchestrator-uri=$(ORCHES)","--sidecar-image=$(SIDECAR)","--metrics-exporter-image=$(EXPORTER)"]          
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
