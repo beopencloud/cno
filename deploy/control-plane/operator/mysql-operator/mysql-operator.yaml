@@ -451,7 +451,7 @@ spec:
               value: "--orchestrator-uri=http://127.0.0.1:3000/api"
             - name: SIDECAR
               value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
-             - name: EXPORTER
+            - name: EXPORTER
                value: "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
