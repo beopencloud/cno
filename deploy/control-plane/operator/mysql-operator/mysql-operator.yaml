@@ -448,7 +448,7 @@ spec:
             - name: LEADER
               value: "--leader-election-namespace=$NAMESPACE"
             - name: ORCHES
-              value: "--orchestrator-uri=http://127.0.0.1:3000/api"
+              value: "--orchestrator-uri=http://mysql-operator-0-svc/api"
             - name: SIDECAR
               value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
             - name: EXPORTER
@@ -463,8 +463,7 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          command: ["/bin/sh"]
-          args: ["-c","$(LEADER)","$(ORCHES)"," $(SIDECAR)"," $(EXPORTER)"]          
+          args: ["mysqlsh","$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]          
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
