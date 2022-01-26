@@ -455,7 +455,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mysql-operator-orc
-                  key: TOPOLOGY_PASSWORDt          
+                  key: TOPOLOGY_PASSWORD          
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
