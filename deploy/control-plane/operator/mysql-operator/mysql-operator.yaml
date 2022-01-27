@@ -407,20 +407,13 @@ spec:
     requests:
       storage: 1Gi
 ---
+# Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql-operator
-  namespace: $NAMESPACE
   labels:
     app: mysql-operator
-    version: "8.0.26-2.0.2"
-    app.kubernetes.io/name: mysql-operator
-    app.kubernetes.io/instance: mysql-operator
-    app.kubernetes.io/version: "8.0.26-2.0.2"
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/managed-by: helm
-    app.kubernetes.io/created-by: helm
 spec:
   replicas: 1
   serviceName: mysql-operator-orc
@@ -438,21 +431,12 @@ spec:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
         checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
-      serviceAccountName: mysql-operator 
+      serviceAccountName: mysql-operator
       containers:
         - name: operator
           image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
           imagePullPolicy: IfNotPresent
-          ressources:
           env:
-            - name: LEADER
-              value: "--leader-election-namespace=$NAMESPACE"
-            - name: ORCHES
-              value: "--orchestrator-uri=http://mysql-operator-0-svc:80/api"
-            - name: SIDECAR
-              value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
-            - name: EXPORTER
-              value: "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
                 secretKeyRef:
@@ -463,7 +447,19 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          args: ["mysqlsh","$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]          
+          args:
+            - --leader-election-namespace=$NAMESPACE
+            # connect to orchestrator on localhost
+            - --orchestrator-uri=http://127.0.0.1:3000/api
+            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
+            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
+          resources:
+            {}
+          # TODO: add livenessProbe to controller
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 80
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
@@ -498,7 +494,6 @@ spec:
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
-            initialDelaySeconds: 200
             timeoutSeconds: 10
             httpGet:
               path: /api/raft-health
@@ -509,20 +504,16 @@ spec:
             name: mysql-operator-orc
         - name: etc-orchestrator
           emptyDir: {}
-        - name: data
-          persistentVolumeClaim:
-            claimName: mysql-operator-pvc
       securityContext:
         fsGroup: 777
-#  volumeClaimTemplates:
-#    - metadata:
-#        name: data
-#      spec:
-#        accessModes: [ ReadWriteOnce ]
-#        resources:
-#          requests:
-#            storage: 1Gi
-
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ ReadWriteOnce ]
+        resources:
+          requests:
+            storage: 1Gi
 #apiVersion: v1
 #kind: PersistentVolume
 #metadata:
