@@ -424,8 +424,6 @@ metadata:
     app.kubernetes.io/created-by: helm
 spec:
   replicas: 1
-  serviceName: mysql-operator-orc
-  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: mysql-operator
@@ -439,21 +437,11 @@ spec:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
         checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
-      serviceAccountName: mysql-operator 
       containers:
         - name: operator
-          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
+          image:  $MYSQL_OPERATOR_IMAGE 
           imagePullPolicy: IfNotPresent
-          ressources:
           env:
-            - name: LEADER
-              value: "--leader-election-namespace=$NAMESPACE"
-            - name: ORCHES
-              value: "--orchestrator-uri=http://mysql-operator-0-svc:80/api"
-            - name: SIDECAR
-              value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
-            - name: EXPORTER
-              value: "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
                 secretKeyRef:
@@ -464,55 +452,8 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          args: ["mysqlsh","$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]          
-        - name: orchestrator
-          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 3000
-              name: web
-              protocol: TCP
-            - containerPort: 10008
-              name: raft
-              protocol: TCP
-          env:
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
-          envFrom:
-            - prefix: ORC_
-              secretRef:
-                name: mysql-operator-orc
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/orchestrator/
-            - name: config
-              mountPath: /templates/
-            - name: etc-orchestrator
-              mountPath: /etc/orchestrator
-          livenessProbe:
-            timeoutSeconds: 10
-            initialDelaySeconds: 200
-            httpGet:
-              path: /api/lb-check
-              port: 3000
-          # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
-          readinessProbe:
-            initialDelaySeconds: 200
-            timeoutSeconds: 10
-            httpGet:
-              path: /api/raft-health
-              port: 3000
-      volumes:
-        - name: config
-          configMap:
-            name: mysql-operator-orc
-        - name: etc-orchestrator
-          emptyDir: {}
-        - name: data
-          persistentVolumeClaim:
-            claimName: mysql-operator-pvc
+          args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"]
+      serviceAccountName: mysql-operator
       securityContext:
         fsGroup: 777
 #apiVersion: v1
