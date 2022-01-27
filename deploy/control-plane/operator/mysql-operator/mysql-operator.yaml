@@ -415,14 +415,15 @@ metadata:
   namespace: $NAMESPACE
   labels:
     app: mysql-operator
+    release: mysql-operator
     version: "8.0.26-2.0.2"
     app.kubernetes.io/name: mysql-operator
     app.kubernetes.io/instance: mysql-operator
     app.kubernetes.io/version: "8.0.26-2.0.2"
     app.kubernetes.io/component: controller
-    app.kubernetes.io/managed-by: helm
-    app.kubernetes.io/created-by: helm
-pec:
+    app.kubernetes.io/managed-by: mysql-operator
+    app.kubernetes.io/created-by: mysql-operator
+spec:
   replicas: 1
   selector:
     matchLabels:
@@ -439,7 +440,7 @@ pec:
     spec:
       containers:
         - name: operator
-          image:  mysql/mysql-operator:8.0.28-2.0.3 
+          image:  $MYSQL_OPERATOR_IMAGE 
           imagePullPolicy: IfNotPresent
           env:
             - name: ORC_TOPOLOGY_USER
