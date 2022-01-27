@@ -442,6 +442,14 @@ spec:
           image:  $MYSQL_OPERATOR_IMAGE 
           imagePullPolicy: IfNotPresent
           env:
+            - name: LEADER
+              value: "--leader-election-namespace=$NAMESPACE"
+            - name: ORCHES
+              value: "--orchestrator-uri=http://mysql-operator-0-svc:80/api"
+            - name: SIDECAR
+              value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
+            - name: EXPORTER
+              value: "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
                 secretKeyRef:
@@ -452,7 +460,7 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"]
+          args: ["$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]   
       serviceAccountName: mysql-operator
       securityContext:
         fsGroup: 777
