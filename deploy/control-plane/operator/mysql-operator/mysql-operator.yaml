@@ -422,7 +422,7 @@ metadata:
     app.kubernetes.io/component: controller
     app.kubernetes.io/managed-by: helm
     app.kubernetes.io/created-by: helm
-spec:
+pec:
   replicas: 1
   selector:
     matchLabels:
@@ -439,17 +439,9 @@ spec:
     spec:
       containers:
         - name: operator
-          image:  $MYSQL_OPERATOR_IMAGE 
+          image:  mysql/mysql-operator:8.0.28-2.0.3 
           imagePullPolicy: IfNotPresent
           env:
-            - name: LEADER
-              value: "--leader-election-namespace=$NAMESPACE"
-            - name: ORCHES
-              value: "--orchestrator-uri=http://mysql-operator-0-svc:80/api"
-            - name: SIDECAR
-              value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
-            - name: EXPORTER
-              value: "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
                 secretKeyRef:
@@ -460,7 +452,7 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          args: ["$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]   
+          args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"]
       serviceAccountName: mysql-operator
       securityContext:
         fsGroup: 777
