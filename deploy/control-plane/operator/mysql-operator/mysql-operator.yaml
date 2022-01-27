@@ -463,7 +463,7 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-         # args: ["mysqlsh","$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]          
+          args: ["mysqlsh","$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"]          
         - name: orchestrator
           image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
           imagePullPolicy: IfNotPresent
@@ -490,19 +490,19 @@ spec:
               mountPath: /templates/
             - name: etc-orchestrator
               mountPath: /etc/orchestrator
-          #livenessProbe:
-          #  timeoutSeconds: 10
-          #  initialDelaySeconds: 200
-          #  httpGet:
-          #    path: /api/lb-check
-          #    port: 3000
+          livenessProbe:
+            timeoutSeconds: 10
+            initialDelaySeconds: 200
+            httpGet:
+              path: /api/lb-check
+              port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
-         # readinessProbe:
-           # initialDelaySeconds: 200
-          #  timeoutSeconds: 10
-          #  httpGet:
-          #    path: /api/raft-health
-          #    port: 3000
+          readinessProbe:
+            initialDelaySeconds: 200
+            timeoutSeconds: 10
+            httpGet:
+              path: /api/raft-health
+              port: 3000
       volumes:
         - name: config
           configMap:
