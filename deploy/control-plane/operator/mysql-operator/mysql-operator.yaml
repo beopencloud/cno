@@ -393,19 +393,19 @@ subjects:
 
 
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-operator-pvc
-  namespace: $NAMESPACE
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: default
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 1Gi
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: mysql-operator-pvc
+#  namespace: $NAMESPACE
+#spec:
+#  accessModes:
+ #   - ReadWriteOnce
+ # storageClassName: default
+#  volumeMode: Filesystem
+#  resources:
+#    requests:
+#      storage: 1Gi
 ---
 # Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
