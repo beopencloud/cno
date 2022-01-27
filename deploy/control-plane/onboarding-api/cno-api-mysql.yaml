@@ -1,7 +1,7 @@
 apiVersion: mysql.presslabs.org/v2alpha1
 kind: MysqlCluster
 metadata:
-  name: cno-api
+  name: cno-api-mysql
 spec:
   replicas: 1
   image: $MYSQL_IMAGE #bitnami/mariadb:latest 
@@ -32,7 +32,7 @@ spec:
   selector:
     app.kubernetes.io/managed-by: mysql.presslabs.org
     app.kubernetes.io/name: mysql
-    mysql.presslabs.org/cluster: cno-api
+    mysql.presslabs.org/cluster: cno-api-mysql
     role: master
   sessionAffinity: None
   type: ClusterIP
