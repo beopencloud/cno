@@ -5,7 +5,7 @@ metadata:
 spec:
   group: mysql.presslabs.org
   versions:
-    - name: v2alpha1
+    - name: v1alpha1 
       served: true
       storage: true
       schema:
