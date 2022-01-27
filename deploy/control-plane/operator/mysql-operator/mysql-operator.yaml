@@ -448,7 +448,7 @@ spec:
             - name: LEADER
               value: "--leader-election-namespace=$NAMESPACE"
             - name: ORCHES
-              value: "--orchestrator-uri=http://mysql-operator-0-svc/api"
+              value: "--orchestrator-uri=http://mysql-operator-0-svc:80/api"
             - name: SIDECAR
               value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
             - name: EXPORTER
@@ -498,6 +498,7 @@ spec:
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
+            initialDelaySeconds: 200
             timeoutSeconds: 10
             httpGet:
               path: /api/raft-health
