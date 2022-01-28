@@ -1,4 +1,4 @@
-apiVersion: mysql.presslabs.org/v1alpha1
+apiVersion: mysql.oracle.com/v2alpha1
 kind: MysqlCluster
 metadata:
   name: cno-api-mysql

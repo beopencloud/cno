@@ -1,11 +1,11 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: mysqlclusters.mysql.presslabs.org
+  name: mysqlclusters.mysql.oracle.com
 spec:
-  group: mysql.presslabs.org
+  group: mysql.oracle.com
   versions:
-    - name: v1alpha1 
+    - name: v2alpha1
       served: true
       storage: true
       schema:
@@ -82,7 +82,7 @@ spec:
                       type: integer
                       minimum: 0
                       default: 0
-                      description: "Number of MySQL router instances to deploy"
+                      description: "Number of MySQL Router instances to deploy"
                     version:
                       type: string
                       pattern: '^\d+\.\d+\.\d+(-.+)?'
@@ -95,6 +95,7 @@ spec:
                   description: "Backup profile specifications for the cluster, which can be referenced from backup schedules and one-off backup jobs."
                   items:
                     type: object
+                    required: ["name"]
                     properties:
                       name:
                         type: string
@@ -109,8 +110,11 @@ spec:
                   description: "Schedules for periodically executed backups"
                   items:
                     type: object
+                    required: ["name", "schedule"]
                     properties:
                       name:
+                        type: string
+                      schedule:
                         type: string
                       backupProfileName:
                         type: string
@@ -119,13 +123,14 @@ spec:
                         x-kubernetes-preserve-unknown-fields: true
                       deleteBackupData:
                         type: boolean
+                        default: false
+                      enabled:
+                        type: boolean
+                        default: true
             status:
               type: object
               x-kubernetes-preserve-unknown-fields: true
       subresources:
-        scale:
-          specReplicasPath: .spec.replicas
-          statusReplicasPath: .status.readyNodes
         status: {}
       additionalPrinterColumns:
         - name: Status
@@ -147,7 +152,9 @@ spec:
         - name: Age
           type: date
           jsonPath: .metadata.creationTimestamp
-  scope: Namespaced  
+  scope: Namespaced
+  conversion:
+    strategy: None
   names:
     kind: MysqlCluster
     listKind: mysqlclusters
@@ -156,13 +163,15 @@ spec:
     shortNames:
       - mysql
       - mysqls
+    categories:
+    - oracle
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: mysqlbackups.mysql.presslabs.org
+  name: mysqlbackups.mysql.oracle.com
 spec:
-  group: mysql.presslabs.org
+  group: mysql.oracle.com
   scope: Namespaced
   names:
     kind: MysqlBackup
@@ -172,7 +181,7 @@ spec:
     shortNames:
       - mbk
   versions:
-    - name: v1alpha1
+    - name: v2alpha1
       served: true
       storage: true
       schema:
@@ -190,6 +199,9 @@ spec:
                 backupProfile:
                   type: object
                   x-kubernetes-preserve-unknown-fields: true
+                addTimestampToBackupDirectory:
+                  type: boolean
+                  default: true
                 deleteBackupData:
                   type: boolean
                   default: false
