@@ -1,4 +1,4 @@
-apiVersion: mysql.presslabs.org/v2alpha1
+apiVersion: mysql.oracle.com/v2alpha1
 kind: MysqlCluster
 metadata:
   name: cno-api-mysql
@@ -30,9 +30,9 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app.kubernetes.io/managed-by: mysql.presslabs.org
+    app.kubernetes.io/managed-by: mysql.oracle.com
     app.kubernetes.io/name: mysql
-    mysql.presslabs.org/cluster: cno-api-mysql
+    mysql.oracle.com/cluster: cno-api-mysql
     role: master
   sessionAffinity: None
   type: ClusterIP
