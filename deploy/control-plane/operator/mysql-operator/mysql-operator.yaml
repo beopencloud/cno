@@ -417,7 +417,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
 ---
 # Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1

@@ -1,11 +1,15 @@
-apiVersion: mysql.oracle.com/v2alpha1
+apiVersion: mysql.oracle.com/v1alpha1
 kind: MysqlCluster
 metadata:
   name: cno-api-mysql
 spec:
-  replicas: 1
-  image: $MYSQL_IMAGE #bitnami/mariadb:latest 
-  secretName: cno-api-db-secret
+  members: 1
+  multiMaster: false
+  #image: $MYSQL_IMAGE #bitnami/mariadb:latest 
+  rootPasswordSecret:
+    name: cno-api-db-secret
+  config:
+    name: cno-api-mysql-cm
   volumeSpec:
     persistentVolumeClaim:
       accessModes: [ "ReadWriteOnce" ]
@@ -14,7 +18,25 @@ spec:
           storage: 5Gi
 
 ---
-
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cno-api-mysql-cm
+data:
+  my.cnf: |-
+    [mysqld]
+    default_authentication_plugin=mysql_native_password
+    skip-host-cache
+    skip-name-resolve
+---
+apiVersion: v1
+data:
+  password: VVRKbk1GUnRZM3BpVlZVOUNnPT0=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: mysql-root-password
+---
 apiVersion: v1
 kind: Service
 metadata:
