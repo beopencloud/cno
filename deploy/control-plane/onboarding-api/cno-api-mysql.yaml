@@ -6,8 +6,7 @@ spec:
   members: 1
   multiMaster: false
   #image: $MYSQL_IMAGE #bitnami/mariadb:latest 
-  rootPasswordSecret:
-    name: cno-api-db-secret
+  secretName: cno-api-db-secret
   config:
     name: cno-api-mysql-cm
   volumeSpec:
