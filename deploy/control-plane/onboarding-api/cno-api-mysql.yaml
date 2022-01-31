@@ -3,38 +3,18 @@ kind: MysqlCluster
 metadata:
   name: cno-api-mysql
 spec:
-  members: 1
+  instances: 1
   multiMaster: false
-  #image: $MYSQL_IMAGE #bitnami/mariadb:latest 
+  imageRepository: $MYSQL_IMAGE #bitnami/mariadb:latest 
   secretName: cno-api-db-secret
-  config:
-    name: cno-api-mysql-cm
-  volumeSpec:
+  datadirVolumeClaimTemplate:
     persistentVolumeClaim:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: 5Gi
 
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cno-api-mysql-cm
-data:
-  my.cnf: |-
-    [mysqld]
-    default_authentication_plugin=mysql_native_password
-    skip-host-cache
-    skip-name-resolve
----
-apiVersion: v1
-data:
-  password: VVRKbk1GUnRZM3BpVlZVOUNnPT0=
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: mysql-root-password
+
 ---
 apiVersion: v1
 kind: Service
