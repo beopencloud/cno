@@ -169,9 +169,9 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: mysqlbackups.mysql.oracle.com
+  name: mysqlbackups.mysql.presslabs.org
 spec:
-  group: mysql.oracle.com
+  group: mysql.presslabs.org
   scope: Namespaced
   names:
     kind: MysqlBackup
@@ -404,39 +404,18 @@ subjects:
     kind: ServiceAccount
 
 
+
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-operator-pvc
-  namespace: $NAMESPACE
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: default
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 5Gi
----
-# Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql-operator
-  namespace: $NAMESPACE
   labels:
     app: mysql-operator
-    release: mysql-operator
-    version: "8.0.26-2.0.2"
-    app.kubernetes.io/name: mysql-operator
-    app.kubernetes.io/instance: mysql-operator
-    app.kubernetes.io/version: "8.0.26-2.0.2"
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/managed-by: mysql-operator
-    app.kubernetes.io/created-by: mysql-operator
 spec:
   replicas: 1
+  serviceName: mysql-operator-orc
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: mysql-operator
@@ -450,9 +429,10 @@ spec:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
         checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
+      serviceAccountName: mysql-operator
       containers:
         - name: operator
-          image:  $MYSQL_OPERATOR_IMAGE 
+          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: ORC_TOPOLOGY_USER
@@ -465,22 +445,74 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"]
-      serviceAccountName: mysql-operator
+          args:
+            - --leader-election-namespace=$NAMESPACE
+            # connect to orchestrator on localhost
+            - --orchestrator-uri=http://127.0.0.1:3000/api
+            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
+            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
+          resources:
+            {}
+          # TODO: add livenessProbe to controller
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 80
+        - name: orchestrator
+          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: web
+              protocol: TCP
+            - containerPort: 10008
+              name: raft
+              protocol: TCP
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          envFrom:
+            - prefix: ORC_
+              secretRef:
+                name: mysql-operator-orc
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/orchestrator/
+            - name: config
+              mountPath: /templates/
+            - name: etc-orchestrator
+              mountPath: /etc/orchestrator
+          livenessProbe:
+            timeoutSeconds: 10
+            initialDelaySeconds: 200
+            httpGet:
+              path: /api/lb-check
+              port: 3000
+          # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
+          readinessProbe:
+            timeoutSeconds: 10
+            httpGet:
+              path: /api/raft-health
+              port: 3000
+      volumes:
+        - name: config
+          configMap:
+            name: mysql-operator-orc
+        - name: etc-orchestrator
+          emptyDir: {}
       securityContext:
         fsGroup: 777
-#apiVersion: v1
-#kind: PersistentVolume
-#metadata:
-#  name: mysql-operator-pv
-#spec:
-#  capacity:
-#    storage: 1Gi
-#  accessModes:
-#    - ReadWriteOnce
-#  storageClassName: default
-#  volumeMode: Filesystem
-#  volumetype: none
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ ReadWriteOnce ]
+        resources:
+          requests:
+            storage: 1Gi
+
 ---
 # Source: mysql-operator/templates/orc-service.yaml
 apiVersion: v1
