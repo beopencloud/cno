@@ -1,5 +1,5 @@
 apiVersion: mysql.oracle.com/v1alpha1
-kind: InnoDBCluster
+kind: MysqlCluster
 metadata:
   name: cno-api-mysql-test
   namespace: mysql-operator
@@ -17,7 +17,7 @@ spec:
       resources:
         requests:
           storage: 5Gi
-          
+
 ---
 apiVersion: v1
 kind: Service
