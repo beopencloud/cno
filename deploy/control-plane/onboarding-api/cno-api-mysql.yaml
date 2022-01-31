@@ -1,20 +1,23 @@
 apiVersion: mysql.oracle.com/v1alpha1
-kind: MysqlCluster
+kind: InnoDBCluster
 metadata:
-  name: cno-api-mysql
+  name: cno-api-mysql-test
+  namespace: mysql-operator
 spec:
   instances: 1
-  multiMaster: false
-  imageRepository: $MYSQL_IMAGE #bitnami/mariadb:latest 
+  imageRepository: $MYSQL_IMAGE #bitnami/mariadb:latest
   secretName: cno-api-db-secret
+  podSpec: 
+  router:
+    instances: 1
+    podSpec: 
   datadirVolumeClaimTemplate:
     persistentVolumeClaim:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: 5Gi
-
-
+          
 ---
 apiVersion: v1
 kind: Service

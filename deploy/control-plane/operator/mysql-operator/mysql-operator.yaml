@@ -248,6 +248,173 @@ spec:
         - name: Age
           type: date
           jsonPath: .metadata.creationTimestamp
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mysqlusers.mysql.presslabs.org
+spec:
+  group: mysql.presslabs.org
+  scope: Namespaced
+  names:
+    kind: MysqlUser
+    plural: mysqlusers
+    listKind: MysqlUserList
+    singular: mysqluser
+    shortNames:
+      - mu
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required: ["clusterName"]
+              properties:
+                clusterName:
+                  type: string
+                backupProfileName:
+                  type: string
+                backupProfile:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                addTimestampToBackupDirectory:
+                  type: boolean
+                  default: true
+                deleteBackupData:
+                  type: boolean
+                  default: false
+            status:
+              type: object
+              properties:
+                status:
+                  type: string
+                startTime:
+                  type: string
+                completionTime:
+                  type: string
+                elapsedTime:
+                  type: string
+                output:
+                  type: string
+                method:
+                  type: string
+                source:
+                  type: string
+                bucket:
+                  type: string
+                ociTenancy:
+                  type: string
+                spaceAvailable:
+                  type: string
+                size:
+                  type: string
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Cluster
+          type: string
+          description: Name of the target cluster
+          jsonPath: .spec.clusterName
+        - name: Status
+          type: string
+          description: Status of the Backup
+          jsonPath: .status.status
+        - name: Output
+          type: string
+          description: Name of the produced file/directory
+          jsonPath: .status.output
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mysqldatabases.mysql.presslabs.org
+spec:
+  group: mysql.presslabs.org
+  scope: Namespaced
+  names:
+    kind: MysqlDatabase
+    plural: mysqldatabases
+    listKind: MysqlDatabaseList
+    singular: mysqldatabase
+    shortNames:
+      - md
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required: ["clusterName"]
+              properties:
+                clusterName:
+                  type: string
+                backupProfileName:
+                  type: string
+                backupProfile:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                addTimestampToBackupDirectory:
+                  type: boolean
+                  default: true
+                deleteBackupData:
+                  type: boolean
+                  default: false
+            status:
+              type: object
+              properties:
+                status:
+                  type: string
+                startTime:
+                  type: string
+                completionTime:
+                  type: string
+                elapsedTime:
+                  type: string
+                output:
+                  type: string
+                method:
+                  type: string
+                source:
+                  type: string
+                bucket:
+                  type: string
+                ociTenancy:
+                  type: string
+                spaceAvailable:
+                  type: string
+                size:
+                  type: string
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Cluster
+          type: string
+          description: Name of the target cluster
+          jsonPath: .spec.clusterName
+        - name: Status
+          type: string
+          description: Status of the Backup
+          jsonPath: .status.status
+        - name: Output
+          type: string
+          description: Name of the produced file/directory
+          jsonPath: .status.output
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
 ---
 # Source: mysql-operator/templates/serviceaccount.yaml
 apiVersion: v1
