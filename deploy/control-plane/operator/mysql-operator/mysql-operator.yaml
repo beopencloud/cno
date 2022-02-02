@@ -157,8 +157,8 @@ spec:
     strategy: None
   names:
     kind: MysqlCluster
-    listKind: mysqlclusters
-    singular: mysqlclusters
+    listKind: MysqlClusterList
+    singular: mysqlcluster
     plural: mysqlclusters
     shortNames:
       - mysql
