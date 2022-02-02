@@ -473,6 +473,7 @@ rules:
   - delete
 - apiGroups:
   - mysql.presslabs.org
+  - mysql.oracle.com
   resources:
   - mysqlbackups
   - mysqlbackups/finalizers
@@ -505,6 +506,8 @@ rules:
   - events
   - jobs
   - pods
+  - statefulset
+  - deployment
   - persistentvolumeclaims
   - configmaps/finalizers
   verbs:
@@ -517,6 +520,7 @@ rules:
   - delete
 - apiGroups:
   - mysql.presslabs.org
+  - mysql.oracle.com
   resources:
   - mysqlclusters
   - mysqlclusters/status
