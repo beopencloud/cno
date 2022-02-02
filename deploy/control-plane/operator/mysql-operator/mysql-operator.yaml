@@ -874,7 +874,7 @@ metadata:
   name: mysql-operator
   namespace: $NAMESPACE
   labels:
-    app: mysql-operator-1
+    app: mysql-operator
     version: "8.0.26-2.0.2"
     app.kubernetes.io/name: mysql-operator
     app.kubernetes.io/instance: mysql-operator
@@ -884,12 +884,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql-operator-1
+      app: mysql-operator
       release: mysql-operator
   template:
     metadata:
       labels:
-        app: mysql-operator-1
+        app: mysql-operator
         release: mysql-operator
       annotations:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
@@ -902,14 +902,6 @@ spec:
           imagePullPolicy: IfNotPresent
           ressources:
           env:
-            - name: LEADER
-              value: "--leader-election-namespace=$NAMESPACE"
-            - name: ORCHES
-              value: "--orchestrator-uri=http://127.0.0.1:3000/api"
-            - name: SIDECAR
-              value: "--sidecar-image=$MYSQL_SIDECAR_IMAGE"
-            - name: EXPORTER
-              value: "--metrics-exporter-image=$MYSQL_EXPORTER_IMAGE"
             - name: ORC_TOPOLOGY_USER
               valueFrom:
                 secretKeyRef:
@@ -920,7 +912,7 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-          args: ["$(LEADER)","$(ORCHES)","$(SIDECAR)","$(EXPORTER)"] 
+          args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"] 
 ---
 # Source: mysql-operator/templates/orc-service.yaml
 apiVersion: v1
