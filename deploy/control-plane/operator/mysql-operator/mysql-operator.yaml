@@ -408,7 +408,7 @@ roleRef:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql-operator
   namespace: $NAMESPACE
