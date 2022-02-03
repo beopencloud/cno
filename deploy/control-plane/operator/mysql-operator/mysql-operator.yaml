@@ -300,14 +300,14 @@ metadata:
 imagePullSecrets:
 - name: $SA
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: cno-api-db-secret
-stringData:
-  rootUser: root
-  rootHost: '%'
-  rootPassword: MySQL202!
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: cno-api-db-secret
+#stringData:
+#  rootUser: root
+#  rootHost: '%'
+#  rootPassword: MySQL202!
 ---
 
 apiVersion: v1

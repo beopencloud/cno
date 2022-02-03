@@ -4,11 +4,11 @@ kind: InnoDBCluster
 metadata:
   name: cno-api-mysql
 spec:
-  instances: 1
+  instances: 3
   secretName: cno-api-db-secret
   podSpec:  
   router:
-    instances: 1
+    instances: 2
     podSpec: 
   datadirVolumeClaimTemplate:
     persistentVolumeClaim:
