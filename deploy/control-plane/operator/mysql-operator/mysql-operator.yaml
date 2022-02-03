@@ -291,7 +291,6 @@ spec:
               type: object
               x-kubernetes-preserve-unknown-fields: true
 ---
-# Source: mysql-operator/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -310,7 +309,7 @@ stringData:
   rootHost: '%'
   rootPassword: MySQL202!
 ---
-# Source: mysql-operator/templates/orc-secret.yaml
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -321,7 +320,7 @@ data:
   TOPOLOGY_USER: "b3JjaGVzdHJhdG9y"
   TOPOLOGY_PASSWORD: "RTZZQzFTZDAyMA=="
 ---
-# Source: mysql-operator/templates/orc-config.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -334,7 +333,7 @@ data:
     [client]
     user = {{ .Env.ORC_TOPOLOGY_USER }}
     password = {{ .Env.ORC_TOPOLOGY_PASSWORD }}
----
+
 ---
 # The main role for the operator
 apiVersion: rbac.authorization.k8s.io/v1
@@ -371,7 +370,6 @@ rules:
     resources: ["*"]
     verbs: ["get", "patch", "list", "watch"]
 ---
-# role for the server sidecar
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -390,7 +388,7 @@ rules:
     resources: ["innodbclusters"]
     verbs: ["*"]
 ---
-# Give access to the operator
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -407,11 +405,7 @@ roleRef:
   kind: ClusterRole
   name: mysql-operator
   apiGroup: rbac.authorization.k8s.io
----
-apiVersion: zalando.org/v1
-kind: ClusterKopfPeering
-metadata:
-  name: mysql-operator
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -459,7 +453,7 @@ spec:
                   key: TOPOLOGY_PASSWORD
           args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"] 
 ---
-# Source: mysql-operator/templates/orc-service.yaml
+
 apiVersion: v1
 kind: Service
 metadata:
