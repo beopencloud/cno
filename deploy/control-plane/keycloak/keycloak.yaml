@@ -36,12 +36,6 @@ metadata:
     app: keycloak
     component: keycloak
   name: keycloak
-  ownerReferences:
-  - apiVersion: keycloak.org/v1alpha1
-    blockOwnerDeletion: true
-    controller: true
-    kind: Keycloak
-    name: cloud-keycloak
 spec:
   podManagementPolicy: OrderedReady
   replicas: 1
