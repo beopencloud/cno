@@ -36,7 +36,6 @@ metadata:
     app: keycloak
     component: keycloak
   name: keycloak
-  namespace: $NAMESPACE
   ownerReferences:
   - apiVersion: keycloak.org/v1alpha1
     blockOwnerDeletion: true
