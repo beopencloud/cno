@@ -21,26 +21,19 @@ spec:
       args:
         - "-Djboss.as.management.blocking.timeout=600"
       env:
-        - name: PROXY_ADDRESS_FORWARDING
-          value: "false"
         - name: KEYCLOAK_IMPORT
           value: /cno/cno-realm.json
       volumes:
         defaultMode: 0777
         items:
-          - name: keytab
-            mountPath: /keytabs
-            secrets:
-              - keytabs
           - name: vault
             mountPath: /opt/jboss/keycloak/secrets
             secrets:
-              - realm1
-              - realm2
-          - name: test-config
-            mountPath: /configmap
-            configMaps:
-              - test-config
+              - keycloak-realm1
+              - keycloak-realm2
+          - configMap:
+            mountPath: /cno
+            name: cno-realm
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -48,7 +41,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
-                - key: app
+                - key: sso
                   operator: In
                   values:
                   - keycloak
@@ -57,7 +50,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
-                - key: app
+                - key: sso
                   operator: In
                   values:
                   - keycloak

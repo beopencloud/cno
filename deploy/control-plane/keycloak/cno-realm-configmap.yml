@@ -2230,21 +2230,14 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: keytabs
-data:
-  krb5.keytab: RkFLRSBLRVlUQUIK
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: realm1
+  name: keycloak-realm1
 stringData:
   realm1_bindcred: "Keycl0@k!"
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: realm2
+  name: keycloak-realm2
 stringData:
   realm2_bindcred: "Keycl0@k!?"
 ---
