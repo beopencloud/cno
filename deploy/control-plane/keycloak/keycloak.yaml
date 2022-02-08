@@ -1,3 +1,4 @@
+# create namespace for keycloak template
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
@@ -7,7 +8,7 @@ metadata:
 spec:
   instances: 1
   externalDatabase:
-    enabled: true
+    enabled: false
   externalAccess:
     enabled: false
     tlsTermination: passthrough
@@ -18,9 +19,8 @@ spec:
       volumes:
         items:
         - configMap:
-            mountPath: /cno
-            name: cno-realm
+          mountPath: /cno
+          name: cno-realm
       env:
       - name: KEYCLOAK_IMPORT
         value: /cno/cno-realm.json
-
