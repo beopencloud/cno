@@ -13,7 +13,7 @@ spec:
     enabled: false
     tlsTermination: passthrough
   podDisruptionBudget:
-    enabled: True
+    enabled: false
   keycloakDeploymentSpec:
     experimental:
       volumes:
