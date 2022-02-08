@@ -9,11 +9,13 @@ spec:
   instances: 1
   externalDatabase:
     enabled: false
+  extensions:
+    - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
   externalAccess:
-    enabled: false
+    enabled: True
     tlsTermination: passthrough
   podDisruptionBudget:
-    enabled: false
+    enabled: True
   keycloakDeploymentSpec:
     experimental:
       volumes:
