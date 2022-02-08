@@ -18,11 +18,49 @@ spec:
     enabled: True
   keycloakDeploymentSpec:
     experimental:
-      volumes:
-        items:
-        - configMap:
-          mountPath: /cno
-          name: cno-realm
+      args:
+        - "-Djboss.as.management.blocking.timeout=600"
       env:
-      - name: KEYCLOAK_IMPORT
-        value: /cno/cno-realm.json
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "false"
+        - name: KEYCLOAK_IMPORT
+          value: /cno/cno-realm.json
+      volumes:
+        defaultMode: 0777
+        items:
+          - name: keytab
+            mountPath: /keytabs
+            secrets:
+              - keytabs
+          - name: vault
+            mountPath: /opt/jboss/keycloak/secrets
+            secrets:
+              - realm1
+              - realm2
+          - name: test-config
+            mountPath: /configmap
+            configMaps:
+              - test-config
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - keycloak
+              topologyKey: "topology.kubernetes.io/zone"
+          - weight: 90
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - keycloak
+              topologyKey: "kubernetes.io/hostname"
+
+
