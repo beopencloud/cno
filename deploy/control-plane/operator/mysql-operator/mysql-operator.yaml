@@ -745,9 +745,7 @@ kind: Secret
 metadata:
   name: cno-api-db-secret
 stringData:
-  rootUser: root
-  rootHost: '%'
-  rootPassword: MySQL202!
+  ROOT_PASSWORD: MySQL202!
 ---
 # Source: mysql-operator/templates/orc-secret.yaml
 apiVersion: v1
