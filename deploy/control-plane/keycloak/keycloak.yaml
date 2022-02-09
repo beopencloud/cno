@@ -9,8 +9,6 @@ spec:
   instances: 1
   externalDatabase:
     enabled: false
-  extensions:
-    - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
   externalAccess:
     enabled: True
     tlsTermination: passthrough
@@ -20,9 +18,9 @@ spec:
     experimental:
       args:
         - "-Djboss.as.management.blocking.timeout=600"
-      env:
-        - name: KEYCLOAK_IMPORT
-          value: /cno/cno-realm.json
+      #env:
+      #  - name: KEYCLOAK_IMPORT
+      #    value: /cno/cno-realm.json
       volumes:
         defaultMode: 0777
         items:
