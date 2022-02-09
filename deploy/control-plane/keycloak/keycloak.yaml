@@ -22,9 +22,7 @@ spec:
         - "-Djboss.as.management.blocking.timeout=600"
       env:
         - name: KEYCLOAK_IMPORT
-          valueFrom: 
-             configMapRef:
-             - name: cno-realm
+          value: /cno/cno-realm.json
       volumes:
         defaultMode: 0777
         items:
