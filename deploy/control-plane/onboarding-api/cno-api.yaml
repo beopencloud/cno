@@ -86,7 +86,7 @@ spec:
         - name: KAFKA_VERBOSE
           value: "false"
         - name: DB_HOST
-          value: "cno-api-mysql-master-external"
+          value: "cno-api-mysql-master"
         - name: DB_PORT
           value: "3306"
         - name: DB_NAME
