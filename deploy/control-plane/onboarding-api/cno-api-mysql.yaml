@@ -21,7 +21,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cno-api-mysql-master
+  name: cno-api-mysql-master-external
 spec:
   ports:
   - name: mysql
