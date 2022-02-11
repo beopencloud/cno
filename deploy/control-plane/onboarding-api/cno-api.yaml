@@ -93,12 +93,14 @@ spec:
         - name: DB_NAME
           value: "cnoapi"
         - name: DB_USERNAME
-          value: "root"
+            secretKeyRef:
+              name: cno-api-mysql-privsecrets
+              key: clusterAdminUsername
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: cno-api-db-secret
-              key: rootPassword
+              name: cno-api-mysql-privsecrets
+              key: clusterAdminPassword
         - name: CREATE_DEFAULT_CLUSTER
           value: $CREATE_DEFAULT_CLUSTER
         - name: DEFAULT_EXTERNAL_BROKERS_URL
