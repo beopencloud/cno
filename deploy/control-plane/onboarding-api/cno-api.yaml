@@ -93,6 +93,7 @@ spec:
         - name: DB_NAME
           value: "cnoapi"
         - name: DB_USERNAME
+          valueFrom:
             secretKeyRef:
               name: cno-api-mysql-privsecrets
               key: clusterAdminUsername
