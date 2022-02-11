@@ -29,6 +29,7 @@ metadata:
   labels:
     run: cno-api
   name: cno-api
+  namespace: $NAMESPACE
 spec:
   progressDeadlineSeconds: 600
   replicas: 1

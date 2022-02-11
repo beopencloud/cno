@@ -4,6 +4,7 @@ metadata:
   labels:
     app: cno-ui
   name: cno-ui
+  namespace: $NAMESPACE
 spec:
   replicas: 1
   selector:
