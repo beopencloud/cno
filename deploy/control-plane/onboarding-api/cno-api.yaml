@@ -130,7 +130,6 @@ spec:
       - name: kafkaconfig
         secret:
           secretName: kafkaconfig
-
 ---
 apiVersion: v1
 kind: Service
