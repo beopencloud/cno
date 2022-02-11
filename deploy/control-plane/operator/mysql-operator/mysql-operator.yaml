@@ -677,7 +677,7 @@ kind: Secret
 metadata:
   name: cno-api-db-secret
 stringData:
-  ROOT_PASSWORD: MySQL202!
+  rootPassword: MySQL202!
 ---
 # Source: mysql-operator/templates/orc-secret.yaml
 apiVersion: v1
@@ -819,11 +819,7 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-            - name: rootPassword
-              valueFrom:
-                secretKeyRef:
-                  name: cno-api-db-secret
-                  key: ROOT_PASSWORD
+         
           args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"] 
 ---
 # Source: mysql-operator/templates/orc-service.yaml
