@@ -819,11 +819,11 @@ spec:
                 secretKeyRef:
                   name: mysql-operator-orc
                   key: TOPOLOGY_PASSWORD
-            #- name: rootPassword
-            #  valueFrom:
-           #     secretKeyRef:
-          #        name: cno-api-db-secret
-         #         key: ROOT_PASSWORD
+            - name: rootPassword
+              valueFrom:
+                secretKeyRef:
+                  name: cno-api-db-secret
+                  key: ROOT_PASSWORD
           args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"] 
 ---
 # Source: mysql-operator/templates/orc-service.yaml
