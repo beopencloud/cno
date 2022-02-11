@@ -5,18 +5,12 @@ metadata:
   name: cno-api-mysql
   namespace: $NAMESPACE
 spec:
-  instances: 1
+  instances: 3
   secretName: cno-api-mysql-privsecrets
   podSpec:  
   router:
-    instances: 1
-    podSpec: 
-  datadirVolumeClaimTemplate:
-    persistentVolumeClaim:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi
+    instances: 2
+    podSpec:
 
 ---
 apiVersion: v1
