@@ -10,7 +10,7 @@ spec:
   externalDatabase:
     enabled: false
   externalAccess:
-    enabled: True
+    enabled: false
     tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True
