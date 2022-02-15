@@ -87,9 +87,9 @@ spec:
         - name: KAFKA_VERBOSE
           value: "false"
         - name: DB_HOST
-          value: "cno-api-mysql"
+          value: "cno-api-mysql-instances"
         - name: DB_PORT
-          value: "6446"
+          value: "3306"
         - name: DB_NAME
           value: "cnoapi"
         - name: DB_USERNAME
