@@ -16,7 +16,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: cno-auth.cluster.beopenit.com
+  - host: cno-auth-1.cluster.beopenit.com
     http:
       paths:
       - backend:
