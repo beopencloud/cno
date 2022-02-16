@@ -72,7 +72,7 @@ spec:
         - name: OIDC_SERVER_BASE_URL
           value: $OIDC_SERVER_BASE_URL
         - name: OIDC_CLIENT_ID
-          value: "cno-api"
+          value: $OIDC_CLIENT_ID
         - name: OIDC_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
