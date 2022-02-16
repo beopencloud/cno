@@ -12,11 +12,11 @@ metadata:
     ingress.bluemix.net/proxy-busy-buffers-size : "size=128k"
   labels:
     app: keycloak
-  name: cno-keycloak
+  name: cno-auth
 spec:
   ingressClassName: nginx
   rules:
-  - host: cno-keycloak.cluster.beopenit.com
+  - host: cno-auth.cluster.beopenit.com
     http:
       paths:
       - backend:
