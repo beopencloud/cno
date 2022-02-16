@@ -68,11 +68,7 @@ spec:
         - name: SERVER_PORT
           value: "8080"
         - name: OIDC_REALM
-          #value: $OIDC_REALM
-          valueFrom:
-            secretKeyRef:
-              name: keycloak-realm1
-              key: realm1_bindcred
+          value: $OIDC_REALM
         - name: OIDC_SERVER_BASE_URL
           value: $OIDC_SERVER_BASE_URL
         - name: OIDC_CLIENT_ID
