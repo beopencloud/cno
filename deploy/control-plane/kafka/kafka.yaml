@@ -31,14 +31,14 @@ spec:
         configuration:
           class: nginx
           bootstrap:
-            host: bootstrap-cno-1.INGRESS_DOMAIN
+            host: bootstrap-cno.INGRESS_DOMAIN
           brokers:
           - broker: 0
-            host: broker-0-cno-1.INGRESS_DOMAIN
+            host: broker-0-cno.INGRESS_DOMAIN
           - broker: 1
-            host: broker-1-cno-1.INGRESS_DOMAIN
+            host: broker-1-cno.INGRESS_DOMAIN
           - broker: 2
-            host: broker-2-cno-1.INGRESS_DOMAIN
+            host: broker-2-cno.INGRESS_DOMAIN
     authorization:
       type: simple
       superUsers:
