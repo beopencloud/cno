@@ -10,12 +10,6 @@ metadata:
     app: cno-api
   name: cno-api
 spec:
-  tls:
-    - hosts:
-      - cno-api.install-cno.beopenit.com
-      # This assumes tls-secret exists and the SSL
-      # certificate contains a CN for foo.bar.com
-      secretName: cno-com-tls
   ingressClassName: nginx
   rules:
   - host: cno-api.cluster.beopenit.com
