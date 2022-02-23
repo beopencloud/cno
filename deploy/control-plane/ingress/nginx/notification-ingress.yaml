@@ -10,6 +10,12 @@ metadata:
     app: cno-notification
   name: cno-notification
 spec:
+  tls:
+    - hosts:
+      - cno-notifcation.install-cno.beopenit.com
+      # This assumes tls-secret exists and the SSL
+      # certificate contains a CN for foo.bar.com
+      secretName: cno-com-tls
   ingressClassName: nginx
   rules:
   - host: cno-notification.cluster.beopenit.com
