@@ -16,23 +16,19 @@ spec:
         port: 9092
         type: internal
         tls:  true
-        authentication:
-          type: tls
-          disableTlsHostnameVerification: false
       - name: tls
         port: 9093
         type: internal
         tls: true
         authentication:
           type: tls
-          disableTlsHostnameVerification: false
       - name: external
         port: 9094
         type: ingress
         tls: true
         authentication:
           type: tls
-          disableTlsHostnameVerification: false
+          disableTlsHostnameVerification: true
         configuration:
           class: nginx
           bootstrap:
