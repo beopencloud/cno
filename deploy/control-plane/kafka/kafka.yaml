@@ -28,7 +28,7 @@ spec:
         tls: true
         authentication:
           type: tls
-            disableTlsHostnameVerification: true
+          - disableTlsHostnameVerification: true
         configuration:
           class: nginx
           bootstrap:
