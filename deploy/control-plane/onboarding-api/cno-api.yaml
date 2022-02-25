@@ -74,7 +74,10 @@ spec:
         - name: OIDC_CLIENT_ID
           value: $OIDC_CLIENT_ID
         - name: OIDC_CLIENT_SECRET
-          value: ""
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-client-cno-api
+              key: OIDC_CLIENT_SECRET
         - name: KAFKA_BROKERS
           value: $KAFKA_BROKERS
         - name: KAFKA_TlS_ENABLED
