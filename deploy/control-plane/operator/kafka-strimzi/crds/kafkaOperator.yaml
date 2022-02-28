@@ -15582,6 +15582,21 @@ metadata:
   name: strimzi-cluster-operator
   labels:
     app: strimzi
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: strimzi-cluster-operator
+  namespace: $NAMESPACE
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: strimzi-cluster-operator
+  labels:
+    app: strimzi
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
@@ -15606,6 +15621,12 @@ rules:
       - nodes
     verbs:
       - get
+      - list
+      - watch
+      - create
+      - patch
+      - update
+      - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
