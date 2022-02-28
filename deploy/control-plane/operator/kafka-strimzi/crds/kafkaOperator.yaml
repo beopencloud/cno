@@ -15531,7 +15531,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: myproject
+    namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-namespaced
@@ -15639,7 +15639,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: myproject
+    namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: strimzi-kafka-broker
@@ -15661,6 +15661,7 @@ rules:
       # The entity operator runs the KafkaUser assembly operator, which needs to access and manage KafkaUser resources
       - kafkausers
       - kafkausers/status
+      - kafkas
     verbs:
       - get
       - list
@@ -15701,7 +15702,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: myproject
+    namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: strimzi-entity-operator
@@ -15736,7 +15737,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: myproject
+    namespace: $NAMESPACE
 roleRef:
   kind: ClusterRole
   name: strimzi-kafka-client
