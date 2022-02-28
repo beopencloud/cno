@@ -363,11 +363,6 @@ roleRef:
   name: mysql-operator
   apiGroup: rbac.authorization.k8s.io
 ---
-apiVersion: zalando.org/v1
-kind: ClusterKopfPeering
-metadata:
-  name: mysql-operator
----
 ---
 # Source: mysql-operator/templates/serviceaccount.yaml
 apiVersion: v1
