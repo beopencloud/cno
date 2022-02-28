@@ -244,29 +244,7 @@ spec:
         - name: Age
           type: date
           jsonPath: .metadata.creationTimestamp
----
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: clusterkopfpeerings.zalando.org
-spec:
-  scope: Cluster
-  group: zalando.org
-  names:
-    kind: ClusterKopfPeering
-    plural: clusterkopfpeerings
-    singular: clusterkopfpeering
-  versions:
-    - name: v1
-      served: true
-      storage: true
-      schema:
-        openAPIV3Schema:
-          type: object
-          properties:
-            status:
-              type: object
-              x-kubernetes-preserve-unknown-fields: true
+
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -321,10 +299,6 @@ rules:
   - apiGroups: ["mysql.oracle.com"]
     resources: ["*"]
     verbs: ["*"]
-  - apiGroups: ["zalando.org"]
-    #resources: ["clusterkopfpeerings", "kopfpeerings"]
-    resources: ["*"]
-    verbs: ["get", "patch", "list", "watch"]
 ---
 # role for the server sidecar
 apiVersion: rbac.authorization.k8s.io/v1
@@ -363,11 +337,7 @@ roleRef:
   name: mysql-operator
   apiGroup: rbac.authorization.k8s.io
 ---
-apiVersion: zalando.org/v1
-kind: ClusterKopfPeering
-metadata:
-  name: mysql-operator
----
+
 ---
 # Source: mysql-operator/templates/serviceaccount.yaml
 apiVersion: v1
