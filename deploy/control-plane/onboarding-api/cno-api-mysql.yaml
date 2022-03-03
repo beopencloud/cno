@@ -35,8 +35,8 @@ metadata:
     app.kubernetes.io/managed-by: mysql-operator
     app.kubernetes.io/name: percona-xtradb-cluster
     app.kubernetes.io/part-of: percona-xtradb-cluster
-    controller-revision-hash: minimal-cluster-pxc-67b966d466
-    statefulset.kubernetes.io/pod-name: minimal-cluster-pxc-0
+    controller-revision-hash: cno-api-mysql-67b966d466
+    statefulset.kubernetes.io/pod-name: cno-api-mysql-0
   name: minimal-svc
 spec:
   - name: port-1
