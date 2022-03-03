@@ -758,7 +758,8 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
-        - name: operator
+        - name: OPERATOR_NAME
+          value: operator
         image: $MYSQL_OPERATOR_IMAGE
         imagePullPolicy: Always
         livenessProbe:
@@ -780,4 +781,3 @@ spec:
           name: metrics
           protocol: TCP
       serviceAccountName: mysql-operator
----
