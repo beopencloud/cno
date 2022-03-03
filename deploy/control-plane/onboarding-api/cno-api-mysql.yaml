@@ -2,7 +2,7 @@
 apiVersion: pxc.percona.com/v1-10-0
 kind: PerconaXtraDBCluster
 metadata:
-  name: minimal-cluster
+  name: cno-api-mysql
 spec:
   crVersion: 1.10.0
   secretsName: minimal-cluster-secrets
@@ -32,7 +32,7 @@ metadata:
   labels:
     app.kubernetes.io/component: pxc
     app.kubernetes.io/instance: minimal-cluster
-    app.kubernetes.io/managed-by: percona-xtradb-cluster-operator
+    app.kubernetes.io/managed-by: mysql-operator
     app.kubernetes.io/name: percona-xtradb-cluster
     app.kubernetes.io/part-of: percona-xtradb-cluster
     controller-revision-hash: minimal-cluster-pxc-67b966d466
@@ -66,7 +66,7 @@ spec:
   selector:
     app.kubernetes.io/component: pxc
     app.kubernetes.io/instance: minimal-cluster
-    app.kubernetes.io/managed-by: percona-xtradb-cluster-operator
+    app.kubernetes.io/managed-by: mysql-operator
     app.kubernetes.io/name: percona-xtradb-cluster
     app.kubernetes.io/part-of: percona-xtradb-cluster
     controller-revision-hash: minimal-cluster-pxc-67b966d466
