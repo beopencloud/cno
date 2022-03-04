@@ -1,76 +1,34 @@
 ---
-apiVersion: pxc.percona.com/v1-10-0
-kind: PerconaXtraDBCluster
+apiVersion: mysql.oracle.com/v2alpha1
+kind: InnoDBCluster
 metadata:
   name: cno-api-mysql
+  namespace: $NAMESPACE
 spec:
-  crVersion: 1.10.0
-  secretsName: minimal-cluster-secrets
-  allowUnsafeConfigurations: true
-  upgradeOptions:
-    apply: 8.0-recommended
-    schedule: "0 4 * * *"
-  pxc:
-    size: 1
-    image: percona/percona-xtradb-cluster:8.0.23-14.1
-    volumeSpec:
-      persistentVolumeClaim:
-        resources:
-          requests:
-            storage: 6G
-  haproxy:
-    enabled: true
-    size: 1
-    image: percona/percona-xtradb-cluster-operator:1.10.0-haproxy
-  logcollector:
-    enabled: true
-    image: percona/percona-xtradb-cluster-operator:1.10.0-logcollector
+  instances: 1
+  secretName: cno-api-db-secret
+  podSpec:  
+  router:
+    instances: 1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app.kubernetes.io/component: pxc
-    app.kubernetes.io/instance: minimal-cluster
-    app.kubernetes.io/managed-by: mysql-operator
-    app.kubernetes.io/name: percona-xtradb-cluster
-    app.kubernetes.io/part-of: percona-xtradb-cluster
-    controller-revision-hash: cno-api-mysql-67b966d466
-    statefulset.kubernetes.io/pod-name: cno-api-mysql-0
-  name: minimal-svc
+  name: cno-api-mysql-master-external
 spec:
-  - name: port-1
+  ports:
+  - name: mysql
     port: 3306
     protocol: TCP
     targetPort: 3306
-  - name: port-2
-    port: 4444
+  - name: sidecar-http
+    port: 8080
     protocol: TCP
-    targetPort: 4444
-  - name: port-3
-    port: 4567
-    protocol: TCP
-    targetPort: 4567
-  - name: port-4
-    port: 4568
-    protocol: TCP
-    targetPort: 4568
-  - name: port-5
-    port: 33062
-    protocol: TCP
-    targetPort: 33062
-  - name: port-6
-    port: 33060
-    protocol: TCP
-    targetPort: 33060
+    targetPort: 8080
   selector:
-    app.kubernetes.io/component: pxc
-    app.kubernetes.io/instance: minimal-cluster
-    app.kubernetes.io/managed-by: mysql-operator
-    app.kubernetes.io/name: percona-xtradb-cluster
-    app.kubernetes.io/part-of: percona-xtradb-cluster
-    controller-revision-hash: minimal-cluster-pxc-67b966d466
-    statefulset.kubernetes.io/pod-name: minimal-cluster-pxc-0
+    app.kubernetes.io/managed-by: mysql.oracle.com
+    app.kubernetes.io/name: mysql
+    mysql.oracle.com/cluster: cno-api-mysql
+    role: master
   sessionAffinity: None
   type: ClusterIP
-
