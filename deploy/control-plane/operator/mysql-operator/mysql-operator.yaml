@@ -746,7 +746,7 @@ spec:
       terminationGracePeriodSeconds: 600
       containers:
       - command:
-        - mysql-operator
+        - percona-xtradb-cluster-operator
         env:
         - name: WATCH_NAMESPACE
           valueFrom:
