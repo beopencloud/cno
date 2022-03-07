@@ -193,31 +193,25 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  annotations:
-    meta.helm.sh/release-name: mysql-operator
-    meta.helm.sh/release-namespace: default
-  creationTimestamp: "2022-03-07T14:30:22Z"
-  generation: 1
+  name: mysql-operator
   labels:
     app: mysql-operator
-  name: mysql-operator
 spec:
-  podManagementPolicy: Parallel
   replicas: 1
+  serviceName: mysql-operator-orc
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: mysql-operator
       release: mysql-operator
-  serviceName: mysql-operator-orc
   template:
     metadata:
-      annotations:
-        checksum/orchestrator-config: 301f994fcecde72ab6be4371173a860c68b440504210a400a8105c833311443b
-        checksum/orchestrator-secret: 93c5fc6c5224389fe53e2dcfeaeca8073e5b8ac7f4408e9a6173d7cd79bd3f1f
-      creationTimestamp: null
       labels:
         app: mysql-operator
         release: mysql-operator
+      annotations:
+        checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
+        checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
       containers:
       - args:
