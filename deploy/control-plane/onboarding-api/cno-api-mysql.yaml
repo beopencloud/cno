@@ -1,15 +1,27 @@
----
-apiVersion: mysql.oracle.com/v2alpha1
-kind: InnoDBCluster
+apiVersion: mysql.presslabs.org/v1alpha1
+kind: MysqlCluster
 metadata:
-  name: cno-api-mysql
-  namespace: $NAMESPACE
+  name: cno-api
 spec:
-  instances: 1
+  replicas: 1
+  image: $MYSQL_IMAGE #bitnami/mariadb:latest 
   secretName: cno-api-db-secret
-  podSpec:  
-  router:
-    instances: 1
+  volumeSpec:
+    persistentVolumeClaim:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cno-api-db-secret
+type: Opaque
+data:
+  # root password is required to be specified
+  ROOT_PASSWORD: TXlzcWxAQ24wQDJPMjJACg==
 ---
 apiVersion: v1
 kind: Service
@@ -26,9 +38,9 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app.kubernetes.io/managed-by: mysql.oracle.com
+    app.kubernetes.io/managed-by: mysql.presslabs.org
     app.kubernetes.io/name: mysql
-    mysql.oracle.com/cluster: cno-api-mysql
+    mysql.presslabs.org/cluster: cno-api
     role: master
   sessionAffinity: None
   type: ClusterIP

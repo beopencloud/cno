@@ -1,4 +1,4 @@
-piVersion: v1
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cno-api
@@ -29,7 +29,6 @@ metadata:
   labels:
     run: cno-api
   name: cno-api
-  namespace: $NAMESPACE
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -72,7 +71,7 @@ spec:
         - name: OIDC_SERVER_BASE_URL
           value: $OIDC_SERVER_BASE_URL
         - name: OIDC_CLIENT_ID
-          value: $OIDC_CLIENT_ID
+          value: "cno-api"
         - name: OIDC_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
@@ -87,7 +86,7 @@ spec:
         - name: KAFKA_VERBOSE
           value: "false"
         - name: DB_HOST
-          value: "cno-api-mysql-instances"
+          value: "cno-api-mysql-master"
         - name: DB_PORT
           value: "3306"
         - name: DB_NAME
@@ -98,7 +97,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: cno-api-db-secret
-              key: rootPassword
+              key: ROOT_PASSWORD
         - name: CREATE_DEFAULT_CLUSTER
           value: $CREATE_DEFAULT_CLUSTER
         - name: DEFAULT_EXTERNAL_BROKERS_URL
@@ -127,6 +126,7 @@ spec:
       - name: kafkaconfig
         secret:
           secretName: kafkaconfig
+
 ---
 apiVersion: v1
 kind: Service
@@ -141,4 +141,3 @@ spec:
     run: cno-api
   sessionAffinity: None
   type: ClusterIP
----
