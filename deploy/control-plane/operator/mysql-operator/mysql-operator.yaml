@@ -1,5 +1,4 @@
 ---
-# Source: mysql-operator/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -9,7 +8,6 @@ metadata:
 imagePullSecrets:
 - name: $SA
 ---
-# Source: mysql-operator/templates/orc-secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -20,7 +18,6 @@ data:
   TOPOLOGY_USER: "b3JjaGVzdHJhdG9y"
   TOPOLOGY_PASSWORD: "RTZZQzFTZDAyMA=="
 ---
-# Source: mysql-operator/templates/orc-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -34,7 +31,6 @@ data:
     user = {{ .Env.ORC_TOPOLOGY_USER }}
     password = {{ .Env.ORC_TOPOLOGY_PASSWORD }}
 ---
-# Source: mysql-operator/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -137,7 +133,6 @@ rules:
   - patch
   - delete
 ---
-# Source: mysql-operator/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -153,7 +148,6 @@ subjects:
     namespace: $NAMESPACE
     kind: ServiceAccount
 ---
-# Source: mysql-operator/templates/orc-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -176,7 +170,6 @@ spec:
   selector:
     statefulset.kubernetes.io/pod-name: mysql-operator-0
 ---
-# Source: mysql-operator/templates/orc-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -197,7 +190,6 @@ spec:
     protocol: TCP
     targetPort: prometheus
 ---
-# Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
