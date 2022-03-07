@@ -199,15 +199,8 @@ metadata:
   creationTimestamp: "2022-03-07T14:30:22Z"
   generation: 1
   labels:
-    app.kubernetes.io/instance: mysql-operator
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: mysql-operator
-    app.kubernetes.io/version: v0.6.2
-    helm.sh/chart: mysql-operator-0.6.2
+    app: mysql-operator
   name: mysql-operator
-  namespace: default
-  resourceVersion: "22992"
-  uid: 4b32dd8f-0a4b-40e7-8993-8fc3a9951171
 spec:
   podManagementPolicy: Parallel
   replicas: 1
@@ -224,7 +217,7 @@ spec:
       creationTimestamp: null
       labels:
         app: mysql-operator
-        release: mysql-operato
+        release: mysql-operator
     spec:
       containers:
       - args:
