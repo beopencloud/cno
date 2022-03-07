@@ -304,29 +304,24 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /var/lib/orchestrator
-          name: data
-        - mountPath: /usr/local/share/orchestrator/templates
-          name: config
+        - name: data
+          mountPath: /var/lib/orchestrator/
+        - name: config
+          mountPath: /templates/
+        - name: etc-orchestrator
+          mountPath: /etc/orchestrator
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext:
-        fsGroup: 65532
-        runAsGroup: 65532
-        runAsNonRoot: true
-        runAsUser: 65532
       serviceAccount: mysql-operator
       serviceAccountName: mysql-operator
       volumes:
-      - configMap:
-          defaultMode: 420
-          name: mysql-operator-orc
-        name: config
-  updateStrategy:
-    rollingUpdate:
-      partition: 0
-    type: RollingUpdate
+        - name: config
+          configMap:
+            name: mysql-operator-orc
+        - name: etc-orchestrator
+          emptyDir: {}
+      securityContext:
+        fsGroup: 777
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
