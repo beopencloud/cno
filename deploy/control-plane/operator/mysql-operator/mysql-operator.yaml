@@ -315,6 +315,8 @@ spec:
               path: /healthz
               port: 8081
           readinessProbe:
+            initialDelaySeconds: 300
+            periodSeconds: 30
             httpGet:
               path: /readyz
               port: 8081
@@ -350,13 +352,16 @@ spec:
               mountPath: /etc/orchestrator
           livenessProbe:
             timeoutSeconds: 50
-            initialDelaySeconds: 200
+            initialDelaySeconds: 300
+            periodSeconds: 30
             httpGet:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
             timeoutSeconds: 50
+            initialDelaySeconds: 300
+            periodSeconds: 30
             httpGet:
               path: /api/raft-health
               port: 3000
