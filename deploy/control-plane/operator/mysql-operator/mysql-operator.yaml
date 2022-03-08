@@ -349,14 +349,14 @@ spec:
             - name: etc-orchestrator
               mountPath: /etc/orchestrator
           livenessProbe:
-            timeoutSeconds: 10
+            timeoutSeconds: 50
             initialDelaySeconds: 200
             httpGet:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
-            timeoutSeconds: 10
+            timeoutSeconds: 50
             httpGet:
               path: /api/raft-health
               port: 3000
