@@ -315,8 +315,6 @@ spec:
               path: /healthz
               port: 8081
           readinessProbe:
-            initialDelaySeconds: 300
-            periodSeconds: 30
             httpGet:
               path: /readyz
               port: 8081
