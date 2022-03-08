@@ -351,7 +351,7 @@ spec:
             - name: etc-orchestrator
               mountPath: /etc/orchestrator
           livenessProbe:
-            timeoutSeconds: 50
+            timeoutSeconds: 10
             initialDelaySeconds: 300
             periodSeconds: 30
             httpGet:
@@ -359,7 +359,7 @@ spec:
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
-            timeoutSeconds: 50
+            timeoutSeconds: 10
             initialDelaySeconds: 300
             periodSeconds: 30
             httpGet:
