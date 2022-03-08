@@ -364,6 +364,8 @@ spec:
             {}
 
       volumes:
+        - name: etc-orchestrator
+          emptyDir: {}
         - name: config
           configMap:
             name: mysql-operator-orc
