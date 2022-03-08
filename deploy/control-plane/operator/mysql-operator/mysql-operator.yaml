@@ -381,6 +381,6 @@ type: Opaque
 data:
   # root password is required to be specified
   ROOT_PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
-  USER: cm9vdAo=
-  DATABASE: Y25vYXBpCg==
-  PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
+  USER: Y25vLXVzZXIK
+  DATABASE: Y25vLWFwaQo=
+  PASSWORD: Y24wQHBpCg==
