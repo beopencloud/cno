@@ -208,10 +208,10 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 3000
+      targetPort: http
     - name: raft
       port: 10008
-      targetPort: 10008
+      targetPort: raft
   selector:
     statefulset.kubernetes.io/pod-name: mysql-operator-0
     app.kubernetes.io/name: mysql-operator
@@ -362,7 +362,6 @@ spec:
               port: 3000
           resources:
             {}
-
       volumes:
         - name: etc-orchestrator
           emptyDir: {}
