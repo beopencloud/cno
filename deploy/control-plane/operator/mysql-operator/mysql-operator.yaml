@@ -380,7 +380,7 @@ metadata:
 type: Opaque
 data:
   # root password is required to be specified
-  ROOT_PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
+  ROOT_PASSWORD: VUZYSzlNMVZyUFRucDVBUHRkCg==
   USER: Y25vLXVzZXIK
   DATABASE: Y25vLWFwaQo=
   PASSWORD: Y24wQHBpCg==
