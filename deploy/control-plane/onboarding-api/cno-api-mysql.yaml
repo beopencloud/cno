@@ -13,6 +13,17 @@ spec:
           storage: 5Gi
 
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cno-api-db-secret
+type: Opaque
+data:
+  # root password is required to be specified
+  ROOT_PASSWORD: TXlzcWxAQ24wQDJPMjJACg==
+  USER: cm9vdAo=
+  DATABASE: Y25vYXBpCg==
+  PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
 ---
 apiVersion: v1
 kind: Service

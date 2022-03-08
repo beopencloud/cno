@@ -90,9 +90,15 @@ spec:
         - name: DB_PORT
           value: "3306"
         - name: DB_NAME
-          value: "cnoapi"
+          valueFrom:
+            secretKeyRef:
+              name: cno-api-db-secret
+              key: DATABASE
         - name: DB_USERNAME
-          value: "root"
+          valueFrom:
+            secretKeyRef:
+              name: cno-api-db-secret
+              key: ROOT_PASSWORD
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
