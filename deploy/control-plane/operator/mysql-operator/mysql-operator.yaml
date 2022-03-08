@@ -21,18 +21,6 @@ data:
   TOPOLOGY_PASSWORD: "TnAyOWhUQ1p5Ng=="
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: cno-api-db-secret
-type: Opaque
-data:
-  # root password is required to be specified
-  ROOT_PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
-  USER: cm9vdAo=
-  DATABASE: Y25vYXBpCg==
-  PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
----
-apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-operator-orc
@@ -385,3 +373,14 @@ spec:
           requests:
             storage: 1Gi
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cno-api-db-secret
+type: Opaque
+data:
+  # root password is required to be specified
+  ROOT_PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
+  USER: cm9vdAo=
+  DATABASE: Y25vYXBpCg==
+  PASSWORD: Q04wLWFwaV9NeXNxTHBAc3N3b3JkCg==
