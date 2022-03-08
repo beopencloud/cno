@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    app: keycloak
+  name: cno-auth
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: cno-auth.cluster.beopenit.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: keycloak
+            port:
+              number: 8443
+        path: /
+        pathType: Prefix

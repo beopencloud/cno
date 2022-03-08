@@ -1,0 +1,71 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: cno-kafka-cluster
+spec:
+  kafka:
+    template:
+      pod:
+        imagePullSecrets:
+        - name: $SA
+    image: $KAFKA_BROKER_IMAGE
+    version: 2.5.0
+    replicas: 1
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: tls
+      - name: external
+        port: 9094
+        type: route
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          bootstrap:
+            host: bootstrap-cno.INGRESS_DOMAIN
+          brokers:
+          - broker: 0
+            host: broker-0-cno.INGRESS_DOMAIN
+          - broker: 1
+            host: broker-1-cno.INGRESS_DOMAIN
+          - broker: 2
+            host: broker-2-cno.INGRESS_DOMAIN
+    authorization:
+      type: simple
+      superUsers:
+        - CN=cno-kafka-superadmin
+    config:
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      log.message.format.version: "2.5"
+    storage:
+      type: ephemeral
+  zookeeper:
+    template:
+      pod:
+        imagePullSecrets:
+        - name: $SA
+    image: $KAFKA_ZOOKEEPER_IMAGE
+    replicas: 1
+    storage:
+      type: ephemeral
+  entityOperator:
+    template:
+      pod:
+        imagePullSecrets:
+        - name: $SA
+    topicOperator:
+      image: $KAFKA_TOPIC_OPERATOR_IMAGE
+    userOperator:
+      image: $KAFKA_USER_OPERATOR_IMAGE
+    tlsSidecar:
+      image: $KAFKA_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE
