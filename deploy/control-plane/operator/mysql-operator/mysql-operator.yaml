@@ -352,16 +352,14 @@ spec:
               mountPath: /etc/orchestrator
           livenessProbe:
             timeoutSeconds: 10
-            initialDelaySeconds: 300
+            initialDelaySeconds: 200
             periodSeconds: 30
             httpGet:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
-            timeoutSeconds: 10
-            initialDelaySeconds: 300
-            periodSeconds: 30
+            timeoutSeconds: 50
             httpGet:
               path: /api/raft-health
               port: 3000
