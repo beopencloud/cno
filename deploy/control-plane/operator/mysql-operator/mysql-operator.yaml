@@ -353,13 +353,12 @@ spec:
           livenessProbe:
             timeoutSeconds: 10
             initialDelaySeconds: 200
-            periodSeconds: 30
             httpGet:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
-            timeoutSeconds: 50
+            timeoutSeconds: 10
             httpGet:
               path: /api/raft-health
               port: 3000
