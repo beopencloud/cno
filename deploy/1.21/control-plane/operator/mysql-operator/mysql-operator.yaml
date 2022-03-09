@@ -277,7 +277,8 @@ spec:
             # connect to orchestrator on localhost
             - --orchestrator-uri=http://127.0.0.1:3000/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
+            - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
+            - --failover-before-shutdown=true
           resources:
             {}
           # TODO: add livenessProbe to controller
@@ -318,11 +319,11 @@ spec:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
-          readinessProbe:
-            timeoutSeconds: 50
-            httpGet:
-              path: /api/raft-health
-              port: 3000
+          #readinessProbe:
+           # timeoutSeconds: 50
+          #  httpGet:
+           #   path: /api/raft-health
+           #   port: 3000
       volumes:
         - name: config
           configMap:
