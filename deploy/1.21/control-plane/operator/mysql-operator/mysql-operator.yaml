@@ -153,6 +153,12 @@ subjects:
     namespace: $NAMESPACE
     kind: ServiceAccount
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-operator-leader-election
+  namespace: $NAMESPACE
+---
 # Source: mysql-operator/templates/orc-service.yaml
 apiVersion: v1
 kind: Service
