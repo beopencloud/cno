@@ -43,111 +43,134 @@ metadata:
   name: 'mysql-operator'
 rules:
 - apiGroups:
-  - coordination.k8s.io
+    - apps
   resources:
-  - leases
+    - statefulsets
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - batch
+    - batch
   resources:
-  - jobs
+    - jobs
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - mysql.presslabs.org
+    - coordination.k8s.io
   resources:
-  - mysqlbackups
-  - mysqlbackups/finalizers
+    - leases
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - apps
+    - ""
   resources:
-  - statefulsets
+    - configmaps
+    - events
+    - jobs
+    - persistentvolumeclaims
+    - pods
+    - secrets
+    - services
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - ""
+    - ""
   resources:
-  - configmaps
-  - secrets
-  - services
-  - events
-  - jobs
-  - pods
-  - persistentvolumeclaims
-  - configmaps/finalizers
+    - pods/status
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - mysql.presslabs.org
+    - mysql.presslabs.org
   resources:
-  - mysqlclusters
-  - mysqlclusters/status
-  - mysqlclusters/finalizers
+    - mysqlbackups
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - policy
+    - mysql.presslabs.org
   resources:
-  - poddisruptionbudgets
+    - mysqlclusters
+    - mysqlclusters/status
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 - apiGroups:
-  - ""
+    - mysql.presslabs.org
   resources:
-  - pods/status
+    - mysqldatabases
+    - mysqldatabases/status
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - mysql.presslabs.org
+  resources:
+    - mysqlusers
+    - mysqlusers/status
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - policy
+  resources:
+    - poddisruptionbudgets
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
 ---
 # Source: mysql-operator/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -296,7 +319,7 @@ spec:
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
           readinessProbe:
-            timeoutSeconds: 10
+            timeoutSeconds: 50
             httpGet:
               path: /api/raft-health
               port: 3000
