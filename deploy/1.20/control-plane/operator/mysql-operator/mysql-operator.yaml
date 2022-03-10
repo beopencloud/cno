@@ -356,7 +356,11 @@ spec:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
-          
+          readinessProbe:
+            timeoutSeconds: 10
+            httpGet:
+              path: /api/raft-health
+              port: 3000          
           resources:
             {}
       volumes:
