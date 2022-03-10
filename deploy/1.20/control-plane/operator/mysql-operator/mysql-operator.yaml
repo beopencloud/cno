@@ -308,8 +308,9 @@ spec:
             - --leader-election-namespace=$NAMESPACE
             - --orchestrator-uri=http://mysql-operator.$NAMESPACE/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-            - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
-            - --failover-before-shutdown=true
+            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
+           # - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
+           # - --failover-before-shutdown=true
           livenessProbe:
             httpGet:
               path: /healthz
