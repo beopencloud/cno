@@ -1,46 +1,48 @@
 ---
-# Source: mysql-operator/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
-imagePullSecrets:
-- name: $SA
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 ---
-# Source: mysql-operator/templates/orc-secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
   name: mysql-operator-orc
   labels:
     app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 data:
   TOPOLOGY_USER: "b3JjaGVzdHJhdG9y"
-  TOPOLOGY_PASSWORD: "RTZZQzFTZDAyMA=="
+  TOPOLOGY_PASSWORD: "TnAyOWhUQ1p5Ng=="
 ---
-# Source: mysql-operator/templates/orc-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-operator-orc
   labels:
     app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 data:
-  orchestrator.conf.json: "{\n  \"ApplyMySQLPromotionAfterMasterFailover\": false,\n  \"BackendDB\": \"sqlite\",\n  \"Debug\": false,\n  \"DetachLostReplicasAfterMasterFailover\": true,\n  \"DetectClusterAliasQuery\": \"SELECT CONCAT(SUBSTRING(@@hostname, 1, LENGTH(@@hostname) - 1 - LENGTH(SUBSTRING_INDEX(@@hostname,'-',-2))),'.',SUBSTRING_INDEX(@@report_host,'.',-1))\",\n  \"DetectInstanceAliasQuery\": \"SELECT @@hostname\",\n  \"DiscoverByShowSlaveHosts\": false,\n  \"FailMasterPromotionIfSQLThreadNotUpToDate\": true,\n  \"HTTPAdvertise\": \"http://{{ .Env.HOSTNAME }}-svc:80\",\n  \"HostnameResolveMethod\": \"none\",\n  \"InstancePollSeconds\": 5,\n  \"ListenAddress\": \":3000\",\n  \"MasterFailoverDetachReplicaMasterHost\": true,\n  \"MySQLHostnameResolveMethod\": \"@@report_host\",\n  \"MySQLTopologyCredentialsConfigFile\": \"/etc/orchestrator/orc-topology.cnf\",\n  \"OnFailureDetectionProcesses\": [\n    \"/usr/local/bin/orc-helper event -w '{failureClusterAlias}' 'OrcFailureDetection' 'Failure: {failureType}, failed host: {failedHost}, lost replcas: {lostReplicas}' || true\",\n    \"/usr/local/bin/orc-helper failover-in-progress '{failureClusterAlias}' '{failureDescription}' || true\"\n  ],\n  \"PostIntermediateMasterFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event '{failureClusterAlias}' 'OrcPostIntermediateMasterFailover' 'Failure type: {failureType}, failed hosts: {failedHost}, slaves: {countSlaves}' || true\"\n  ],\n  \"PostMasterFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event '{failureClusterAlias}' 'OrcPostMasterFailover' 'Failure type: {failureType}, new master: {successorHost}, slaves: {slaveHosts}' || true\"\n  ],\n  \"PostUnsuccessfulFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event -w '{failureClusterAlias}' 'OrcPostUnsuccessfulFailover' 'Failure: {failureType}, failed host: {failedHost} with {countSlaves} slaves' || true\"\n  ],\n  \"PreFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper failover-in-progress '{failureClusterAlias}' '{failureDescription}' || true\"\n  ],\n  \"ProcessesShellCommand\": \"sh\",\n  \"RaftAdvertise\": \"{{ .Env.HOSTNAME }}-svc\",\n  \"RaftBind\": \"{{ .Env.HOSTNAME }}\",\n  \"RaftDataDir\": \"/var/lib/orchestrator\",\n  \"RaftEnabled\": true,\n  \"RaftNodes\": [],\n  \"RecoverIntermediateMasterClusterFilters\": [\n    \".*\"\n  ],\n  \"RecoverMasterClusterFilters\": [\n    \".*\"\n  ],\n  \"RecoveryIgnoreHostnameFilters\": [],\n  \"RecoveryPeriodBlockSeconds\": 300,\n  \"RemoveTextFromHostnameDisplay\": \":3306\",\n  \"SQLite3DataFile\": \"/var/lib/orchestrator/orc.db\",\n  \"SlaveLagQuery\": \"SELECT TIMESTAMPDIFF(SECOND,ts,NOW()) as drift FROM sys_operator.heartbeat ORDER BY drift ASC LIMIT 1\",\n  \"UnseenInstanceForgetHours\": 1\n}"
+  orchestrator.conf.json: "{\n  \"ApplyMySQLPromotionAfterMasterFailover\": true,\n  \"BackendDB\": \"sqlite\",\n  \"Debug\": false,\n  \"DetachLostReplicasAfterMasterFailover\": true,\n  \"DetectClusterAliasQuery\": \"SELECT CONCAT(SUBSTRING(@@hostname, 1, LENGTH(@@hostname) - 1 - LENGTH(SUBSTRING_INDEX(@@hostname,'-',-2))),'.',SUBSTRING_INDEX(@@report_host,'.',-1))\",\n  \"DetectInstanceAliasQuery\": \"SELECT @@hostname\",\n  \"DiscoverByShowSlaveHosts\": false,\n  \"FailMasterPromotionIfSQLThreadNotUpToDate\": true,\n  \"HTTPAdvertise\": \"http://{{ .Env.HOSTNAME }}.mysql-operator-orc:3000\",\n  \"HostnameResolveMethod\": \"none\",\n  \"InstancePollSeconds\": 5,\n  \"ListenAddress\": \":3000\",\n  \"MasterFailoverLostInstancesDowntimeMinutes\": 10,\n  \"MySQLHostnameResolveMethod\": \"@@report_host\",\n  \"MySQLTopologyCredentialsConfigFile\": \"/etc/orchestrator/orc-topology.cnf\",\n  \"OnFailureDetectionProcesses\": [\n    \"/usr/local/bin/orc-helper event -w '{failureClusterAlias}' 'OrcFailureDetection' 'Failure: {failureType}, failed host: {failedHost}, lost replcas: {lostReplicas}' || true\",\n    \"/usr/local/bin/orc-helper failover-in-progress '{failureClusterAlias}' '{failureDescription}' || true\"\n  ],\n  \"PostIntermediateMasterFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event '{failureClusterAlias}' 'OrcPostIntermediateMasterFailover' 'Failure type: {failureType}, failed hosts: {failedHost}, slaves: {countSlaves}' || true\"\n  ],\n  \"PostMasterFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event '{failureClusterAlias}' 'OrcPostMasterFailover' 'Failure type: {failureType}, new master: {successorHost}, slaves: {slaveHosts}' || true\"\n  ],\n  \"PostUnsuccessfulFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper event -w '{failureClusterAlias}' 'OrcPostUnsuccessfulFailover' 'Failure: {failureType}, failed host: {failedHost} with {countSlaves} slaves' || true\"\n  ],\n  \"PreFailoverProcesses\": [\n    \"/usr/local/bin/orc-helper failover-in-progress '{failureClusterAlias}' '{failureDescription}' || true\"\n  ],\n  \"ProcessesShellCommand\": \"sh\",\n  \"RaftAdvertise\": \"{{ .Env.HOSTNAME }}.mysql-operator-orc\",\n  \"RaftBind\": \"{{ .Env.HOSTNAME }}\",\n  \"RaftDataDir\": \"/var/lib/orchestrator\",\n  \"RaftEnabled\": true,\n  \"RaftNodes\": [],\n  \"RecoverIntermediateMasterClusterFilters\": [\n    \".*\"\n  ],\n  \"RecoverMasterClusterFilters\": [\n    \".*\"\n  ],\n  \"RecoveryIgnoreHostnameFilters\": [],\n  \"RecoveryPeriodBlockSeconds\": 300,\n  \"RemoveTextFromHostnameDisplay\": \":3306\",\n  \"SQLite3DataFile\": \"/var/lib/orchestrator/orc.db\",\n  \"SlaveLagQuery\": \"SELECT TIMESTAMPDIFF(SECOND,ts,UTC_TIMESTAMP()) as drift FROM sys_operator.heartbeat ORDER BY drift ASC LIMIT 1\",\n  \"UnseenInstanceForgetHours\": 1\n}"
   orc-topology.cnf: |
     [client]
     user = {{ .Env.ORC_TOPOLOGY_USER }}
     password = {{ .Env.ORC_TOPOLOGY_PASSWORD }}
 ---
-# Source: mysql-operator/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app: 'mysql-operator'
-  name: 'mysql-operator'
+    app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
+  name: mysql-operator
 rules:
 - apiGroups:
     - apps
@@ -172,13 +174,14 @@ rules:
     - update
     - watch
 ---
-# Source: mysql-operator/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -189,56 +192,70 @@ subjects:
     kind: ServiceAccount
 ---
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql-operator-leader-election
-  namespace: $NAMESPACE
----
-# Source: mysql-operator/templates/orc-service.yaml
-apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-operator-0-svc
+  name: mysql-operator-orc
   labels:
     app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
+    app.kubernetes.io/component: orchestrator-raft
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   type: ClusterIP
+  publishNotReadyAddresses: true
   ports:
-  - name: web
-    port: 80
-    targetPort: 3000
-  - name: raft
-    port: 10008
-    targetPort: 10008
+    - name: http
+      port: 80
+      targetPort: http
+    - name: raft
+      port: 10008
+      targetPort: raft
   selector:
     statefulset.kubernetes.io/pod-name: mysql-operator-0
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 ---
-# Source: mysql-operator/templates/orc-service.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-operator-leader-election
+  namespace: $NAMESPACE
+
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 spec:
   type: ClusterIP
-  selector:
-    app: mysql-operator
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 3000
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: http
+    - port: 9125
+      name: prometheus
+      protocol: TCP
+      targetPort: prometheus
+  selector:
+    statefulset.kubernetes.io/pod-name: mysql-operator-0
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 ---
-# Source: mysql-operator/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql-operator
   labels:
     app: mysql-operator
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/instance: mysql-operator
 spec:
   replicas: 1
   serviceName: mysql-operator-orc
@@ -247,20 +264,35 @@ spec:
     matchLabels:
       app: mysql-operator
       release: mysql-operator
+      app.kubernetes.io/name: mysql-operator
+      app.kubernetes.io/instance: mysql-operator
   template:
     metadata:
       labels:
         app: mysql-operator
         release: mysql-operator
+        app.kubernetes.io/name: mysql-operator
+        app.kubernetes.io/instance: mysql-operator
       annotations:
         checksum/config: 0728c31a378a32b09e3a0e72611f4a3bb3ee5720c1ff9bdd2fc719ae28234ed9
         checksum/secret: f9296cc326e6906162c4328796d372e315d440dd1b65a6de3888335fd0ff568b
     spec:
       serviceAccountName: mysql-operator
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
       containers:
         - name: operator
-          image: $MYSQL_OPERATOR_IMAGE #"quay.io/presslabs/mysql-operator:0.4.0"
+          securityContext:
+            {}
+          image: $MYSQL_OPERATOR_IMAGE
           imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: prometheus
+              protocol: TCP
           env:
             - name: ORC_TOPOLOGY_USER
               valueFrom:
@@ -274,23 +306,28 @@ spec:
                   key: TOPOLOGY_PASSWORD
           args:
             - --leader-election-namespace=$NAMESPACE
-            # connect to orchestrator on localhost
-            - --orchestrator-uri=http://127.0.0.1:3000/api
+            - --orchestrator-uri=http://mysql-operator.$NAMESPACE/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-            - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
+            - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
+            - --failover-before-shutdown=true
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
           resources:
             {}
-          # TODO: add livenessProbe to controller
-          # livenessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: 80
         - name: orchestrator
-          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE #quay.io/presslabs/mysql-operator-orchestrator:0.4.0
+          securityContext:
+            {}
+          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
-              name: web
+              name: http
               protocol: TCP
             - containerPort: 10008
               name: raft
@@ -306,9 +343,9 @@ spec:
                 name: mysql-operator-orc
           volumeMounts:
             - name: data
-              mountPath: /var/lib/orchestrator/
+              mountPath: /var/lib/orchestrator
             - name: config
-              mountPath: /templates/
+              mountPath: /usr/local/share/orchestrator/templates
             - name: etc-orchestrator
               mountPath: /etc/orchestrator
           livenessProbe:
@@ -318,19 +355,15 @@ spec:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
-          readinessProbe:
-            timeoutSeconds: 50
-            httpGet:
-              path: /api/raft-health
-              port: 3000
+          
+          resources:
+            {}
       volumes:
+        - name: etc-orchestrator
+          emptyDir: {}
         - name: config
           configMap:
             name: mysql-operator-orc
-        - name: etc-orchestrator
-          emptyDir: {}
-      securityContext:
-        fsGroup: 777
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -339,3 +372,15 @@ spec:
         resources:
           requests:
             storage: 1Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cno-api-db-secret
+type: Opaque
+data:
+  # root password is required to be specified
+  ROOT_PASSWORD: VUZYSzlNMVZyUFRucDVBUHRkCg==
+  USER: Y25vLXVzZXIK
+  DATABASE: Y25vLWFwaQo=
+  PASSWORD: Y24wQHBpCg==

@@ -8,9 +8,9 @@ metadata:
 spec:
   instances: 1
   externalDatabase:
-    enabled: false
+    enabled: true
   externalAccess:
-    enabled: false
+    enabled: true
     tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True
