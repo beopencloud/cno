@@ -243,6 +243,12 @@ spec:
       name: prometheus
       protocol: TCP
       targetPort: prometheus
+    - name: web
+      port: 80
+      targetPort: 3000
+    - name: raft
+      port: 10008 
+      targetPort: 10008
   selector:
     statefulset.kubernetes.io/pod-name: mysql-operator-0
     app.kubernetes.io/name: mysql-operator
@@ -311,14 +317,11 @@ spec:
             - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
            # - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
            # - --failover-before-shutdown=true
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8081
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8081
+          # TODO: add livenessProbe to controller
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 80
           resources:
             {}
         - name: orchestrator
@@ -328,7 +331,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
-              name: http
+              name: web
               protocol: TCP
             - containerPort: 10008
               name: raft
@@ -356,11 +359,11 @@ spec:
               path: /api/lb-check
               port: 3000
           # https://github.com/github/orchestrator/blob/master/docs/raft.md#proxy-healthy-raft-nodes
-          #readinessProbe:
-           # timeoutSeconds: 10
-           # httpGet:
-           #   path: /api/raft-health
-           #   port: 3000          
+          readinessProbe:
+            timeoutSeconds: 10
+            httpGet:
+              path: /api/raft-health
+              port: 3000          
           resources:
             {}
       volumes:
