@@ -243,9 +243,6 @@ spec:
       name: prometheus
       protocol: TCP
       targetPort: prometheus
-    - name: web
-      port: 80
-      targetPort: 3000
     - name: raft
       port: 10008 
       targetPort: 10008
