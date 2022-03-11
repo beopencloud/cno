@@ -306,7 +306,7 @@ spec:
                   key: TOPOLOGY_PASSWORD
           args:
             - --leader-election-namespace=$NAMESPACE
-            - --orchestrator-uri=http://mysql-operator.$NAMESPACE/api
+            - --orchestrator-uri=http://127.0.0.1:3000/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
             - --metrics-exporter-image=$MYSQL_EXPORTER_IMAGE
            # - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
