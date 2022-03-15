@@ -8,9 +8,9 @@ metadata:
 spec:
   instances: 1
   externalDatabase:
-    enabled: true
+    enabled: false
   externalAccess:
-    enabled: true
+    enabled: false
     tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True
@@ -53,5 +53,3 @@ spec:
                   values:
                   - keycloak
               topologyKey: "kubernetes.io/hostname"
-
-
