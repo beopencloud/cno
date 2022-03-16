@@ -25,7 +25,7 @@ spec:
         app: sso
       annotations:
     spec:
-      serviceAccountName: default
+      serviceAccountName: keycloak-postgres
       
       affinity:
         podAffinity:
@@ -43,23 +43,40 @@ spec:
               weight: 1
         nodeAffinity:
           
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 3000
-        fsGroup: 2000
-        fsGroupChangePolicy: "OnRootMismatch"
+       securityContext:
+        fsGroup: 1001
       hostNetwork: false
       hostIPC: false
       initContainers:
+        - name: init-chmod-data
+          image: docker.io/bitnami/bitnami-shell:10-debian-10-r365
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            limits: {}
+            requests: {}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              chown 1001:1001 /bitnami/postgresql
+              mkdir -p /bitnami/postgresql/data
+              chmod 700 /bitnami/postgresql/data
+              find /bitnami/postgresql -mindepth 1 -maxdepth 1 -not -name "conf" -not -name ".snapshot" -not -name "lost+found" | \
+                xargs -r chown -R 1001:1001
+              chmod -R 777 /dev/shm
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/postgresql
+            - name: dshm
+              mountPath: /dev/shm
       containers:
         - name: postgresql
           image: $KEYCLOAK_POSTGRESQL_IMAGE #docker.io/bitnami/postgresql:14.2.0-debian-10-r31   
           imagePullPolicy: "IfNotPresent"
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 3000
-            fsGroup: 2000
-            fsGroupChangePolicy: "OnRootMismatch"
+            runAsUser: 1001
           env:
             - name: BITNAMI_DEBUG
               value: "false"
