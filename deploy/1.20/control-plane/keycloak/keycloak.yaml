@@ -1,4 +1,3 @@
-# create namespace for keycloak template
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
@@ -7,51 +6,12 @@ metadata:
     app: sso
 spec:
   instances: 1
-  externalDatabase:
-    enabled: false
+  extensions:
+    - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
   externalAccess:
-    enabled: false
-    tlsTermination: passthrough
+    enabled: True
   podDisruptionBudget:
     enabled: True
-  keycloakDeploymentSpec:
-    experimental:
-      args:
-        - "-Djboss.as.management.blocking.timeout=600"
-      #env:
-      #  - name: KEYCLOAK_IMPORT
-      #    value: /cno/cno-realm.json
-      volumes:
-        defaultMode: 0777
-        items:
-          - name: vault
-            mountPath: /opt/jboss/keycloak/secrets
-            secrets:
-              - keycloak-realm1
-              - keycloak-realm2
-          - configMap:
-            mountPath: /cno
-            name: cno-realm
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: sso
-                  operator: In
-                  values:
-                  - keycloak
-              topologyKey: "topology.kubernetes.io/zone"
-          - weight: 90
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: sso
-                  operator: In
-                  values:
-                  - keycloak
-              topologyKey: "kubernetes.io/hostname"
-
-
+  # User needs to provision the external database
+  externalDatabase:
+    enabled: True
