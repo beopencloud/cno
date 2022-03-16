@@ -1,5 +1,0 @@
-spec:
-  template:
-    spec:
-      securityContext:
-        runAsNonRoot: true

@@ -10,7 +10,7 @@ spec:
     realm: "cno"
     enabled: True
     displayName: "CNO REALM"
-  registrationAllowed: true
+  #registrationAllowed: true
   instanceSelector:
     matchLabels:
       app: sso
