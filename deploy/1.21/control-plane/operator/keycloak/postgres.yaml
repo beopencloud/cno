@@ -1,3 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: keycloak-postgres
+  namespace:  $NAMESPACE
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -25,11 +31,9 @@ spec:
         app: sso
       annotations:
     spec:
-      serviceAccountName: default
-      
+      serviceAccountName: keycloak-postgres      
       affinity:
-        podAffinity:
-          
+        podAffinity:          
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - podAffinityTerm:
@@ -41,16 +45,38 @@ spec:
                   - $NAMESPACE
                 topologyKey: kubernetes.io/hostname
               weight: 1
-        nodeAffinity:
-          
+        nodeAffinity:          
       securityContext:
         fsGroup: 1001
       hostNetwork: false
       hostIPC: false
       initContainers:
+        - name: init-chmod-data
+          image: docker.io/bitnami/bitnami-shell:10-debian-10-r365
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            limits: {}
+            requests: {}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              chown 1001:1001 /bitnami/postgresql
+              mkdir -p /bitnami/postgresql/data
+              chmod 700 /bitnami/postgresql/data
+              find /bitnami/postgresql -mindepth 1 -maxdepth 1 -not -name "conf" -not -name ".snapshot" -not -name "lost+found" | \
+                xargs -r chown -R 1001:1001
+              chmod -R 777 /dev/shm
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/postgresql
+            - name: dshm
+              mountPath: /dev/shm
       containers:
         - name: postgresql
-          image: docker.io/bitnami/postgresql:14.2.0-debian-10-r31 #$KEYCLOAK_POSTGRESQL_IMAGE  
+          image: docker.io/bitnami/postgresql:14.2.0-debian-10-r31   
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
@@ -130,17 +156,12 @@ spec:
             - name: dshm
               mountPath: /dev/shm
             - name: data
-              mountPath: /bitnami/postgresql
+              mountPath: /bitnami/
       volumes:
         - name: dshm
           emptyDir:
             medium: Memory
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - "ReadWriteOnce"
-        resources:
-          requests:
-            storage: "8Gi"
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+ 

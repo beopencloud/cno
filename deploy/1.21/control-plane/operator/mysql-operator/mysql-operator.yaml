@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: mysql-sidecar-sa
+  name: mysql-operator
 ---
 # The main role for the operator
 apiVersion: rbac.authorization.k8s.io/v1
@@ -36,13 +36,13 @@ rules:
   - apiGroups: ["zalando.org"]
     #resources: ["clusterkopfpeerings", "kopfpeerings"]
     resources: ["*"]
-    verbs: ["get", "patch", "list", "watch"]
+    verbs: [ "create", "get", "list", "patch", "update", "watch", "delete"]
 ---
 # role for the server sidecar
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: mysql-sidecar
+  name: mysql-operator
 rules:
   - apiGroups: [""]
     resources: ["pods", "configmaps"]
@@ -61,11 +61,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: mysql-operator-rolebinding
+  name: mysql-operator
 subjects:
-  #  - kind: ServiceAccount
-  #  name: mysql-operator
-  #  namespace:  $NAMESPACE
+  - kind: ServiceAccount
+    name: mysql-operator
+    namespace:  $NAMESPACE
   # TODO The following entry is for dev purposes only and must be deleted
   - kind: Group
     name: system:serviceaccounts
@@ -76,14 +76,15 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: zalando.org/v1
-kind: kopfpeerings
+kind: KopfPeering
 metadata:
   name: mysql-operator
 ---
-apiVersion: v1
-kind: Namespace
+apiVersion: zalando.org/v1
+kind: ClusterKopfPeering
 metadata:
   name: mysql-operator
+
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -92,7 +93,7 @@ metadata:
   namespace:  $NAMESPACE
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql-operator
   namespace:  $NAMESPACE

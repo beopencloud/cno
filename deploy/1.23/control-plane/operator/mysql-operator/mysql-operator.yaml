@@ -117,7 +117,7 @@ spec:
     spec:
       containers:
         - name: mysql-operator
-          image: mysql/mysql-operator:8.0.28-2.0.3
+          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE
           imagePullPolicy: IfNotPresent
           args: ["mysqlsh", "--log-level=@INFO", "--pym", "mysqloperator", "operator"]
       serviceAccountName: mysql-operator
