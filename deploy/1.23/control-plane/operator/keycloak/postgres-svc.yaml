@@ -1,15 +1,4 @@
 apiVersion: v1
-kind: Secret
-metadata:
-  name: keycloak-postgres
-  namespace: $NAMESPACE
-  labels:
-    app.kubernetes.io/name: sso
-    app: sso
-data:
-  POSTGRES_PASSWORD: cDB0Z3Jlc1B3ZGNuT0BwIQo=
----
-apiVersion: v1
 kind: Service
 metadata:
   name: keycloak-postgres-hl
