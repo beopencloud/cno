@@ -135,12 +135,7 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - "ReadWriteOnce"
-        resources:
-          requests:
-            storage: "8Gi"
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+ 
