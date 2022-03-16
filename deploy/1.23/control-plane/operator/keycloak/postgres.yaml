@@ -44,16 +44,19 @@ spec:
         nodeAffinity:
           
       securityContext:
-        fsGroup: 1001
+        fsGroup: 2000
       hostNetwork: false
       hostIPC: false
       initContainers:
       containers:
         - name: postgresql
-          image: docker.io/bitnami/postgresql:14.2.0-debian-10-r31 #$KEYCLOAK_POSTGRESQL_IMAGE  
+          image: $KEYCLOAK_POSTGRESQL_IMAGE #docker.io/bitnami/postgresql:14.2.0-debian-10-r31   
           imagePullPolicy: "IfNotPresent"
           securityContext:
-            runAsUser: 1001
+            runAsUser: 1000
+            runAsGroup: 3000
+            fsGroup: 2000
+            fsGroupChangePolicy: "OnRootMismatch"
           env:
             - name: BITNAMI_DEBUG
               value: "false"
@@ -130,7 +133,7 @@ spec:
             - name: dshm
               mountPath: /dev/shm
             - name: data
-              mountPath: /bitnami/postgresql
+              mountPath: /bitnami/
       volumes:
         - name: dshm
           emptyDir:
