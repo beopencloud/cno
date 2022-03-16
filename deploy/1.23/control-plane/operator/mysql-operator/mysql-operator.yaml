@@ -79,6 +79,11 @@ apiVersion: zalando.org/v1
 kind: KopfPeering
 metadata:
   name: mysql-operator
+---
+apiVersion: zalando.org/v1
+kind: ClusterKopfPeering
+metadata:
+  name: mysql-operator
 
 ---
 apiVersion: v1
