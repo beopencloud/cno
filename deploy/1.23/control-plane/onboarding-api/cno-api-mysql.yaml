@@ -1,17 +1,12 @@
-apiVersion: mysql.presslabs.org/v1alpha1
-kind: MysqlCluster
+apiVersion: mysql.oracle.com/v2alpha1
+kind: InnoDBCluster
 metadata:
-  name: cno-api
+  name: cno-api-mysql
 spec:
-  replicas: 1
-  image: $MYSQL_IMAGE #bitnami/mariadb:latest 
   secretName: cno-api-db-secret
-  volumeSpec:
-    persistentVolumeClaim:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi
+  instances: 1
+  router:
+    instances: 1
 
 ---
 
