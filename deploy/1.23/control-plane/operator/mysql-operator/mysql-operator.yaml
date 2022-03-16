@@ -88,7 +88,7 @@ metadata:
   namespace:  $NAMESPACE
 ---
 apiVersion: apps/v1
-kind: Statefulset
+kind: StatefulSet
 metadata:
   name: mysql-operator
   namespace:  $NAMESPACE
