@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: sso
     app: sso
 data:
-  POSTGRES_PASSWORD: "SDkzWGlpYkN0eg=="
+  POSTGRES_PASSWORD: cDB0Z3Jlc1B3ZGNuT0BwIQo=
 ---
 apiVersion: v1
 kind: Service
