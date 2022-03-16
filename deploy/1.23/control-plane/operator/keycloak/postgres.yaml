@@ -76,7 +76,7 @@ spec:
               mountPath: /dev/shm
       containers:
         - name: postgresql
-          image: $KEYCLOAK_POSTGRESQL_IMAGE #docker.io/bitnami/postgresql:14.2.0-debian-10-r31   
+          image: docker.io/bitnami/postgresql:14.2.0-debian-10-r31   
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
