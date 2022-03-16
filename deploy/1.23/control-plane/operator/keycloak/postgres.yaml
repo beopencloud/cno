@@ -25,11 +25,9 @@ spec:
         app: sso
       annotations:
     spec:
-      serviceAccountName: keycloak-postgres
-      
+      serviceAccountName: keycloak-postgres      
       affinity:
-        podAffinity:
-          
+        podAffinity:          
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - podAffinityTerm:
@@ -41,9 +39,8 @@ spec:
                   - $NAMESPACE
                 topologyKey: kubernetes.io/hostname
               weight: 1
-        nodeAffinity:
-          
-       securityContext:
+        nodeAffinity:          
+      securityContext:
         fsGroup: 1001
       hostNetwork: false
       hostIPC: false
