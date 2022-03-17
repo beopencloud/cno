@@ -193,6 +193,13 @@ subjects:
     namespace: "default"
     kind: ServiceAccount
 ---
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-operator-leader-election
+  namespace: $NAMESPACE
+---
 apiVersion: v1
 kind: Service
 metadata:
