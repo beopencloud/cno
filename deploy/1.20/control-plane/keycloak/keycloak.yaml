@@ -16,7 +16,7 @@ spec:
   externalDatabase:
     enabled: True
   keycloakDeploymentSpec:
-    podlabel: sso
+    podlabel: app=sso
     experimental:
       affinity:
         podAntiAffinity:
