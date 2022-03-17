@@ -10,8 +10,8 @@ metadata:
   name: keycloak-postgres
   namespace: $NAMESPACE
   labels:
-    app.kubernetes.io/name: sso
-    app: sso
+    app.kubernetes.io/name: postgres
+    app: postgres
   annotations:
 spec:
   replicas: 1
@@ -21,14 +21,14 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app.kubernetes.io/name: sso
-      app: sso
+      app.kubernetes.io/name: postgres
+      app: postgres
   template:
     metadata:
       name: keycloak-postgres
       labels:
-        app.kubernetes.io/name: sso
-        app: sso
+        app.kubernetes.io/name: postgres
+        app: postgres
       annotations:
     spec:
       serviceAccountName: keycloak-postgres      
@@ -39,8 +39,8 @@ spec:
             - podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    app.kubernetes.io/name: sso
-                    app: sso
+                    app.kubernetes.io/name: postgres
+                    app: postgres
                 namespaces:
                   - $NAMESPACE
                 topologyKey: kubernetes.io/hostname

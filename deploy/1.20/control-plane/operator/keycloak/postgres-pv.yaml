@@ -4,7 +4,7 @@ metadata:
   name: postgres-pv-volume
   labels:
     type: local
-    app: sso
+    app: postgres
 spec:
   storageClassName: manual
   capacity:
@@ -19,7 +19,7 @@ apiVersion: v1
 metadata:
   name: postgres-pv-claim
   labels:
-    app: sso
+    app: postgres
 spec:
   storageClassName: manual
   accessModes:
