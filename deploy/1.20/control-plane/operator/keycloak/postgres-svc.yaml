@@ -4,8 +4,8 @@ metadata:
   name: keycloak-postgres-hl
   namespace: $NAMESPACE
   labels:
-    app.kubernetes.io/name: sso
-    app: sso
+    app.kubernetes.io/name: postgres
+    app: postgres
     # Use this annotation in addition to the actual publishNotReadyAddresses
     # field below because the annotation will stop being respected soon but the
     # field is broken in some versions of Kubernetes:
@@ -23,8 +23,8 @@ spec:
       port: 5432
       targetPort: tcp-postgresql
   selector:
-    app.kubernetes.io/name: sso
-    app: sso
+    app.kubernetes.io/name: postgres
+    app: postgres
 ---
 apiVersion: v1
 kind: Service
@@ -32,8 +32,8 @@ metadata:
   name: keycloak-postgres
   namespace: $NAMESPACE
   labels:
-    app.kubernetes.io/name: sso
-    app: sso
+    app.kubernetes.io/name: postgres
+    app: postgres
   annotations:
 spec:
   type: ClusterIP
@@ -43,5 +43,5 @@ spec:
       targetPort: tcp-postgresql
       nodePort: null
   selector:
-    app.kubernetes.io/name: sso
-    app: sso
+    app.kubernetes.io/name: postgres
+    app: postgres

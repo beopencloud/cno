@@ -1,41 +1,31 @@
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
-  name: cloud-keycloak
+  name: keycloak
   labels:
     app: sso
 spec:
   instances: 1
-  extensions:
-    - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
   externalAccess:
-    enabled: True
+    enabled: False
+    tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True
-  # User needs to provision the external database
   externalDatabase:
     enabled: True
   keycloakDeploymentSpec:
-    podlabel: app=sso
     experimental:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - sso
-              topologyKey: "topology.kubernetes.io/zone"
-          - weight: 90
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - sso
-              topologyKey: "kubernetes.io/hostname"
+      args:
+        - "-Djboss.as.management.blocking.timeout=600"
+      env:
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "false"
+      volumes:
+        items:
+        - name: cno-realm
+          mountPath: /cno
+          configMaps:
+            - cno-realm
+      env:
+        - name: KEYCLOAK_IMPORT
+          value: /cno/cno-realm.json
