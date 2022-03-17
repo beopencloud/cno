@@ -25,3 +25,23 @@ spec:
   selector:
     app.kubernetes.io/name: sso
     app: sso
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-postgres
+  namespace: $NAMESPACE
+  labels:
+    app.kubernetes.io/name: sso
+    app: sso
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+    - name: tcp-postgresql
+      port: 5432
+      targetPort: tcp-postgresql
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: sso
+    app: sso
