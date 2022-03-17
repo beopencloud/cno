@@ -6,8 +6,7 @@ metadata:
   name: mysql-operator
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 ---
@@ -18,8 +17,7 @@ metadata:
   name: mysql-operator-orc
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 data:
@@ -33,8 +31,7 @@ metadata:
   name: mysql-operator-orc
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 data:
@@ -51,8 +48,7 @@ metadata:
   name: mysql-operator
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 rules:
@@ -193,8 +189,7 @@ metadata:
   name: mysql-operator
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 roleRef:
@@ -214,8 +209,7 @@ metadata:
   labels:
     app.kubernetes.io/component: orchestrator-raft
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 spec:
@@ -240,10 +234,8 @@ metadata:
   name: mysql-operator
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
-    app.kubernetes.io/version: "v0.6.2"
-    
+    app.kubernetes.io/name: mysql-operator   
+    app.kubernetes.io/version: "v0.6.2"    
     app.kubernetes.io/component: operator
 spec:
   type: ClusterIP
@@ -267,8 +259,7 @@ metadata:
   name: mysql-operator
   labels:
     helm.sh/chart: mysql-operator-0.6.2
-    app.kubernetes.io/name: mysql-operator
-   
+    app.kubernetes.io/name: mysql-operator   
     app.kubernetes.io/version: "v0.6.2"
     
 spec:
@@ -277,16 +268,14 @@ spec:
   podManagementPolicy: Parallel
   selector:
     matchLabels:
-      app.kubernetes.io/name: mysql-operator
-     
+      app.kubernetes.io/name: mysql-operator     
   template:
     metadata:
       annotations:
         checksum/orchestrator-config: b170d7f05515828cc33d3394728c9ad541444954d75c4c1a6ef7a79a9b7672d0
         checksum/orchestrator-secret: 371989aa668467a0652a963773b31bdce7fdc16c514bf72fb9c4cb5e6f69bf38
       labels:
-        app.kubernetes.io/name: mysql-operator
-       
+        app.kubernetes.io/name: mysql-operator       
     spec:
       serviceAccountName: mysql-operator
       securityContext:
