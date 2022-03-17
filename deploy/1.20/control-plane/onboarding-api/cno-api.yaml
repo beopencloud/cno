@@ -99,7 +99,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: cno-api-db-secret
-              key: rootPassword
+              key: ROOT_PASSWORD
         - name: CREATE_DEFAULT_CLUSTER
           value: $CREATE_DEFAULT_CLUSTER
         - name: DEFAULT_EXTERNAL_BROKERS_URL
