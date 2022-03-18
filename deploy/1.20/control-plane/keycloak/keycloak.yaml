@@ -7,6 +7,7 @@ metadata:
 spec:
   instances: 1
   externalAccess:
+    host: keycloak
     enabled: False
     tlsTermination: passthrough
   podDisruptionBudget:

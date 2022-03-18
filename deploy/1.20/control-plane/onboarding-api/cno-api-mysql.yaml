@@ -11,7 +11,6 @@ spec:
         requests:
           storage: 1Gi
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -27,7 +26,6 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app.kubernetes.io/managed-by: mysql.oracle.com
     app.kubernetes.io/name: mysql
     mysql.presslabs.org/cluster: cno-api
     role: master
