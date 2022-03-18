@@ -29,8 +29,8 @@ spec:
             - cno-realm
         items:
         - name: keycloak
-          secrets: 
-            - keycloak
+          configMaps: 
+            - keycloak-configmap
           mountPath: /etc/x509/https
         items:  
         - name: keycloak-certificate
