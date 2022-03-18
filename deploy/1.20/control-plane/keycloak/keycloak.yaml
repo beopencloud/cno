@@ -44,4 +44,7 @@ spec:
       env:
         - name: X509_CA_BUNDLE
           value: "/cno/ca.crt /cno/server.crt"
+      env:
+        - name: KEYCLOAK_IMPORT
+          value: /cno/cno-realm.json
           
