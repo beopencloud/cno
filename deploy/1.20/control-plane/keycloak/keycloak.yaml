@@ -8,7 +8,6 @@ spec:
   instances: 1
   externalAccess:
     enabled: False
-    host: keycloak
     tlsTermination: passthrough
   podDisruptionBudget:
     enabled: True
@@ -27,23 +26,6 @@ spec:
           mountPath: /cno
           configMaps:
             - cno-realm
-        items:
-        - name: keycloak
-          configMaps: 
-            - keycloak-configmap
-          mountPath: /etc/x509/https
-        items:  
-        - name: keycloak-certificate
-          mountPath: /cno
-          configMaps:
-            - keycloak-certificate
-
-      env:
-        - name: KEYCLOAK_IMPORT
-          value: /cno/cno-realm.json
-      env:
-        - name: X509_CA_BUNDLE
-          value: "/cno/ca.crt /cno/server.crt"
       env:
         - name: KEYCLOAK_IMPORT
           value: /cno/cno-realm.json
