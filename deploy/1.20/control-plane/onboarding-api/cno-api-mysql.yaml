@@ -4,7 +4,8 @@ metadata:
   name: cno-api
 spec:
   secretName: cno-api-db-secret
-  image: mysql:8.0.27
+  image: percona:8.0.26-17
+  mysqlVersion: "8.0.26-17"
   volumeSpec:
     persistentVolumeClaim:
       accessModes: ["ReadWriteOnce"]
