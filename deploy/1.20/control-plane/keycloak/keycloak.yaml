@@ -55,11 +55,11 @@ spec:
         - name: KEYCLOAK_PASSWORD
           valueFrom:
             secretKeyRef:
-              key: keycloak-password
-              name: cno-keycloak-secret
+              key: ADMIN_PASSWORD
+              name: credential-keycloak
         - name: KEYCLOAK_USER
           secretKeyRef:
             key: keycloak-username
-            name: cno-keycloak-secret
+            name: credential-keycloak
       
 ---
