@@ -29,43 +29,35 @@ spec:
         app: keycloak
     spec:
       containers:
-        - env:
-            - name: DB_ADDR
-              value: cno-api-mysql
-            - name: DB_DATABASE
-              value: cno
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: cno-api-db-secret
-                  key: ROOT_PASSWORD
-            - name: DB_PORT
-              value: "3306"
-            - name: DB_USER
-             value: "root"
-            - name: DB_VENDOR
-              value: mysql
-            - name: KEYCLOAK_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: keycloak-password
-                  name: cno-keycloak-secret
-            - name: KEYCLOAK_USER
-                secretKeyRef:
-                  key: keycloak-username
-                  name: cno-keycloak-secret
-          image: quay.io/keycloak/keycloak:16.1.0
-          name: keycloak
-          ports:
-            - containerPort: 8080
-          resources: {}
+      - image: quay.io/keycloak/keycloak:16.1.0
+        ports:
+        - containerPort: 8080        
+        name: keycloak        
+        env:
+        - name: DB_ADDR
+          value: cno-api-mysql
+        - name: DB_DATABASE
+          value: cno
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cno-api-db-secret
+              key: ROOT_PASSWORD
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: "root"
+        - name: DB_VENDOR
+          value: mysql
+        - name: KEYCLOAK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: keycloak-password
+              name: cno-keycloak-secret
+        - name: KEYCLOAK_USER
+          secretKeyRef:
+            key: keycloak-username
+            name: cno-keycloak-secret
+      resources: {}
       restartPolicy: Always
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: cno-keycloak-secret
-type: Opaque
-data:
-  keycloak-username: YWRtaW5fdXNlcgo=
-  keycloak-password: YWRtaW5fcGFzc3dvcmQK
