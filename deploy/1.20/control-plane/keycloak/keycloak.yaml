@@ -1,32 +1,71 @@
-apiVersion: keycloak.org/v1alpha1
-kind: Keycloak
+apiVersion: v1
+kind: Service
 metadata:
-  name: keycloak
   labels:
-    app: sso
+    app: keycloak
+  name: keycloak
 spec:
-  instances: 1
-  externalAccess:
-    enabled: False
-    tlsTermination: passthrough
-  podDisruptionBudget:
-    enabled: True
-  externalDatabase:
-    enabled: True
-  keycloakDeploymentSpec:
-    experimental:
-      args:
-        - "-Djboss.as.management.blocking.timeout=600"
-      env:
-        - name: PROXY_ADDRESS_FORWARDING
-          value: "false"
-      volumes:
-        items:
-        - name: cno-realm
-          mountPath: /cno
-          configMaps:
-            - cno-realm
-      env:
-        - name: KEYCLOAK_IMPORT
-          value: /cno/cno-realm.json
-          
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: keycloak
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: keycloak
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - env:
+            - name: DB_ADDR
+              value: cno-api-mysql
+            - name: DB_DATABASE
+              value: cno
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cno-api-db-secret
+                  key: ROOT_PASSWORD
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+             value: "root"
+            - name: DB_VENDOR
+              value: mysql
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: keycloak-password
+                  name: cno-keycloak-secret
+            - name: KEYCLOAK_USER
+                secretKeyRef:
+                  key: keycloak-username
+                  name: cno-keycloak-secret
+          image: quay.io/keycloak/keycloak:16.1.0
+          name: keycloak
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cno-keycloak-secret
+type: Opaque
+data:
+  keycloak-username: YWRtaW5fdXNlcgo=
+  keycloak-password: YWRtaW5fcGFzc3dvcmQK
