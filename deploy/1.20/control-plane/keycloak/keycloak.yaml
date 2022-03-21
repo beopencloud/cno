@@ -29,10 +29,13 @@ spec:
         app: keycloak
     spec:
       containers:
-      - image: quay.io/keycloak/keycloak:16.1.0
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:16.1.0
         ports:
-        - containerPort: 8080        
-        name: keycloak        
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        restartPolicy: Always            
         env:
         - name: DB_ADDR
           value: cno-api-mysql
@@ -58,6 +61,5 @@ spec:
           secretKeyRef:
             key: keycloak-username
             name: cno-keycloak-secret
-      resources: {}
-      restartPolicy: Always
+      
 ---
