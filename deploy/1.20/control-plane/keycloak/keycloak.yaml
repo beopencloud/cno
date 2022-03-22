@@ -1,3 +1,33 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: keycloak-pv-volume
+  labels:
+    type: local
+    app: keycloak
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1M
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: keycloak-pv-claim
+  labels:
+    app: keycloak
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1M
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,7 +46,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app: keycloak
+    app: keyclaok
   name: keycloak
 spec:
   podManagementPolicy: Parallel
@@ -25,38 +55,28 @@ spec:
   selector:
     matchLabels:
       app: keycloak
-  strategy: {}
   template:
     metadata:
       labels:
         app: keycloak
-    terminationGracePeriodSeconds: 60
-  updateStrategy:
-    type: RollingUpdate
     spec:
       containers:
-      - name: keycloak
-        image: quay.io/keycloak/keycloak:17.0.0
-        args: ["start-dev"]
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        - containerPort: 8443
-          name: https
-          protocol: TCP
-        resources: {}
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File          
-        env:
-        - name: KEYCLOAK_IMPORT
-          value: /cno/cno-realm.json
+      - env:
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_PASSWORD
+              name: credential-keycloak
+        - name: KEYCLOAK_ADMIN
+          secretKeyRef:
+            key: ADMIN_USER
+            name: credential-keycloak
+        - name: DB_VENDOR
+          value: postgres
         - name: DB_ADDR
-          value: keycloak-postgres
+          value: postgres-svc
+        - name: DB_PORT
+          value: "5432"
         - name: DB_DATABASE
           value: cno
         - name: DB_SCHEMA
@@ -72,35 +92,35 @@ spec:
           valueFrom:
             secretKeyRef:
               name: keycloak-postgres
-              key: POSTGRES_USERs
-        - name: DB_VENDOR
-          value: postgres
-        - name: KEYCLOAK_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: ADMIN_PASSWORD
-              name: credential-keycloak
-        - name: KEYCLOAK_ADMIN
-          secretKeyRef:
-            key: ADMIN_USER
-            name: credential-keycloak
-        readinessProbe:
-          httpGet:
-            path: /auth/realms/master
-            port: 8080
-          initialDelaySeconds: 30
+              key: POSTGRES_USER
+        image: quay.io/keycloak/keycloak:17.0.0
+        args: ["start-dev"]
+        imagePullPolicy: IfNotPresent
+        name: keycloak
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8443
+          name: https
+          protocol: TCP        
         volumeMounts:
           - name: cno-realm
             mountPath: /cno
             configMaps:
               - cno-realm
-  volumeClaimTemplates:
-    - metadata:
-        name: cno-realm
-      spec:
-        accessModes: [ ReadWriteOnce ]
-        resources:
-          requests:
-            storage: 1Gi
+        resources: {}
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      terminationGracePeriodSeconds: 60
+  updateStrategy:
+    type: RollingUpdate
+  volumes:
+    - name: cno-realm
+      persistentVolumeClaim:
+        claimName: keycloak-pv-claim
       
 ---

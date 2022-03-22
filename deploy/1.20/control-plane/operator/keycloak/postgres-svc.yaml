@@ -29,7 +29,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak-postgres
+  name: postgres-svc
   namespace: $NAMESPACE
   labels:
     app.kubernetes.io/name: postgres
