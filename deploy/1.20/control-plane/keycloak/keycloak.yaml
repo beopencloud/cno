@@ -40,8 +40,9 @@ spec:
       - env:
         - name: KEYCLOAK_IMPORT
           valueFrom: 
-             configMap:
-               name: cno-realm
+            configMapKeyRef:
+              name: cno-realm
+              key: cno-realm.json
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
