@@ -27,12 +27,12 @@ spec:
       app: keycloak
   strategy: {}
   template:
-    terminationGracePeriodSeconds: 60
-  updateStrategy:
-    type: RollingUpdate 
     metadata:
       labels:
         app: keycloak
+    terminationGracePeriodSeconds: 60
+  updateStrategy:
+    type: RollingUpdate
     spec:
       containers:
       - name: keycloak
