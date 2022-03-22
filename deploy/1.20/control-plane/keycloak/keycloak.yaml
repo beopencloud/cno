@@ -37,12 +37,14 @@ spec:
         configMaps:
           cno-realm
       containers:      
-      - env:
+      - env: 
         - name: KEYCLOAK_IMPORT
-          valueFrom:
-            configMapKeyRef:
-              name: cno-realm
-              key: cno-realm.json
+          value: cno-realm.json
+        #- name: KEYCLOAK_IMPORT
+        #  valueFrom:
+        #    configMapKeyRef:
+         #     name: cno-realm
+         #     key: cno-realm.json
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -74,7 +76,9 @@ spec:
             secretKeyRef:
               name: keycloak-postgres
               key: POSTGRES_USER
-        image: quay.io/keycloak/keycloak:16.1.0
+        image: quay.io/keycloak/keycloak:17.0.0
+        #args: ["import --dir /cno --file cno-realm.json --realm cno"]
+        args: ["start --auto-build --db-password='0n76cw2vbN41R5' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='keycloak' --http-enabled='true'"]
         imagePullPolicy: IfNotPresent
         name: keycloak
         ports:
