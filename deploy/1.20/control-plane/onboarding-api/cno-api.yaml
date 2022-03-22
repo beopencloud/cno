@@ -127,7 +127,7 @@ spec:
       volumes:
       - name: kafkaconfig
         secret:
-          secretName: cno-kafka-cluster-clients-ca-cert
+          secretName: kafkaconfig
 
 ---
 apiVersion: v1
