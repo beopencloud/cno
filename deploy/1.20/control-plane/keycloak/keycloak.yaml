@@ -27,6 +27,9 @@ spec:
       app: keycloak
   strategy: {}
   template:
+    terminationGracePeriodSeconds: 60
+  updateStrategy:
+    type: RollingUpdate 
     metadata:
       labels:
         app: keycloak
@@ -44,7 +47,11 @@ spec:
           name: https
           protocol: TCP
         resources: {}
-        restartPolicy: Always            
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File          
         env:
         - name: KEYCLOAK_IMPORT
           value: /cno/cno-realm.json
@@ -77,14 +84,6 @@ spec:
           secretKeyRef:
             key: ADMIN_USER
             name: credential-keycloak
-        - name: JGROUPS_DISCOVERY_PROTOCOL
-          value: dns.DNS_PING
-        - name: JGROUPS_DISCOVERY_PROPERTIES
-          value: 'dns_query=cno-api-mysql.$NAMESPACE'
-        - name: CACHE_OWNERS_COUNT
-          value: "2"
-        - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
-          value: "2"
         readinessProbe:
           httpGet:
             path: /auth/realms/master
