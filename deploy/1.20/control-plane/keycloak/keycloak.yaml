@@ -1,33 +1,3 @@
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: keycloak-pv-volume
-  labels:
-    type: local
-    app: keycloak
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1M
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "/mnt/data"
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: keycloak-pv-claim
-  labels:
-    app: keycloak
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1M
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -59,7 +29,11 @@ spec:
       labels:
         app: keycloak
     spec:
-      containers:
+      volumes:
+      - name: cno-realm
+        configMaps:
+          cno-realm
+      containers:      
       - env:
         - name: KEYCLOAK_IMPORT
           value: /cno/cno-realm.json
@@ -107,9 +81,7 @@ spec:
           protocol: TCP        
         volumeMounts:
           - name: cno-realm
-            mountPath: /cno
-            configMaps:
-              - cno-realm
+            mountPath: /cno            
         resources: {}
         securityContext:
           runAsNonRoot: true
@@ -119,9 +91,6 @@ spec:
       terminationGracePeriodSeconds: 60
   updateStrategy:
     type: RollingUpdate
-  volumes:
-    - name: cno-realm
-      persistentVolumeClaim:
-        claimName: keycloak-pv-claim
+  
       
 ---
