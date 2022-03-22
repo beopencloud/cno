@@ -43,13 +43,12 @@ spec:
     app: keycloak
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
     app: keyclaok
   name: keycloak
 spec:
-  podManagementPolicy: Parallel
   replicas: 1
   revisionHistoryLimit: 10
   selector:
@@ -62,6 +61,8 @@ spec:
     spec:
       containers:
       - env:
+        - name: KEYCLOAK_IMPORT
+          value: /cno/cno-realm.json
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
