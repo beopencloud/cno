@@ -1,24 +1,27 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: keycloak
   labels:
     app: keycloak
-  name: keycloak
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+  - name: http
+    port: 8080
+    targetPort: 8080
   selector:
     app: keycloak
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
-    app: keycloak
+    app: keyclaok
   name: keycloak
 spec:
+  podManagementPolicy: Parallel
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: keycloak
@@ -30,36 +33,75 @@ spec:
     spec:
       containers:
       - name: keycloak
-        image: quay.io/keycloak/keycloak:16.1.0
+        image: quay.io/keycloak/keycloak:17.0.0
+        args: ["start-dev"]
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8443
+          name: https
           protocol: TCP
         resources: {}
         restartPolicy: Always            
         env:
+        - name: KEYCLOAK_IMPORT
+          value: /cno/cno-realm.json
         - name: DB_ADDR
-          value: cno-api-mysql
+          value: keycloak-postgres
         - name: DB_DATABASE
           value: cno
+        - name: DB_SCHEMA
+          value: public
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: cno-api-db-secret
-              key: ROOT_PASSWORD
+              name: keycloak-postgres
+              key: POSTGRES_PASSWORD
         - name: DB_PORT
-          value: "3306"
+          value: "5432"
         - name: DB_USER
-          value: "root"
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-postgres
+              key: POSTGRES_USERs
         - name: DB_VENDOR
-          value: mysql
-        - name: KEYCLOAK_PASSWORD
+          value: postgres
+        - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               key: ADMIN_PASSWORD
               name: credential-keycloak
-        - name: KEYCLOAK_USER
+        - name: KEYCLOAK_ADMIN
           secretKeyRef:
-            key: keycloak-username
+            key: ADMIN_USER
             name: credential-keycloak
+        - name: JGROUPS_DISCOVERY_PROTOCOL
+          value: dns.DNS_PING
+        - name: JGROUPS_DISCOVERY_PROPERTIES
+          value: 'dns_query=cno-api-mysql.$NAMESPACE'
+        - name: CACHE_OWNERS_COUNT
+          value: "2"
+        - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+          value: "2"
+        readinessProbe:
+          httpGet:
+            path: /auth/realms/master
+            port: 8080
+          initialDelaySeconds: 30
+        volumeMounts:
+          - name: cno-realm
+            mountPath: /cno
+            configMaps:
+              - cno-realm
+  volumeClaimTemplates:
+    - metadata:
+        name: cno-realm
+      spec:
+        accessModes: [ ReadWriteOnce ]
+        resources:
+          requests:
+            storage: 1Gi
       
 ---
