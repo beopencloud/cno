@@ -71,8 +71,7 @@ spec:
             secretKeyRef:
               name: keycloak-postgres
               key: POSTGRES_USER
-        image: quay.io/keycloak/keycloak:17.0.0
-        args: ["start"]
+        image: quay.io/keycloak/keycloak:16.1.0
         imagePullPolicy: IfNotPresent
         name: keycloak
         ports:
