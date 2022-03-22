@@ -39,7 +39,7 @@ spec:
       containers:      
       - env:
         - name: KEYCLOAK_IMPORT
-          valueFrom: 
+          valueFrom:
             configMapKeyRef:
               name: cno-realm
               key: cno-realm.json
