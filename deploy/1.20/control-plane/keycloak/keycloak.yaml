@@ -49,11 +49,11 @@ spec:
           valueFrom:
             secretKeyRef:
               key: ADMIN_PASSWORD
-              name: credential-keycloak
+              name: credential-cloud-keycloak
         - name: KEYCLOAK_ADMIN
           secretKeyRef:
-            key: ADMIN_USER
-            name: credential-keycloak
+            key: ADMIN_USERNAME
+            name: credential-cloud-keycloak
         - name: DB_VENDOR
           value: postgres
         - name: DB_ADDR
