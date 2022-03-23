@@ -12,10 +12,11 @@ metadata:
   name: cno-ui
 spec:
   ingressClassName: nginx
-  rules:
   tls:
   - hosts:
       - cno.cno-dev.gocno.io
+  rules:
+  
     secretName: cno-test-com-tls
   - host: cno-ui.cluster.beopenit.com
     http:

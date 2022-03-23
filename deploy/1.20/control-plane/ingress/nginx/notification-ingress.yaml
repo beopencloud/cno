@@ -8,11 +8,11 @@ metadata:
   name: cno-notification
 spec:
   ingressClassName: nginx
-  rules:
   tls:
   - hosts:
       - cno-notification.cno-dev.gocno.io
     secretName: cno-test-com-tls
+  rules:
   - host: cno-notification.cluster.beopenit.com
     http:
       paths:
