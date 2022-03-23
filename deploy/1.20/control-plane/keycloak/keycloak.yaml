@@ -46,7 +46,10 @@ spec:
         #      name: cno-realm
         #      key: cno-realm.json
         - name: KEYCLOAK_USER
-          value: admin
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_USER
+              name: credential-cloud-keycloak
         - name: KEYCLOAK_PASSWORD
           valueFrom:
             secretKeyRef:
