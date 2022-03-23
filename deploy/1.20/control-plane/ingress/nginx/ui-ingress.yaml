@@ -15,9 +15,8 @@ spec:
   tls:
   - hosts:
       - cno.cno-dev.gocno.io
-  rules:
-  
     secretName: cno-test-com-tls
+  rules:
   - host: cno-ui.cluster.beopenit.com
     http:
       paths:
