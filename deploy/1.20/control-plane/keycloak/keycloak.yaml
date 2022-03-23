@@ -34,17 +34,17 @@ spec:
     spec:
       volumes:
       - name: cno-realm
-        configMaps:
-          cno-realm
+        configMap:
+          name: cno-realm
       containers:      
       - env: 
         - name: KEYCLOAK_IMPORT
-          value: cno-realm.json
+          value: /cno/cno-realm.json
         #- name: KEYCLOAK_IMPORT
         #  valueFrom:
         #    configMapKeyRef:
-         #     name: cno-realm
-         #     key: cno-realm.json
+        #      name: cno-realm
+        #      key: cno-realm.json
         - name: KEYCLOAK_USER
           value: admin
         - name: KEYCLOAK_PASSWORD
@@ -74,9 +74,9 @@ spec:
             secretKeyRef:
               name: keycloak-postgres
               key: POSTGRES_USER
-        image: quay.io/keycloak/keycloak:17.0.0
-        #args: ["import --dir /cno --file cno-realm.json --realm cno"]
-        args: ["start --auto-build --db-password='$POSTGRES_PASS' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='localhost:8080' --http-enabled='true'"]
+        image: quay.io/keycloak/keycloak:15.1.1
+        #args: ["import --dir='/cno' --file='cno-realm.json' --realm='cno' --override='true' && start --proxy='passthrough' --hostname-strict-backchannel='false' --hostname='localhost' --http-enabled='true' --hostname-strict='false' "]
+        #args: ["import --dir='/cno' --file='cno-realm.json' --realm='cno' --override='true' && start --proxy='passthrough' --hostname-strict-backchannel='false' --db-password='POSTGRES_PASS' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='localhost' --http-enabled='true' --hostname-strict='false'"]
         imagePullPolicy: IfNotPresent
         name: keycloak
         ports:
@@ -88,7 +88,7 @@ spec:
           protocol: TCP        
         volumeMounts:
           - name: cno-realm
-            mountPath: /cno            
+            mountPath: /cno          
         resources: {}
         securityContext:
           runAsNonRoot: true

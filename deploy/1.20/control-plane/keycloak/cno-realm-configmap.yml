@@ -2219,7 +2219,7 @@ data:
       "clientAuthenticationFlow": "clients",
       "dockerAuthenticationFlow": "docker auth",
       "attributes": {},
-      "keycloakVersion": "12.0.1",
+      "keycloakVersion": "17.0.0",
       "userManagedAccessAllowed": false
     }
 kind: ConfigMap
