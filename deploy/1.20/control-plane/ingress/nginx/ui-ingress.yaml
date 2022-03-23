@@ -13,6 +13,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+  tls:
+  - hosts:
+      - cno.cno-dev.gocno.io
+    secretName: cno-test-com-tls
   - host: cno-ui.cluster.beopenit.com
     http:
       paths:
