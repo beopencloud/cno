@@ -78,7 +78,7 @@ spec:
               key: POSTGRES_USER
         image: quay.io/keycloak/keycloak:17.0.0
         #args: ["import --dir /cno --file cno-realm.json --realm cno"]
-        args: ["start --auto-build --db-password='$POSTGRES_PASSWORD' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='keycloak' --http-enabled='true'"]
+        args: ["start --auto-build --db-password='POSTGRES_PASS' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='keycloak' --http-enabled='true'"]
         imagePullPolicy: IfNotPresent
         name: keycloak
         ports:
