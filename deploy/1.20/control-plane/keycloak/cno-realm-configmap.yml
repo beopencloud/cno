@@ -663,8 +663,8 @@ data:
         {
           "id": "c39b01dd-c137-4a95-b3ea-91b297110b43",
           "clientId": "cno-api",
-          "adminUrl": "http://$AUTH_URL/",
-          "baseUrl": "http://$AUTH_URL/",
+          "adminUrl": "http://keycloak:8080",
+          "baseUrl": "http://keycloak:8080",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
