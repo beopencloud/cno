@@ -9,6 +9,9 @@ metadata:
   name: cno-api
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - cno-api.INGRESS_DOMAIN
   rules: 
   - host: cno-api.cluster.beopenit.com
     http:
