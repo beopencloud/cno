@@ -272,17 +272,27 @@ The CLI can be installed with a curl script, brew or by downloading the binary f
 ## Install with curl:
 
 ```
+<<<<<<< HEAD
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoctl.sh | sh
+=======
 $ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoctl.sh | sh
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## Install with brew on MacOs:
 
 ```
+<<<<<<< HEAD
+brew tap beopencloud/cno
+
+brew install cnoctl
+=======
 $ brew tap beopencloud/cno
 ```
 
 ```
 $ brew install cnoctl
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## Install from release:
@@ -292,6 +302,13 @@ In the cnoctl release page (https://github.com/beopencloud/cno/releases) downloa
 Example for version v0.0.1 on MacOs:
 
 ```
+<<<<<<< HEAD
+wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_Darwin_x86_64.tar.gz
+
+tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
+
+mv cnoctl /usr/local/bin/
+=======
 $ wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_Darwin_x86_64.tar.gz
 ```
 ```
@@ -300,6 +317,7 @@ $ tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
 
 ```
 $ mv cnoctl /usr/local/bin/
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## Verify cnoctl installation
@@ -309,7 +327,11 @@ Check that cnoctl is properly installed by getting the command help:
 Example for version v0.0.1 on MacOs:
 
 ```
+<<<<<<< HEAD
+cnoctl --version
+=======
 $ cnoctl --help
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## **Quick Installation CNO with CNOCTL**
@@ -317,7 +339,11 @@ $ cnoctl --help
 To install CNO you need Kubernetes v1.16 or higher.
 Once cnoctl is installed, to install CNO run the following command:
 ```
+<<<<<<< HEAD
+cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
+=======
 $ cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 The supported flags are:
 * --domain: The wirldcard domain configured in the cluster
@@ -360,9 +386,31 @@ The supported flags are:
 ## GET SYNTAX
 
 List informations about all tag
+
+> if your cluster has PSPs, set the CNO_POD_POLICY_ACTIVITED variable to true before install:
+
+```
+export CNO_POD_POLICY_ACTIVITED=true
+```
+
+#### 1. install using ingress to expose applications
+
+> You must provide a domain name for the ingress resources
+
+> Replace \<namespace> with the desired target namespace. default is cno-system
+
+```
+export INGRESS_DOMAIN=cluster1.beopenit.com"
+export CNO_VERSION=1.0.0-rc
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
 ```
 cnoctl adm get tag [tag_id]
 ```
+export CNO_VERSION=1.0.0-rc
+curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
+```
+
+#### 3. install using service type NodePort to expose applications
 
 The supported arguments are:
 
@@ -458,7 +506,11 @@ The supported flags are:
 ### **GCP**
 
 ```
+<<<<<<< HEAD
+cnoctl adm create provider-gke [name] [--flags]
+=======
 cnoctl adm create provider-gke [name] [--flags
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 The supported arguments are:
@@ -542,8 +594,12 @@ Do a test to make sure that the smtp server configuration is correct
 
 ```
 cnoctl adm test smtp receivermail@mail.com -m "Your message"
+<<<<<<< HEAD
+
+=======
 or
 cnoctl adm test smtp receivermail@mail.com --message "Your message"
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 The supported flags are:
@@ -551,9 +607,16 @@ The supported flags are:
 * email or e: the receiver mail test | [REQUIRED]
 * message or m: the message to sent| [OPTIONAL]
 
+<<<<<<< HEAD
+  
+  
+
+# Tutorials
+=======
  
 # Tutorials
 * [Multi Cloud Management with CNO Hub](https://viktormoskalev07.github.io/cno/dist/gs-multi-cloud(tutorials).html)
 * [IAM Set Up](https://viktormoskalev07.github.io/cno/dist/gs-iam-setup(tutorials).html)
 * [Onboard projects and teams](https://viktormoskalev07.github.io/cno/dist/gs-onboard-projects(tutorials).html)
 * [Continuous Deployment](https://viktormoskalev07.github.io/cno/dist/gs-contin-deploy(tutorials).html)
+>>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e

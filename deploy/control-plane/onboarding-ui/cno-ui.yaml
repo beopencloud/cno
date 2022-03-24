@@ -4,7 +4,6 @@ metadata:
   labels:
     app: cno-ui
   name: cno-ui
-  namespace: cno-system
 spec:
   replicas: 1
   selector:
@@ -16,7 +15,7 @@ spec:
         app: cno-ui
     spec:
       containers:
-      - image: beopenit/cno-ui:latest
+      - image: $CNO_UI_IMAGE #beopenit/cno-ui:latest
         name: cno-ui
         imagePullPolicy: Always
         ports:

@@ -4,15 +4,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cno-cd-operator
-  namespace: cno-system
-
+imagePullSecrets:
+- name: $SA
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cno-cd-operator
-  namespace: cno-system
 spec:
   replicas: 1
   selector:
@@ -26,7 +25,7 @@ spec:
       serviceAccountName: cno-cd-operator
       containers:
       - name: cno-cd-operator
-        image: beopenit/cno-cd-operator:latest
+        image: $CNO_CD_OPERATOR_IMAGE #beopenit/cno-cd-operator:latest
         imagePullPolicy: Always
         env:
         - name: WATCH_NAMESPACE
@@ -49,16 +48,7 @@ rules:
   - ""
   resources:
   - namespaces
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
+  - pods
   - services
   verbs:
   - create
@@ -145,7 +135,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cno-cd-operator
-  namespace: cno-system
+  namespace: $NAMESPACE
 
 ---
 
@@ -196,7 +186,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cno-cd-operator
-  namespace: cno-system
+  namespace: $NAMESPACE
 
 ---
 

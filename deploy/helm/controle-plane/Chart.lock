@@ -1,0 +1,12 @@
+dependencies:
+- name: strimzi-kafka-operator
+  repository: https://strimzi.io/charts/
+  version: 0.26.0
+- name: mysql-operator
+  repository: https://helm-charts.bitpoke.io
+  version: 0.5.1
+- name: data-plane
+  repository: file://../data-plane
+  version: 0.1.0
+digest: sha256:02bbdfa592c1b60384bfa8e09fd5819a87ef944d45962903c6bf551cfbf577e6
+generated: "2021-11-16T17:27:14.489831Z"

@@ -1,0 +1,26 @@
+{{ if (eq .Values.global.expose.type "ingress") }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  labels:
+    app: cno-ui
+  name: cno-ui
+spec:
+  rules:
+  - host: {{ printf "%s.%s" "cno"  .Values.global.expose.domain }}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: cno-ui
+            port:
+              number: 80
+{{ end }}

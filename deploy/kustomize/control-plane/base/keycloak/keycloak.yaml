@@ -1,0 +1,25 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: cloud-keycloak
+  labels:
+    app: sso
+spec:
+  instances: 1
+  externalDatabase:
+    enabled: true
+  externalAccess:
+    enabled: false
+    tlsTermination: passthrough
+  podDisruptionBudget:
+    enabled: True
+  keycloakDeploymentSpec:
+    experimental:
+      volumes:
+        items:
+        - configMap:
+            mountPath: /cno
+            name: cno-realm
+      env:
+      - name: KEYCLOAK_IMPORT
+        value: /cno/cno-realm.json
