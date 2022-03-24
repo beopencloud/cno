@@ -16,7 +16,7 @@ spec:
     app: keycloak
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app: keyclaok
@@ -56,27 +56,22 @@ spec:
               key: ADMIN_PASSWORD
               name: credential-cloud-keycloak
         - name: DB_VENDOR
-          value: postgres
+          value: MYSQL
         - name: DB_ADDR
-          value: postgres-svc
+          value: cno-api-mysql
         - name: DB_PORT
-          value: "5432"
+          value: "3306"
         - name: DB_DATABASE
-          value: postgres
+          value: cno-keycloak
         - name: DB_SCHEMA
           value: public
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: keycloak-postgres
-              key: POSTGRES_PASSWORD
-        - name: DB_PORT
-          value: "5432"
+              name: cno-api-db-secret
+              key: ROOT_PASSWORD
         - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: keycloak-postgres
-              key: POSTGRES_USER
+          value: root
         image: quay.io/keycloak/keycloak:15.1.1
         #args: ["import --dir='/cno' --file='cno-realm.json' --realm='cno' --override='true' && start --proxy='passthrough' --hostname-strict-backchannel='false' --hostname='localhost' --http-enabled='true' --hostname-strict='false' "]
         #args: ["import --dir='/cno' --file='cno-realm.json' --realm='cno' --override='true' && start --proxy='passthrough' --hostname-strict-backchannel='false' --db-password='POSTGRES_PASS' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='localhost' --http-enabled='true' --hostname-strict='false'"]

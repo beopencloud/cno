@@ -10,8 +10,7 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - cno-notification.cno-dev.gocno.io
-    secretName: cno-test-com-tls
+      - cno-notification.INGRESS_DOMAIN
   rules:
   - host: cno-notification.cluster.beopenit.com
     http:

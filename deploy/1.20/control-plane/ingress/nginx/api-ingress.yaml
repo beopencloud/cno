@@ -10,8 +10,7 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - cno-api.cno-dev.gocno.io
-    secretName: cno-test-com-tls
+      - cno-api.INGRESS_DOMAIN
   rules: 
   - host: cno-api.cluster.beopenit.com
     http:
