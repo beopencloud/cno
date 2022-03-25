@@ -62,7 +62,7 @@ spec:
         - name: DB_PORT
           value: "3306"
         - name: DB_DATABASE
-          value: keycloak
+          value: cnokeycloak
         - name: DB_SCHEMA
           value: public
         - name: DB_PASSWORD
