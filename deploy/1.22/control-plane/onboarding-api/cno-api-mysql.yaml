@@ -1,18 +1,17 @@
----
 apiVersion: mysql.presslabs.org/v1alpha1
 kind: MysqlCluster
 metadata:
   name: cno-api
 spec:
-  replicas: 1
   secretName: cno-api-db-secret
+  image: percona:8.0.26-17
+  mysqlVersion: "8.0.26-17"
   volumeSpec:
     persistentVolumeClaim:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 5Gi
-
+          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +28,6 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app.kubernetes.io/managed-by: mysql.presslabs.org
     app.kubernetes.io/name: mysql
     mysql.presslabs.org/cluster: cno-api
     role: master

@@ -10,9 +10,9 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - cno-ui.INGRESS_DOMAIN
+      - cno.INGRESS_DOMAIN
   rules:
-  - host: cno-ui.cluster.beopenit.com
+  - host: cno.INGRESS_DOMAIN
     http:
       paths:
       - path: /

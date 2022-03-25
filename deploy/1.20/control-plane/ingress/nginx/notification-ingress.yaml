@@ -13,7 +13,7 @@ spec:
   - hosts:
       - cno-notification.INGRESS_DOMAIN
   rules:
-  - host: cno-notification.cluster.beopenit.com
+  - host: cno-notification.INGRESS_DOMAIN
     http:
       paths:
       - path: /

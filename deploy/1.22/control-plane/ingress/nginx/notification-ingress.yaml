@@ -3,11 +3,15 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   labels:
     app: cno-notification
   name: cno-notification
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+      - cno-notification.INGRESS_DOMAIN
   rules:
   - host: cno-notification.cluster.beopenit.com
     http:

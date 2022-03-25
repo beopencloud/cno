@@ -3,12 +3,16 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   labels:
     app: cno-api
   name: cno-api
 spec:
   ingressClassName: nginx
-  rules:
+  tls:
+  - hosts:
+      - cno-api.INGRESS_DOMAIN
+  rules: 
   - host: cno-api.cluster.beopenit.com
     http:
       paths:

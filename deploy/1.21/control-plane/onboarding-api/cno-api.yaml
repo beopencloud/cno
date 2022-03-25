@@ -88,7 +88,7 @@ spec:
         - name: KAFKA_VERBOSE
           value: "false"
         - name: DB_HOST
-          value: "cno-api-mysql-master"
+          value: "cno-api-mysql"
         - name: DB_PORT
           value: "3306"
         - name: DB_NAME
@@ -99,7 +99,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: cno-api-db-secret
-              key: rootPassword
+              key: ROOT_PASSWORD
         - name: CREATE_DEFAULT_CLUSTER
           value: $CREATE_DEFAULT_CLUSTER
         - name: DEFAULT_EXTERNAL_BROKERS_URL

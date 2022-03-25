@@ -20,7 +20,7 @@ spec:
         name: cno-ui
         imagePullPolicy: Always
         ports:
-          - containerPort: 8080
+          - containerPort: 80
         resources: {}
         env:
         - name: API_URL
@@ -47,7 +47,7 @@ spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: cno-ui
   type: ClusterIP

@@ -13,7 +13,7 @@ spec:
   - hosts:
       - cno-api.INGRESS_DOMAIN
   rules: 
-  - host: cno-api.cluster.beopenit.com
+  - host: cno-api.INGRESS_DOMAIN
     http:
       paths:
       - path: /
