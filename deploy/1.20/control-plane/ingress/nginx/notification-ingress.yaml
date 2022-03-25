@@ -12,6 +12,7 @@ spec:
   tls:
   - hosts:
       - cno-notification.INGRESS_DOMAIN
+    secretName: SECRETNAME
   rules:
   - host: cno-notification.INGRESS_DOMAIN
     http:

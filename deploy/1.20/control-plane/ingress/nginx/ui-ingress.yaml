@@ -11,6 +11,7 @@ spec:
   tls:
   - hosts:
       - cno.INGRESS_DOMAIN
+    secretName: SECRETNAME
   rules:
   - host: cno.INGRESS_DOMAIN
     http:
