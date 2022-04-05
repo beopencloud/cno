@@ -279,7 +279,7 @@ spec:
         - name: operator
           securityContext:
             {}
-          image: $MYSQL_OPERATOR_IMAGE #"docker.io/bitpoke/mysql-operator:v0.6.2"
+          image: $MYSQL_OPERATOR_IMAGE 
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
