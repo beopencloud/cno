@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-images-config
+  fieldPath: data.CNO_ONBOARDING_OPERATOR_IMAGE
+targets:
+- select:
+    kind: Deployment
+    name: onboarding-operator-kubernetes
+  fieldPaths:
+  - spec.template.spec.containers.[name=onboarding-operator-kubernetes].image

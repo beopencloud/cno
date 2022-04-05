@@ -1,0 +1,30 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cno-cd-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cno-cd-operator
+  template:
+    metadata:
+      labels:
+        name: cno-cd-operator
+    spec:
+      serviceAccountName: cno-cd-operator
+      containers:
+      - name: cno-cd-operator
+        image: beopenit/cno-cd-operator:1.0.0-rc
+        imagePullPolicy: Always
+        env:
+        - name: WATCH_NAMESPACE
+          value: ""
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: OPERATOR_NAME
+          value: "cno-cd-operator"

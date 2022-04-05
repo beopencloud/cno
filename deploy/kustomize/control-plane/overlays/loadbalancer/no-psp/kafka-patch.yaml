@@ -1,0 +1,23 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: cno-kafka-cluster
+spec:
+  kafka:
+    listeners:
+    - name: plain
+      port: 9092
+      type: internal
+      tls: false
+    - name: tls
+      port: 9093
+      type: internal
+      tls: true
+      authentication:
+        type: tls
+    - name: external
+      port: 9094
+      type: loadbalancer
+      tls: true
+      authentication:
+        type: tls

@@ -1,0 +1,29 @@
+{{ if or (eq .Values.global.expose.type "loadbalancer") (eq .Values.global.expose.type "nodeport") }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+  name: cno-pres-install-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubectl
+        env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace }}
+        - name: NODEPORT_IP_ADDRESS
+          value: {{ .Values.global.expose.nodePortIPAddress }}
+        image: bitnami/kubectl
+        {{ if eq .Values.global.expose.type "loadbalancer" }}
+        command: ['/bin/sh', '-c', '{{ $.Files.Get "scripts/loadbalancer-ingress-ip-patch.sh" }}' ]
+        {{ else if eq .Values.global.expose.type "nodeport"  }}
+        command: ['/bin/sh', '-c', '{{ $.Files.Get "scripts/noadport-patch.sh" }}' ]
+        {{ end }}
+      restartPolicy: Never
+      serviceAccountName: cno-api
+  backoffLimit: 1
+{{ end }}

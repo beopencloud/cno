@@ -1,0 +1,3 @@
+image: docker.io/beopenit/cno-api:1.0.0-rc
+mysqlDBImage: docker.io/percona:5.7.35
+dbStorage: 15Gi

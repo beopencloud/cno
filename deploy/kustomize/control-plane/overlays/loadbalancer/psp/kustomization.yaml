@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../../../base
+patchesStrategicMerge:
+# - keycloak-postgresql-patch.yaml
+- kafka-patch.yaml
+- cno-api-service-patch.yaml
+- cno-api-ingress-deletion-patch.yaml
+- cno-ui-service-patch.yaml
+- cno-ui-ingress-deletion-patch.yaml
+- cno-ui-deployment-patch.yaml
+- cno-api-deployment-patch.yaml

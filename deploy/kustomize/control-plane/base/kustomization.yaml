@@ -1,0 +1,188 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cno-system
+commonLabels:
+  cno/resource: "true"
+generatorOptions:
+  disableNameSuffixHash: true
+secretGenerator:
+- name: cno-config
+  envs:
+  - cno-secret.env
+  literals:
+  - OIDC_CLIENT_SECRET=cno-api-client-secret
+  type: Opaque
+- name: cno-api-db-secret
+  envs:
+  - cno-db-secret.env
+  literals:
+  - DATABASE=cnoapi
+  type: Opaque
+- name: credential-cloud-keycloak
+  envs:
+  - keycloak.env
+  literals:
+  - ADMIN_USERNAME=admin
+  type: Opaque
+
+
+configMapGenerator:
+- name: cno-config
+  envs:
+  - cno-config.env
+  literals:
+  - DEFAULT_CLUSTER_ID=113d583aac3144f6b98370116a6b69e9
+- name: cno-images-config
+  envs:
+  - cno-images-config.env
+- name: cno-ingress-route-config
+  envs:
+  - cno-ingress-route-config.env
+- name: cno-loadbalancer-config
+  envs:
+  - cno-loadbalancer-config.env
+- name: cno-nodeport-config
+  envs:
+  - cno-nodeport-config.env
+
+configurations:
+- kustomizeconfig.yaml
+
+vars:
+- name: NAMESPACE
+  objref:
+    kind: Namespace
+    name: cno-system
+    apiVersion: v1
+- name: DEFAULT_CLUSTER_ID
+  objref:
+    kind: ConfigMap
+    name: cno-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.DEFAULT_CLUSTER_ID
+- name: DOMAIN
+  objref:
+    kind: ConfigMap
+    name: cno-ingress-route-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.DOMAIN
+- name: NODE_PORT_IP
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.NODE_PORT_IP
+- name: KAFKA_BOOTSTRAP_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.KAFKA_BOOTSTRAP_NODEPORT
+- name: CNO_API_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_API_NODEPORT
+- name: CNO_UI_NODEPORT
+  objref:
+    kind: ConfigMap
+    name: cno-nodeport-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_UI_NODEPORT
+- name: KAFKA_BOOTSTRAP_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-loadbalancer-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.KAFKA_BOOTSTRAP_LOADBALANCER_IP
+- name: CNO_API_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-loadbalancer-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_API_LOADBALANCER_IP
+- name: CNO_UI_LOADBALANCER_IP
+  objref:
+    kind: ConfigMap
+    name: cno-loadbalancer-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CNO_UI_LOADBALANCER_IP
+- name: MYSQL_SIDECAR_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.MYSQL_SIDECAR_IMAGE
+- name: MYSQL_EXPORTER_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.MYSQL_EXPORTER_IMAGE
+- name: STRIMZI_OPERATOR_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.STRIMZI_OPERATOR_IMAGE
+- name: STRIMZI_KAFKA_IMAGE
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.STRIMZI_KAFKA_IMAGE
+- name: IMAGE_PULL_SECRETS_NAME
+  objref:
+    kind: ConfigMap
+    name: cno-images-config
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.IMAGE_PULL_SECRETS_NAME
+
+resources:
+- namespace.yaml
+- keycloak
+- kafka
+- mysql
+- cno-api
+- cno-ui
+- dataplane
+
+replacements:
+- path: keycloak/replacements-related-image-keycloak-init.yaml
+- path: keycloak/replacements-related-image-keycloak.yaml
+- path: keycloak/replacements-related-image-postgresql.yaml
+- path: keycloak/replacements-related-keycloak-operator-image.yaml
+
+- path: kafka/replacements-related-kafka-image.yaml
+- path: kafka/replacements-related-kafka-tls-sidecar-image.yaml
+- path: kafka/replacements-related-kafka-topic-operator-image.yaml
+- path: kafka/replacements-related-kafka-user-operator-image.yaml
+- path: kafka/replacements-related-strimzi-operator-image.yaml
+- path: kafka/replacements-related-zookeeper-image.yaml
+
+- path: mysql/replacements-mysql-operator-image.yaml
+- path: mysql/replacements-mysql-orchestrator-image.yaml
+- path: mysql/replacements-mysql-image.yaml
+- path: mysql/replacements-mysql-secretname.yaml
+
+- path: cno-api/replacements-cno-api-image.yaml
+- path: cno-ui/replacements-cno-ui-image.yaml
+
+- path: dataplane/replacements-cno-agent-image.yaml
+- path: dataplane/replacements-cno-operator-image.yaml
+- path: dataplane/replacements-cnocd-image.yaml
