@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 apiVersion: kafka.strimzi.io/v1beta2
+=======
+apiVersion: kafka.strimzi.io/v1beta1
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
 kind: KafkaUser
 metadata:
   name: cno-kafka-superadmin

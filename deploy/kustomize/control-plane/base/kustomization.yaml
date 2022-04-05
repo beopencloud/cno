@@ -18,12 +18,15 @@ secretGenerator:
   literals:
   - DATABASE=cnoapi
   type: Opaque
+<<<<<<< HEAD
 - name: credential-cloud-keycloak
   envs:
   - keycloak.env
   literals:
   - ADMIN_USERNAME=admin
   type: Opaque
+=======
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
 
 
 configMapGenerator:

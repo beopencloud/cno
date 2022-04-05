@@ -3,6 +3,7 @@ kind: MysqlCluster
 metadata:
   name: cno-api
 spec:
+<<<<<<< HEAD
   secretName: cno-api-db-secret
   image: percona:8.0.26-17
   mysqlVersion: "8.0.26-17"
@@ -12,3 +13,14 @@ spec:
       resources:
         requests:
           storage: 1Gi
+=======
+  replicas: 1
+  image: bitnami/mariadb:latest
+  secretName: cno-api-db-secret
+  volumeSpec:
+    persistentVolumeClaim:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06

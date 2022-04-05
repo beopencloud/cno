@@ -48,16 +48,7 @@ rules:
   - ""
   resources:
   - namespaces
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
+  - pods
   - services
   verbs:
   - create
