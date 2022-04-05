@@ -3,7 +3,11 @@ kind: Kustomization
 bases:
 - ../../../base
 patchesStrategicMerge:
+<<<<<<< HEAD
+# - keycloak-postgresql-patch.yaml
+=======
 - keycloak-postgresql-patch.yaml
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
 - kafka-patch.yaml
 - cno-api-service-patch.yaml
 - cno-api-ingress-deletion-patch.yaml

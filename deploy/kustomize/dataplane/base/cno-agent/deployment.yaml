@@ -23,7 +23,11 @@ spec:
         run: cno-agent
     spec:
       containers:
+<<<<<<< HEAD
+      - image: beopenit/cno-agent:1.0.0-rc
+=======
       - image: beopenit/cno-agent:latest
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
         imagePullPolicy: Always
         name: cno-agent
         resources: {}

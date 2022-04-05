@@ -3,17 +3,38 @@ kind: MysqlCluster
 metadata:
   name: cno-api
 spec:
-  replicas: 1
-  image: $MYSQL_IMAGE #bitnami/mariadb:latest 
   secretName: cno-api-db-secret
+  image: percona:8.0.26-17
+  mysqlVersion: "8.0.26-17"
   volumeSpec:
     persistentVolumeClaim:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 5Gi
-
+          storage: 1Gi
 ---
+<<<<<<< HEAD
+apiVersion: v1
+kind: Service
+metadata:
+  name: cno-api-mysql-master-external
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  - name: sidecar-http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: mysql
+    mysql.presslabs.org/cluster: cno-api
+    role: master
+  sessionAffinity: None
+  type: ClusterIP
+=======
 
 #apiVersion: v1
 #kind: Service
@@ -36,3 +57,4 @@ spec:
 #    role: master
 #  sessionAffinity: None
 #  type: ClusterIP
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  labels:
+    app: cno-api
+  name: cno-api
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - cno-api.INGRESS_DOMAIN
+    secretName: SECRETNAME
+  rules: 
+  - host: cno-api.INGRESS_DOMAIN
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: cno-api
+            port:
+              number: 80

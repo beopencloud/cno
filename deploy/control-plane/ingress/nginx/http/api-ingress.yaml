@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: cno-api
+  name: cno-api
+spec:
+  ingressClassName: nginx
+  rules: 
+  - host: cno-api.INGRESS_DOMAIN
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: cno-api
+            port:
+              number: 80

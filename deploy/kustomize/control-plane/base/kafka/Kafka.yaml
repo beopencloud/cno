@@ -9,7 +9,11 @@ spec:
         imagePullSecrets:
         - name: $(IMAGE_PULL_SECRETS_NAME)
     image: $(STRIMZI_KAFKA_IMAGE)
+<<<<<<< HEAD
+    version: 3.0.0
+=======
     version: 2.5.0
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
     replicas: 1
     listeners:
       - name: plain
@@ -28,7 +32,13 @@ spec:
         tls: true
         authentication:
           type: tls
+<<<<<<< HEAD
+          disableTlsHostnameVerification: true
         configuration:
+          class: nginx
+=======
+        configuration:
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
           bootstrap:
             host: bootstrap-cno.$(DOMAIN)
           brokers:
@@ -46,7 +56,14 @@ spec:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1
       transaction.state.log.min.isr: 1
+<<<<<<< HEAD
+      default.replication.factor: 1
+      min.insync.replicas: 1
+      inter.broker.protocol.version: "3.0"
+      log.message.format.version: "3.0"
+=======
       log.message.format.version: "2.5"
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
     storage:
       type: ephemeral
   zookeeper:

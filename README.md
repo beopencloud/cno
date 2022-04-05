@@ -1,5 +1,7 @@
+ 
+# CNO<br/>Cloud Native Onboarding 
 
-# CNO<br/>Cloud Native Onboarding - DOCUMENTATION
+Onboard, Deploy, Manage and Secure microservices on Kubernetes.
 
 Onboard, Deploy, Manage and Secure microservices on Kubernetes
 
@@ -265,34 +267,24 @@ CNO_RAW_REPOSITORY=  "https://raw.githubusercontent.com/beopencloud/cno"
 Then set the new image urls, as shown in the previous paragraph.
 # Installation
 
-## **Install CNOCTL**
+## **Install CNO CLI**
 
 The CLI can be installed with a curl script, brew or by downloading the binary from the releases page. Once installed you'll get the cnoctl command.
 
 ## Install with curl:
 
 ```
-<<<<<<< HEAD
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoctl.sh | sh
-=======
 $ curl -sSL https://raw.githubusercontent.com/beopencloud/cno/main/scripts/cnoctl.sh | sh
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## Install with brew on MacOs:
 
 ```
-<<<<<<< HEAD
-brew tap beopencloud/cno
-
-brew install cnoctl
-=======
 $ brew tap beopencloud/cno
 ```
 
 ```
 $ brew install cnoctl
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## Install from release:
@@ -302,13 +294,6 @@ In the cnoctl release page (https://github.com/beopencloud/cno/releases) downloa
 Example for version v0.0.1 on MacOs:
 
 ```
-<<<<<<< HEAD
-wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_Darwin_x86_64.tar.gz
-
-tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
-
-mv cnoctl /usr/local/bin/
-=======
 $ wget https://github.com/beopencloud/cno/releases/download/v0.0.1/cnoctl_0.0.1_Darwin_x86_64.tar.gz
 ```
 ```
@@ -317,7 +302,6 @@ $ tar -xzf cnoctl_0.0.1_Darwin_x86_64.tar.gz
 
 ```
 $ mv cnoctl /usr/local/bin/
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## Verify cnoctl installation
@@ -327,11 +311,14 @@ Check that cnoctl is properly installed by getting the command help:
 Example for version v0.0.1 on MacOs:
 
 ```
-<<<<<<< HEAD
+
+cnoctl --help
+```
+
+## **Quick CNO Installation with CNOCTL**
+
 cnoctl --version
-=======
 $ cnoctl --help
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 
 ## **Quick Installation CNO with CNOCTL**
@@ -339,19 +326,29 @@ $ cnoctl --help
 To install CNO you need Kubernetes v1.16 or higher.
 Once cnoctl is installed, to install CNO run the following command:
 ```
-<<<<<<< HEAD
+
 cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
-=======
+
 $ cnoctl init --type aks --domain cno-dev.beopenit.com --ingress-type nginx
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
 ```
 The supported flags are:
+
+* --type: The kubernetes in which cno is been install type: vanilla, aks, eks, gke (default "vanilla")
+* --domain: The wirldcard domain configured in the cluster
+* --ingress-type: The ingress type used in the cluster: nodeport, nginx, router, loadbalancer
+* --namespace: cno install namespace (default "cno-system")
 * --domain: The wirldcard domain configured in the cluster
 * --ingress-type: The ingress type used in the cluster: nodeport, nginx, router, loadbalancer
 * --namespace: cno install namespace (default "cno-system")
 * --type: The kubernetes in which cno is been install type: vanilla, aks, eks, gke (default "vanilla")
 * --version: cno version to install (default "1.0.0-rc")
 * --with-dataplane: install cno with a default dataplane (default true)
+* --psp: is pod policy security enabled on your cluster.
+
+
+## **CNO Installation with Kustomize**
+
+To install CNO, you need Kubernetes v1.16 or higher. Clone the cno repository:
 
 # Configuration
 
@@ -369,8 +366,11 @@ Tags are elements made up of pairs (key and values) whose main purpose is to all
 
 Create a tag by giving elements of configuration
 ```
-cnoctl adm create tag [name] [--flags]
+git clone [https://github.com/beopencloud/cno.git](https://github.com/beopencloud/cno.git)
 ```
+
+Go to the control-plane Kustomize directory:
+
 
 The supported arguments are:
 * name: The name of the tag you want to create | [REQUIRED]
@@ -389,26 +389,30 @@ List informations about all tag
 
 > if your cluster has PSPs, set the CNO_POD_POLICY_ACTIVITED variable to true before install:
 
+ 
 ```
-export CNO_POD_POLICY_ACTIVITED=true
+cd deploy/kustomize/control-plane
+```
+Prerequisites:
+
+Edit the following files for configuration:
+
+1.  Put the api server url of your cluster on base/cno-config.env [REQUIRED]
+ ```
+vi base/cno-config.env
+```
+2.  Edit the root password of CNO db base/cno-db-secret.env [OPTIONAL]
+  ```
+vi base/cno-db-secret.env
+```
+ 
+3.  You can set images name/version of CNO’s components if you have a private registry and want to do an installation in disconnected mode [OPTIONAL]
+```
+vi  base/cno-images-config.env
 ```
 
-#### 1. install using ingress to expose applications
+4. Set the CNO admin user password on file base/cno-secret.env [OPTIONAL]
 
-> You must provide a domain name for the ingress resources
-
-> Replace \<namespace> with the desired target namespace. default is cno-system
-
-```
-export INGRESS_DOMAIN=cluster1.beopenit.com"
-export CNO_VERSION=1.0.0-rc
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
-```
-cnoctl adm get tag [tag_id]
-```
-export CNO_VERSION=1.0.0-rc
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
-```
 
 #### 3. install using service type NodePort to expose applications
 
@@ -428,9 +432,15 @@ It is the different capacities allocated to a cluster that allow it to function 
 ## CREATION SYNTAX
 
 Create a quota by giving elements of configuration
+ 
 ```
-cnoctl adm create quota [name] --cpu LimitValue,RequestValue --memory LimitValue,RequestValue --storage valueStorage
+vi base/cno-secret.env
 ```
+
+5.  You must have an ingress or route controller correctly installed and configured
+- You must have an ingress or route controller correctly installed and configured
+- Edit the following file and set your ingress or route controller domain
+
 
 The supported arguments are:
 
@@ -447,9 +457,14 @@ The supported flag are:
 
 List informations about all quota
 
+ 
 ```
-cnoctl adm get quota [name]
+vi base/cno-ingress-route-config.env
 ```
+
+6. ONLY FOR LoadBalancer exposition type. [REQUIRED]
+- Deploy a service LoadBalancer for cno-api and another for the kafka with the following command
+
 
 The supported arguments are:
 
@@ -471,9 +486,79 @@ Create a tag by giving elements of configuration
 
 ### **AWS**
 
+ 
 ```
-cnoctl adm create provider-eks [name] [--flags]
+kubectl create namespace cno-system
+kubectl create -n cno-system -f overlays/loadbalancer/prerequisite.yaml
 ```
+- After that, wait for the allocation of external IPs of the services
+```
+kubectl -n cno-system get svc
+```
+- Edit the following file and set the IP addresses of kafka_boostrap and cno-api services
+```
+vi base/cno-loadbalancer-config.env
+```
+7. ONLY FOR NodPort exposition type. [REQUIRED]
+- Deploy a service NodPort for cno-api and another for the kafka with the following command
+```
+kubectl create namespace cno-system
+kubectl create -n cno-system -f overlays/nodeport/prerequisite.yaml
+```
+- Get the nodePort of the cno-api and the kafka_boostrap service
+```
+kubectl -n cno-system get svc
+```
+- Edit the following file and set an external IP node of your cluster and the nodePort of kafka_boostrap and cno-api services
+```
+vi base/cno-nodeport-config.env
+```
+After that you can install cno with this following generic commande.
+```
+Kubectl apply -k overlays/ingress|loadbalancer|nodeport/psp|no-psp
+```
+**NB: For Openshift the generic command for installation is:**
+```
+Kubectl apply -k overlays/openshif/tingress|loadbalancer|nodeport/psp|no-psp
+```
+Or if your kubectl version is not compatible with the kustomize, you can install the latest version of kustomize with this command.
+```
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+```
+And use the following command to install CNO
+```
+Kustomize build overlays/ingress|loadbalancer|nodeport/psp|no-psp | kubectl apply -f -
+```
+For example if you want to install CNO with LoadBalancer exposition type on a cluster with Pod Security Policy activated, you have to run the following command:
+```
+Kubectl apply -k overlays/loadbalancer/psp
+Or
+kustomize build overlays/loadbalancer/psp | kubectl apply -f -
+```
+after that wait until the pods are running then connect to the dashboard with the following accesses.
+url: 
+-  For Ingress or Route exposition type: https://cno.YOUR_DOMAIN
+- For Loadbalancer exposition type: [http://external_ip_addr_of_cno-ui_service](http://external_ip_addr_of_cno-ui_service)
+-   For NodePort exposition type: http://node_ip:node_port
+Username : admin
+password : get it on file base/cno-secret.env (default: beopenit)
+** NB: For Openshift the generic command for installation is: **
+```
+Kubectl apply -k overlays/openshif/tingress|loadbalancer|nodeport/psp|no-psp
+Or
+kustomize build overlays/openshif/ingress|loadbalancer|nodeport/psp|no-psp | kubectl apply -f -
+```
+
+
+# Configuration
+
+## Cloud Providers:
+CNO Hub, the hub of Kubernetes clusters, helps you centralize the management, governance, and monitoring of your entire Kubernetes ecosystem. You can register clusters into CNO Hub in two different ways: Standard registration and Cloud-based registration. 
+
+**Standard Registration**, you can add any existing Kubernetes clusters like VMware Tanzu, RedHat OpenShift or Rancher RKE. To do so, go directly to Day 2 Operations with CNO Hub.
+
+
+**Cloud-based Registration**, CNO Hub can register automatically your Kubernetes clusters from AWS, Azure or GCP. To do so, you need to create cloud providers into CNO first. You can create cloud providers via CNOCTL with the following commands:
 
 The supported arguments are:
 
@@ -487,16 +572,26 @@ The supported flags are:
 * session-token: Session Token for Aws cloud provider | [REQUIRED]
 
 ###  **AZURE**
+ 
 
+#### AWS
 ```
-cnoctl adm create provider-aks [name] [--flags]
+cnoctl adm create provider eks [name] [--flags]
 ```
-
 The supported arguments are:
-
 * name: The name of the cloud provider you want to create | [REQUIRED]
 
 The supported flags are:
+* --default-region: The region of the provider | [REQUIRED] 
+* --access-key: Access key for EKS cloud provider | [REQUIRED]
+* --secret-key: Secret key for EKS cloud provider | [REQUIRED]
+* --session-token: Session Token for EKS cloud provider | [REQUIRED]
+
+
+#### AZURE
+
+
+```cnoctl adm create provider aks [name] [--flags]```
 
 * client-id: The client-id for aks provider | [REQUIRED]
 * client-secret: The client secret for aks provider | [REQUIRED]
@@ -506,46 +601,64 @@ The supported flags are:
 ### **GCP**
 
 ```
-<<<<<<< HEAD
+
 cnoctl adm create provider-gke [name] [--flags]
-=======
+
 cnoctl adm create provider-gke [name] [--flags
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
+ 
 ```
+ 
 
 The supported arguments are:
-
 * name: The name of the cloud provider you want to create | [REQUIRED]
 
 The supported flags are:
+* --client-id: The client-id for AKS provider | [REQUIRED] 
+* --client-secret: The client secret for AKS provider | [REQUIRED]
+* --subscription-id: The subscription id for AKS provider | [REQUIRED]
+* --tenant-id: The tenant id of the AKS provider | [REQUIRED]
+
+
+#### GCP
+
 
 * Json-file: The json file that contains the configuration of the gke provider | [REQUIRED]
 
 ## GET SYNTAX
+ 
 
-List informations about all cloud provider
-
-```
-cnoctl adm get provider [name]
-```
+```cnoctl adm create provider gke [name] [--flags]```
 
 The supported arguments are:
+* name: The name of the cloud provider you want to create | [REQUIRED]
 
-* name: The name of the cloud provider from which we want to retrieve information. To specify if you want to get information about a specific provider | [OPTIONAL]
+The supported flags are:
+* --json-file: The JSON file that contains the configuration of the GKE provider | [REQUIRED] 
 
-## **LDAP Configuration**
 
-## Configure Ldap Account
+## LDAP Configuration
 
-Ldap Account consists of creating an Ldap Server to store and use users, group.
+This section provides how to configure your ldap identity provider to validate usernames and passwords using bind authentication. 
 
 Creating ldap account by giving the following command
+ 
 
 ```
 cnoctl adm create ldap [--flags ]
 ```
 
 The supported flags are:
+* --url: The URL of your LDAP account | [REQUIRED]
+* --Port: The port of the LDAP account (389 for LDAP, 634 for LDAPs)| [REQUIRED]
+* --cn: The common name for the LDAP server | [REQUIRED]
+* --basedn: The base domain name | [REQUIRED]
+* --admin-password: define the LDAP admin password | [REQUIRED]
+
+
+
+## Configure Messaging 
+
+To configure SMTP settings to send emails or notifications to CNO users, you have to create a messaging account through CNOCTL.
 
 * url: The url of your ldap account | [REQUIRED]
 * port: The port of the ldap account (389 for ldap, 634 for ldaps) | [REQUIRED]
@@ -567,10 +680,18 @@ cnoctl adm get ldap
 
 Messaging Account consists of creating an SMTP server to send emails or notifications to CNO users.
 Create a messaging account by giving elements of configuration
+ 
 
 ```
 cnoctl adm create smtp [--flags]
 ```
+
+The supported flags are:
+* --email: The sender email of your organization | [REQUIRED]
+* --smtp-password: The sender email account password | [REQUIRED]
+* --smtp-server:  SMTP address server. | [REQUIRED]
+* --smtp-port: The port of the email providers' servers. | [REQUIRED]
+
 
 The supported flags are:
 
@@ -594,12 +715,12 @@ Do a test to make sure that the smtp server configuration is correct
 
 ```
 cnoctl adm test smtp receivermail@mail.com -m "Your message"
-<<<<<<< HEAD
 
-=======
+
+
 or
 cnoctl adm test smtp receivermail@mail.com --message "Your message"
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
+ 
 ```
 
 The supported flags are:
@@ -607,16 +728,17 @@ The supported flags are:
 * email or e: the receiver mail test | [REQUIRED]
 * message or m: the message to sent| [OPTIONAL]
 
-<<<<<<< HEAD
+
   
   
 
 # Tutorials
-=======
+
  
 # Tutorials
 * [Multi Cloud Management with CNO Hub](https://viktormoskalev07.github.io/cno/dist/gs-multi-cloud(tutorials).html)
 * [IAM Set Up](https://viktormoskalev07.github.io/cno/dist/gs-iam-setup(tutorials).html)
 * [Onboard projects and teams](https://viktormoskalev07.github.io/cno/dist/gs-onboard-projects(tutorials).html)
 * [Continuous Deployment](https://viktormoskalev07.github.io/cno/dist/gs-contin-deploy(tutorials).html)
->>>>>>> 04c46f2bef6350ad76c87554671a778c80cd235e
+ 
+ 
