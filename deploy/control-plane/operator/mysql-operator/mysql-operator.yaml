@@ -279,7 +279,7 @@ spec:
         - name: operator
           securityContext:
             {}
-          image: "docker.io/bitpoke/mysql-operator:v0.6.2"
+          image: $MYSQL_OPERATOR_IMAGE #"docker.io/bitpoke/mysql-operator:v0.6.2"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -299,8 +299,8 @@ spec:
           args:
             - --leader-election-namespace=$NAMESPACE
             - --orchestrator-uri=http://mysql-operator.$NAMESPACE/api
-            - --sidecar-image=docker.io/bitpoke/mysql-operator-sidecar-5.7:v0.6.2
-            - --sidecar-mysql8-image=docker.io/bitpoke/mysql-operator-sidecar-8.0:v0.6.2
+            - --sidecar-image=$MYSQL_SIDECAR_IMAGE
+            - --sidecar-mysql8-image=$MYSQL_EXPORTER_IMAGE 
             - --failover-before-shutdown=true
           livenessProbe:
             httpGet:
@@ -315,7 +315,7 @@ spec:
         - name: orchestrator
           securityContext:
             {}
-          image: docker.io/bitpoke/mysql-operator-orchestrator:v0.6.2
+          image: $MYSQL_OPERATOR_ORCHESTRATOR_IMAGE 
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

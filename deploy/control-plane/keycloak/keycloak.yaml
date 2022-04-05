@@ -72,7 +72,7 @@ spec:
               key: ROOT_PASSWORD
         - name: DB_USER
           value: root
-        image: quay.io/keycloak/keycloak:15.1.1
+        image: $KEYCLOAK_IMAGE
         #args: ["import --dir='/cno' --file='cno-realm.json' --realm='cno' --override='true' && start --proxy='passthrough' --hostname-strict-backchannel='false' --hostname='localhost' --http-enabled='true' --hostname-strict='false' "]
         #args: ["import --dir='/cno' --file='cno-realm.json' --realm='cno' --override='true' && start --proxy='passthrough' --hostname-strict-backchannel='false' --db-password='POSTGRES_PASS' --db-schema='public' --db-url-database='postgres' --db-url-properties='postgres' --db-url-host='postgres-svc:5432' --db-username='postgres' --hostname='localhost' --http-enabled='true' --hostname-strict='false'"]
         imagePullPolicy: IfNotPresent
