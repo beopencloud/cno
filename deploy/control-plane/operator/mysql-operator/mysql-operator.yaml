@@ -300,7 +300,7 @@ spec:
             - --leader-election-namespace=$NAMESPACE
             - --orchestrator-uri=http://mysql-operator.$NAMESPACE/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-            - --sidecar-mysql8-image=$MYSQL_SIDECAR_IMAGE_8 
+            - --sidecar-mysql8-image=$MYSQL_EXPORTER_IMAGE
             - --failover-before-shutdown=true
           livenessProbe:
             httpGet:
