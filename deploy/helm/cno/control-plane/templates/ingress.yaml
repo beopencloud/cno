@@ -1,0 +1,65 @@
+{{- if and (eq .Values.expose.type "nginx-ingress") (eq .Values.cluster.platform "kubernetes") }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    {{- if eq .Values.global.cnoAPI.protocol "https" }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    {{- end }}
+  labels:
+    app: cno-api
+  name: cno-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingressClassName: nginx
+  {{- if eq .Values.global.cnoAPI.protocol "https" }}
+  tls:
+    - hosts:
+        - cno-api.{{ .Values.expose.ingress.domain }}
+      secretName: api-ingress-certifcate
+  {{- end }}
+  rules:
+    - host: cno-api.{{ .Values.expose.ingress.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cno-api
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    {{- if eq .Values.global.cnoAPI.protocol "https" }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  {{- end }}
+  labels:
+    app: cno-ui
+  name: cno-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingressClassName: nginx
+  {{- if eq .Values.global.cnoAPI.protocol "https" }}
+  tls:
+    - hosts:
+        - cno.{{ .Values.expose.ingress.domain }}
+      secretName: ui-ingress-certifcate
+  {{- end }}
+  rules:
+    - host: cno.{{ .Values.expose.ingress.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cno-ui
+                port:
+                  number: 80
+{{- end }}
