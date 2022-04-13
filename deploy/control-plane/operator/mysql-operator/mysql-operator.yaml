@@ -300,7 +300,7 @@ spec:
             - --leader-election-namespace=$NAMESPACE
             - --orchestrator-uri=http://mysql-operator.$NAMESPACE/api
             - --sidecar-image=$MYSQL_SIDECAR_IMAGE
-            - --sidecar-mysql8-image=$MYSQL_EXPORT_IMAGE
+            - --metrics-exporter-image=docker.io/prom/mysqld-exporter:v0.13.0
             - --failover-before-shutdown=true
           livenessProbe:
             httpGet:
