@@ -87,6 +87,8 @@ spec:
           value: "false"
         - name: KAFKA_VERBOSE
           value: "false"
+        - name: UI_URL
+          value: $UI_URL
         - name: DB_HOST
           value: "cno-api-mysql"
         - name: DB_PORT
