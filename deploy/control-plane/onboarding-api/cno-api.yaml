@@ -66,6 +66,8 @@ spec:
           value: "true"
         - name: SERVER_URL
           value: $SERVER_URL
+        - name: UI_URL
+          value: $UI_URL
         - name: SERVER_PORT
           value: "8080"
         - name: OIDC_REALM
@@ -87,8 +89,6 @@ spec:
           value: "false"
         - name: KAFKA_VERBOSE
           value: "false"
-        - name: UI_URL
-          value: $UI_URL
         - name: DB_HOST
           value: "cno-api-mysql"
         - name: DB_PORT
