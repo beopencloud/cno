@@ -1,0 +1,12 @@
+{{- if .Values.agentConfig.defaultCluster }}
+apiVersion: v1
+data:
+  uuid: {{ .Values.cluster.agent.uuid | b64enc }}
+  user.key: {{ .Values.agentConfig.cnoAgent.licence.key | b64enc }}
+  user.crt: {{ .Values.agentConfig.cnoAgent.licence.crt | b64enc }}
+  ca.crt: {{ .Values.agentConfig.cnoAgent.licence.ca | b64enc }}
+kind: Secret
+metadata:
+  name: {{ include "cno-chart.licenceSecret" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
