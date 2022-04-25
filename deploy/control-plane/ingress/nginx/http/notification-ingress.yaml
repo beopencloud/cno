@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: cno-notification
+  name: cno-notification
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: cno-notification.INGRESS_DOMAIN
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: cno-notification
+            port:
+              number: 3000

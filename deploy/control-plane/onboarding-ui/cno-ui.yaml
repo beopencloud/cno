@@ -4,6 +4,7 @@ metadata:
   labels:
     app: cno-ui
   name: cno-ui
+  namespace: $NAMESPACE
 spec:
   replicas: 1
   selector:
@@ -19,11 +20,13 @@ spec:
         name: cno-ui
         imagePullPolicy: Always
         ports:
-          - containerPort: 8080
+          - containerPort: 80
         resources: {}
         env:
         - name: API_URL
           value: $API_URL
+        - name: NOTIFICATION_URL
+          value: $NOTIFICATION_URL
         - name: OIDC_URL
           value: $OIDC_URL
         - name: OIDC_REALM

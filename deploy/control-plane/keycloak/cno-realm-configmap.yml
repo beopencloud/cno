@@ -663,8 +663,8 @@ data:
         {
           "id": "c39b01dd-c137-4a95-b3ea-91b297110b43",
           "clientId": "cno-api",
-          "adminUrl": "http://$AUTH_URL/",
-          "baseUrl": "http://$AUTH_URL/",
+          "adminUrl": "http://keycloak:8080",
+          "baseUrl": "http://keycloak:8080",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
@@ -2219,9 +2219,11 @@ data:
       "clientAuthenticationFlow": "clients",
       "dockerAuthenticationFlow": "docker auth",
       "attributes": {},
-      "keycloakVersion": "12.0.1",
+      "keycloakVersion": "17.0.0",
       "userManagedAccessAllowed": false
     }
 kind: ConfigMap
 metadata:
   name: cno-realm
+
+

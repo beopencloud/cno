@@ -1,0 +1,282 @@
+---
+# Source: mysql-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mysql-operator
+  labels:
+    app: mysql-operator
+imagePullSecrets:
+- name: $(IMAGE_PULL_SECRETS_NAME)
+---
+<<<<<<< HEAD
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mysql-operator
+  labels:
+    helm.sh/chart: mysql-operator-0.6.2
+    app.kubernetes.io/name: mysql-operator   
+    app.kubernetes.io/version: "v0.6.2"    
+rules:
+- apiGroups:
+    - apps
+  resources:
+    - statefulsets
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - batch
+  resources:
+    - jobs
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - coordination.k8s.io
+  resources:
+    - leases
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - configmaps
+    - events
+    - jobs
+    - persistentvolumeclaims
+    - pods
+    - secrets
+    - services
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - pods/status
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - mysql.presslabs.org
+  resources:
+    - mysqlbackups
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - mysql.presslabs.org
+  resources:
+    - mysqlclusters
+    - mysqlclusters/status
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - mysql.presslabs.org
+  resources:
+    - mysqldatabases
+    - mysqldatabases/status
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - mysql.presslabs.org
+  resources:
+    - mysqlusers
+    - mysqlusers/status
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - policy
+  resources:
+    - poddisruptionbudgets
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+---
+=======
+# Source: mysql-operator/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: 'mysql-operator'
+  name: 'mysql-operator'
+rules:
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - mysql.presslabs.org
+  resources:
+  - mysqlbackups
+  - mysqlbackups/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - secrets
+  - services
+  - events
+  - jobs
+  - pods
+  - persistentvolumeclaims
+  - configmaps/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - mysql.presslabs.org
+  resources:
+  - mysqlclusters
+  - mysqlclusters/status
+  - mysqlclusters/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/status
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+---
+# Source: mysql-operator/templates/clusterrolebinding.yaml
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mysql-operator
+  labels:
+<<<<<<< HEAD
+    helm.sh/chart: mysql-operator-0.6.2
+    app.kubernetes.io/name: mysql-operator   
+    app.kubernetes.io/version: "v0.6.2"
+    
+=======
+    app: mysql-operator
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: mysql-operator
+subjects:
+<<<<<<< HEAD
+  - name: mysql-operator
+    kind: ServiceAccount
+=======
+- name: mysql-operator
+  kind: ServiceAccount
+>>>>>>> 2ad8d51d600200a23a31fe70a7bef1d68dcdeb06

@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cno-system
+resources:
+- base/cno-agent
+- base/cnocd-operator
+- base/cno-operator
+configMapGenerator:
+- name: cno-config-dataplane
+  envs:
+  - cno-images-config.env
+replacements:
+- path: base/cno-agent/replacements-cno-agent-image.yaml
+- path: base/cno-operator/replacements-cno-operator-image.yaml
+- path: base/cnocd-operator/replacements-cnocd-image.yaml

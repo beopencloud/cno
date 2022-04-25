@@ -1,0 +1,39 @@
+varReference:
+- path: spec/kafka/listeners[]/configuration/bootstrap/host
+  kind: Kafka
+- path: spec/kafka/listeners[]/configuration/brokers[]/host
+  kind: Kafka
+- path: spec/template/template/pod/imagePullSecrets[]/name
+  kind: Kafka
+
+
+- path: spec/entityOperator/template/pod/imagePullSecrets[]/name
+  kind: Kafka
+- path: spec/entityOperator/tlsSidecar/image
+  kind: Kafka
+- path: spec/entityOperator/topicOperator/image
+  kind: Kafka
+- path: spec/entityOperator/userOperator/image
+  kind: Kafka
+- path: spec/zookeeper/image
+  kind: Kafka
+- path: spec/kafka/image
+  kind: Kafka
+
+- path: spec/kafka/template/pod/imagePullSecrets[]/name
+  kind: Kafka
+- path: spec/zookeeper/template/pod/imagePullSecrets[]/name
+  kind: Kafka
+- path: spec/entityOperator/template/pod/imagePullSecrets[]/name
+  kind: Kafka
+
+- path: spec/template/spec/volumes/secret/secretName
+  kind: Deployment
+- path: imagePullSecrets[]/name
+  kind: ServiceAccount
+- path: users
+  kind: SecurityContextConstraints
+- path: spec
+  kind: Route
+- path: metadata
+  kind: Route

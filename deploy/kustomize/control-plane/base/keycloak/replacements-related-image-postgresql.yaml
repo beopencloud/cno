@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-images-config
+  fieldPath: data.KEYCLOAK_POSTGRESQL_IMAGE
+targets:
+- select:
+    kind: Deployment
+    name: keycloak-postgresql
+  fieldPaths:
+  - spec.template.spec.containers.[name=keycloak-postgresql].image

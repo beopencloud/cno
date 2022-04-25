@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-config-dataplane
+  fieldPath: data.CNO_CD_OPERATOR_IMAGE
+targets:
+- select:
+    kind: Deployment
+    name: cno-cd-operator
+  fieldPaths:
+  - spec.template.spec.containers.[name=cno-cd-operator].image

@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-images-config
+  fieldPath: data.STRIMZI_KAFKA_IMAGE
+targets:
+- select:
+    kind: kafka
+    name: cno-kafka-cluster
+  fieldPaths:
+  - spec.zookeeper.image

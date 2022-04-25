@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cno-agent
+spec:
+  template:
+    spec:
+      containers:
+      - name: cno-agent
+        env:
+        - name: KAFKA_BROKERS
+          value: "cno-kafka-cluster-kafka-bootstrap:9093"
+        - name: KAFKA_CA_CERT
+          value: /.key/ca/ca.crt
+        - name: KAFKA_CLIENT_CERT
+          value: /.key/user/user.crt
+        - name: KAFKA_CLIENT_KEY
+          value: /.key/user/user.key
+        - name: LICENCE
+          value: $(DEFAULT_CLUSTER_ID)
+          valueFrom:
+            $patch: delete
+        volumeMounts:
+        - name: kafkaca
+          mountPath: "/.key/ca"
+          readOnly: true
+        - name: kafkaclientcred
+          mountPath: "/.key/user"
+          readOnly: true
+        - name: kafkaconfig
+          $patch: delete
+      volumes:
+      - name: kafkaconfig
+        $patch: delete
+      - name: kafkaca
+        secret:
+          secretName: cno-kafka-cluster-cluster-ca-cert
+      - name: kafkaclientcred
+        secret:
+          secretName: $(DEFAULT_CLUSTER_ID)

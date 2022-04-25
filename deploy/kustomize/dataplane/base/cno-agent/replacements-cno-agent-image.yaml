@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: cno-config-dataplane
+  fieldPath: data.CNO_AGENT_IMAGE
+targets:
+- select:
+    kind: Deployment
+    name: cno-agent
+  fieldPaths:
+  - spec.template.spec.containers.[name=cno-agent].image
