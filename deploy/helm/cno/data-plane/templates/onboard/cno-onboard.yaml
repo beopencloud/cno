@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cno-onboarding-operator
+  namespace: {{ .Release.Namespace }}
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cno-onboarding-operator
+subjects:
+  - kind: ServiceAccount
+    name: cno-onboarding-operator
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cno-onboarding-operator
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cno-onboarding-operator
+  template:
+    metadata:
+      labels:
+        app: cno-onboarding-operator
+    spec:
+      serviceAccountName: cno-onboarding-operator
+      containers:
+        - name: cno-onboarding-operator
+          image: {{ .Values.cnoOnboarding.image.name }}:{{ .Values.cnoOnboarding.image.version }}
+          imagePullPolicy: Always
+          resources:
+          {{- if hasKey .Values.cnoOnboarding "resources" }}
+          {{- toYaml .Values.cnoOnboarding.resources | nindent 12 }}
+          {{- end }}
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "cno-onboarding-operator"
+
