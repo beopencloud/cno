@@ -1,0 +1,7 @@
+{{- if and (ne .Values.expose.type "nginx-ingress") (eq .Values.cluster.platform "kubernetes") }}
+Edit CNO API URL in UI
+kubectl -n {{ .Release.Namespace }} svc cno-api
+kubectl -n {{ .Release.Namespace }} set env deployment/cno-ui API_URL=<external_cno-api_url>
+{{- else }}
+kubectl -n {{ .Release.Namespace }} get ingress cno-api
+{{- end }}
