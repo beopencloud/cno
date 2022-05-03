@@ -48,7 +48,7 @@ cnoAgent:
 
 ```yaml
 git clone https://github.com/beopencloud/cno.git
-cd cno/deploy/helm/cno/control-plane
+cd cno/deploy/helm/control-plane
 helm install cno-agent ./ --namespace cno-system
 ```
 #### Uninstall CNO data-plane
