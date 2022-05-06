@@ -1,6 +1,6 @@
 apiVersion: v2
-name: cno-chart
-description: A Helm chart for Kubernetes
+name: cno
+description: Chart for CNO control plane
 
 # A chart can be either an 'application' or a 'library' chart.
 #

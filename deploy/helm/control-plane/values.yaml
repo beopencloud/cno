@@ -30,7 +30,7 @@ global:
       endpoint: /api/v1/healthy
     image:
       name: docker.io/beopenit/cno-api
-      version: v1.0.0-2022-04-26T16-50-51Z
+      version: v1.0.0
     # resources:
     #   requests:
     #     cpu: 100m
@@ -43,7 +43,7 @@ global:
 cnoUI:
   image:
     name: docker.io/beopenit/cno-ui
-    version: v1.0.0-2022-04-26T17-31-09Z
+    version: v1.0.0
   # resources:
   #   requests:
   #     cpu: 100m
