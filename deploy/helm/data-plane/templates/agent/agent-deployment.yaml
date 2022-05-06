@@ -32,9 +32,9 @@ spec:
           command: ["/bin/sh","-c"]
           args:
             - |
-              until curl -s -f -o /dev/null "{{ include "cno-agent.apiProtocol" . }}://{{ include "cno-agent.cnoAPIUrl" . }}{{ .Values.global.cnoAPI.heathCheck.endpoint }}"
+              until curl -s -f -o /dev/null "{{ include "cno-agent.cnoAPIUrl" . }}{{ .Values.global.cnoAPI.heathCheck.endpoint }}"
               do
-                echo cno API {{ include "cno-agent.apiProtocol" . }}://{{ include "cno-agent.cnoAPIUrl" . }}{{ .Values.global.cnoAPI.heathCheck.endpoint }} unvailable `date`
+                echo cno API {{ include "cno-agent.cnoAPIUrl" . }}{{ .Values.global.cnoAPI.heathCheck.endpoint }} unvailable `date`
                 sleep 10
               done
               echo Successed: `date`
