@@ -26,6 +26,7 @@ spec:
       labels:
         app: cno-agent
     spec:
+    {{- if .Values.defaultCluster }}
       initContainers:
         - name: cno-api-check
           image: {{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}
@@ -38,6 +39,7 @@ spec:
                 sleep 10
               done
               echo Successed: `date`
+    {{- end }}
       containers:
         - image: {{ .Values.cnoAgent.image.name }}:{{ .Values.cnoAgent.image.version }}
           imagePullPolicy: Always

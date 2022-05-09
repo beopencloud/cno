@@ -36,7 +36,7 @@ cnoAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/cno-agent
-    version: 1.0.0-rc
+    version: v1.0.0
   kafka:
     brokers: <kafka brokers>
   licence:
