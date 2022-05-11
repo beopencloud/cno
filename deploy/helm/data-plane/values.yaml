@@ -26,7 +26,7 @@ cnoOnboarding:
 cnoCD:
   image:
     name: docker.io/beopenit/cno-cd-operator
-    version: 1.0.0
+    version: v1.0.0
   # resources:
   #   requests:
   #     cpu: 100m

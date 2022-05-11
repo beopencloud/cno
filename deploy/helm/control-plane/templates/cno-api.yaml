@@ -127,8 +127,12 @@ spec:
 {{ include "cno-chart.databaseConfig" . | indent 12 }}
             - name: CREATE_DEFAULT_CLUSTER
               value: {{ .Values.agentConfig.defaultCluster | quote }}
+            {{- if and (eq .Values.expose.type "nginx-ingress") }}
             - name: DEFAULT_EXTERNAL_BROKERS_URL
-              value: {{ .Values.kafkaConfig.externalBrokersUrl }}
+              value: broker-0-cno.{{ .Values.expose.ingress.domain }}:443
+            - name: SERVER_URL
+              value: https://cno-api.{{ .Values.expose.ingress.domain }}
+            {{- end }}
             {{- if .Values.agentConfig.defaultCluster }}
             - name: DEFAULT_CLUSTER_ID
               value: {{ include "cno-chart.clusterAgentUuid" . }}

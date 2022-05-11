@@ -1,7 +1,12 @@
+============================================================
+INFO CNO installation success.
 {{- if and (ne .Values.expose.type "nginx-ingress") (eq .Values.cluster.platform "kubernetes") }}
-Edit CNO API URL in UI
-kubectl -n {{ .Release.Namespace }} svc cno-api
-kubectl -n {{ .Release.Namespace }} set env deployment/cno-ui API_URL=<external_cno-api_url>
+ CNO URL : https://cno.{{ expose.ingress.domain}}  
 {{- else }}
-kubectl -n {{ .Release.Namespace }} get ingress cno-api
+ Run the command below to get CNO URL
+ kubectl -n {{ .Release.Namespace }} get svc cno-ui
 {{- end }}
+ CNO Credentials: 
+ USERNAME: admin    PASSWORD: {{ superadmin.password }}
+============================================================
+
