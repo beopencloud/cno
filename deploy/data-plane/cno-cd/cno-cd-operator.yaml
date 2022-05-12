@@ -25,7 +25,7 @@ spec:
       serviceAccountName: cno-cd-operator
       containers:
       - name: cno-cd-operator
-        image: $CNO_CD_OPERATOR_IMAGE #beopenit/cno-cd-operator:latest
+        image: beopenit/cno-cd-operator:v1.0.0 #beopenit/cno-cd-operator:latest
         imagePullPolicy: Always
         env:
         - name: WATCH_NAMESPACE
