@@ -46,10 +46,9 @@ cnoAgent:
 
 #### Install CNO data-plane
 
-```yaml
-git clone https://github.com/beopencloud/cno.git
-cd cno/deploy/helm/control-plane
-helm install cno-agent ./ --namespace cno-system
+```shell
+helm repo add cno-repo https://beopencloud.github.io/cno
+helm install cno cno-repo/cno-agent --namespace cno-system --create-namespace
 ```
 #### Uninstall CNO data-plane
 

@@ -131,10 +131,8 @@ Set metricServer to false if you already have metric server installed in the clu
 ### Install CNO
 
 ```shell
-git clone https://github.com/beopencloud/cno.git
-cd cno/deploy/helm/control-plane
-helm dependency update ./
-helm install cno ./ --namespace cno-system --create-namespace
+helm repo add cno-repo https://beopencloud.github.io/cno
+helm install cno cno-repo/cno --namespace cno-system --create-namespace
 ```
 ### Deploy CNO UI
 Edit API_URL to put external CNO API url in API_URL
