@@ -1,0 +1,141 @@
+---
+cluster:
+  # kubernetes or openshift
+  platform: kubernetes
+  apiUrl: https://kubernetes.default.svc.cluster.local:443
+# expose type
+expose:
+  # values: loadbalancer, nodeport, route or nginx-ingress
+  type: nginx-ingress
+  # set if expose equal to route or nginx-ingress
+  ingress:
+    domain: dev.gocno.io
+# set super admin password (username admin)
+superadmin:
+  password: admin
+  # set secret if superadmin password is in custom secret
+  # secret:
+  #   name: cno-super-admin
+  #   key: PASSWORD
+
+global:
+  # cno-api config
+  cnoAPI:
+    protocol: https
+    internalServiceName: cno-api
+    heathCheck:
+      image:
+        name: docker.io/nginxinc/nginx-unprivileged
+        version: latest
+      endpoint: /api/v1/healthy
+    image:
+      name: docker.io/beopenit/cno-api
+      version: v1.0.0
+    # resources:
+    #   requests:
+    #     cpu: 100m
+    #     memory: 512Mi
+    #   limits:
+    #     cpu: 1
+    #     memory: 1Gi
+
+# cno-ui config
+cnoUI:
+  image:
+    name: docker.io/beopenit/cno-ui
+    version: v1.0.0
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 512Mi
+  #   limits:
+  #     cpu: 1
+  #     memory: 1Gi
+
+# kafka configuration
+kafkaConfig:
+  externalBrokersUrl: cno-kafka-cluster-kafka-external-bootstrap:9094
+  image:
+    name: quay.io/strimzi/kafka
+    version: 0.27.1-kafka-3.0.0
+  storage:
+    # ephemeral or persistent-claim
+    type: ephemeral
+    # set persistentVolumeClaim if type=persistent-claim
+    persistentVolumeClaim:
+      deleteClaim: true
+      size: 1Gi
+
+# kafka strimzi configuration
+strimziOperator:
+  # quay.io/strimzi/operator:0.27.1
+  image:
+    registry: quay.io
+    repository: strimzi
+    name: operator
+    tag: 0.27.1
+
+# Keycloak configuration
+keycloakConfig:
+  image:
+    name: quay.io/keycloak/keycloak
+    version: 15.1.1
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 512Mi
+  #   limits:
+  #     cpu: 100m
+  #     memory: 512Mi
+  admin:
+    username: admin
+    password: admin
+    # set secret to customize admin credentials ADMIN_USERNAME ADMIN_PASSWORD
+    # secret:
+    #   name: my-keycloak-credentials
+  service:
+    name: cno-keycloak
+    port: 8080
+    protocol: http
+  realm: cno
+  client:
+    id: cno-api
+    secret: cno-api-client-secret
+
+databaseConfig:
+  # internalDatabase=false if you have existing database
+  internalDatabase: true
+  # Only MYSQL database is supported at this time
+  type: MYSQL
+  host: cno-api-mysql
+  database: cnoapi
+  port: 3306
+  secret:
+    # Create secret and Overwrite DB_USERNAME DB_PASSWORD KEYS
+    name: cno-db-credentals
+  image:
+    name: docker.io/mysql
+    version: "8.0.28"
+  # uncomment if you want to mount volume
+#  persistentVolumeClaim:
+#     name: cno-database-pvc
+#     size: 500m
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 512Mi
+  #   limits:
+  #     cpu: 100m
+  #     memory: 512Mi
+
+agentConfig:
+  defaultCluster: false
+  defaultClusterType: EKS
+  cnoAgent:
+    metricServer: true
+    licence:
+      secret:
+        name: agent-licence
+    kafka:
+      brokers: cno-kafka-cluster-kafka-bootstrap:9093
+
