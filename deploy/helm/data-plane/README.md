@@ -1,12 +1,32 @@
 ## CNO data-plane helm chart
 
-### Requirements
+## Prerequisites
 - Kubernetes: 1.20, 1.21, 1.22
 
-```shell
-kubectl create namespace cno-system
+- ```shell
+   kubectl create namespace cno-system
+  ```
+## Get Repo Info
+
 ```
-### Configuration
+helm repo add cno-repo https://beopencloud.github.io/cno
+helm repo update 
+```
+
+## Install Chart CNO data-plane
+
+```
+helm install cno cno-repo/cno-agent --namespace cno-system --create-namespace
+```
+
+## Uninstall CNO data-plane
+
+```
+helm uninstall cno-agent --namespace cno-system
+kubectl delete namespace cno-system
+```
+
+## Configuration
 ```shell
 kubectl create secret generic my-licence \
 --from-literal=uuid=<uuid licence>
@@ -16,7 +36,7 @@ kubectl create secret generic my-licence \
 --namespace cno-system
 ```
 
-#### Config CNO API infos
+- __CNO API infos__
 
 ```yaml
 global:
@@ -28,7 +48,8 @@ global:
     ...
 ```
 
-#### Config CNO Agent
+- __Config CNO Agent__
+
 Set metricServer to false if you already have metric server installed in the cluster.
 
 ```yaml
@@ -42,17 +63,4 @@ cnoAgent:
   licence:
     secret:
       name: my-licence
-```
-
-#### Install CNO data-plane
-
-```shell
-helm repo add cno-repo https://beopencloud.github.io/cno
-helm install cno cno-repo/cno-agent --namespace cno-system --create-namespace
-```
-#### Uninstall CNO data-plane
-
-```
-helm uninstall cno-agent --namespace cno-system
-kubectl delete namespace cno-system
 ```
