@@ -1,10 +1,59 @@
-## CNO control-plane helm chart
+# CNO 
 
-### Requirements
-- Kubernetes: 1.20, 1.21, 1.22
-- Install metrics server (optional): if not installed, and you want to install CN0 control-plane with data-plane
+CNO is a unified platform that simplifies the adoption and use of Kubernetes in a multi-cloud ecosystem.
 
-### Configuration
+## Prerequisites
+  - A Kubernetes Cluster This Kubernetes cluster will host CNO's control plane and is the only cluster not managed within CNO.
+  - Supported Kubernetes Version: Kubernetes 1.20, 1.21. 1.22.
+
+## Get Repo Info
+
+```
+helm repo add cno-repo https://beopencloud.github.io/cno
+helm repo update 
+```
+
+__Value content example__
+
+    cluster:
+    # kubernetes or openshift
+      platform: kubernetes
+    # kubernetes api-server url
+      apiUrl: https://kubernetes-api-server-url
+    expose:
+    # values: loadbalancer, nodeport, route or nginx-ingress
+      type: nginx-ingress
+    # set if expose equal to route or nginx-ingress
+      ingress:
+        domain: dev.gocno.io
+    superadmin:
+      password: admin
+    agentConfig:
+      # cluster type eks, aks, gke, vanilla
+      defaultClusterType: EKS
+      cnoAgent:
+        metricServer: true
+
+## Install Chart
+
+```
+helm install cno cno-repo/cno -f values.yaml --namespace cno-system --create-namespace
+```
+
+## Uninstall Chart
+
+```
+helm uninstall cno
+```
+
+
+## Configuration 
+
+To see all configurable options with detailed comments, visit the chart's values.yaml, or run these configuration commands:
+
+```
+ helm show values cno-repo/cno
+```
 
 #### Set cluster type and api-server url 
  
@@ -15,24 +64,24 @@
    ...
  ```
 #### Expose type
-- ##### Loadbalancer
+- __Loadbalancer__
     ```yaml
     expose:
       type: loadbalancer
     ```
-- ##### NodePort
+- __NodePort__
     ```yaml
     expose:
       type: nodeport
     ```
-- ##### nginx-ingress (to test)
+- __nginx-ingress (to test)__
     ```yaml
     expose:
       type: nginx-ingress
       ingress:
         domain: <your domain>
     ```
-- ##### oenshift route (to test)
+- __openshift route (to test)__
     ```yaml
     expose:
       type: route
@@ -40,12 +89,12 @@
 #### Default super admin (after created it not possible to update password)
 the username of default super admin is _admin_
 
-- ##### Set password
+- __Set password__
     ```yaml
     superadmin:
       password: admin
     ```
-- ##### Pass password on secret
+- __Pass password on secret__
     ```shell
     kubectl create secret generic cno-super-admin \
     --from-literal=PASSWORD=admin \
@@ -57,8 +106,10 @@ the username of default super admin is _admin_
         name: cno-super-admin
         key: PASSWORD
     ```
-#### Kafka Config
-- #### Kafka ephemeral
+- __Kafka Config__
+  
+   - __Kafka ephemeral__
+  
     ```yaml
     kafkaConfig:
       externalBrokersUrl: <internal access to kafka>
@@ -66,7 +117,7 @@ the username of default super admin is _admin_
         type: ephemeral
       ...
     ```
-- #### Kafka persistent
+   - __Kafka persistent__
     ```yaml
     kafkaConfig:
       externalBrokersUrl: <internal access to kafka>
@@ -121,28 +172,9 @@ You can deploy mysql database with CNO or use an existing mysql database
 - ##### Deploy data-plane
 Set metricServer to false if you already have metric server installed in the cluster.
 
-    ```yaml
+  ```yaml
     agentConfig:
       defaultCluster: true
       metricServer: true
       ...
-    ```
-
-### Install CNO
-
-```shell
-helm repo add cno-repo https://beopencloud.github.io/cno
-helm install cno cno-repo/cno --namespace cno-system --create-namespace
-```
-### Deploy CNO UI
-Edit API_URL to put external CNO API url in API_URL
-```shell
-kubectl -n cno-system set env deployment/cno-ui API_URL=test-cluster
-```
-
-### Uninstall CNO
-
-```
-helm uninstall cno --namespace cno-system 
-kubectl delete namespace cno-system
-```
+  ```
