@@ -1,12 +1,12 @@
 ============================================================
 INFO CNO installation success.
 {{- if and (ne .Values.expose.type "nginx-ingress") (eq .Values.cluster.platform "kubernetes") }}
- CNO URL : https://cno.{{ expose.ingress.domain}}  
+ CNO URL : https://cno.{{ .Values.expose.ingress.domain}}  
 {{- else }}
  Run the command below to get CNO URL
  kubectl -n {{ .Release.Namespace }} get svc cno-ui
 {{- end }}
  CNO Credentials: 
- USERNAME: admin    PASSWORD: {{ superadmin.password }}
+ USERNAME: admin    PASSWORD: {{ .Values.superadmin.password }}
 ============================================================
 
