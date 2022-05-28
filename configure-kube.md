@@ -1,4 +1,3 @@
-
 # Configure  kubeconfig
 
 ### Option 1: Configure Kubeconfig with your Cloud Provider CLI
@@ -51,4 +50,4 @@ Find more information on [Red Hat OpenShift Docs](https://docs.openshift.com/con
 
 ### Option 2: Configure Kubeconfig manually
 
-If you installed kubernetes on bare Metal, via kubeadm or with any other distribution (e.g. Rancher...) you can follow  Kubernetes documentaion via [kubernetes.io](https://kubernetes.io/fr/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+If you installed Kubernetes on bare Metal, via kubeadm, or with any other distribution (e.g., Rancher...), you can follow  Kubernetes documentation via [kubernetes.io](https://kubernetes.io/fr/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)

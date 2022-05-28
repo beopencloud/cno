@@ -1,11 +1,11 @@
-# Cno helm chart
+# CNO helm chart
 
-# Install CNO Control plane
+## Install CNO Control plane
 ```
 helm repo add cno-repo https://beopencloud.github.io/cno
 helm install cno cno-repo/cno -f values.yaml
 ```
-# Values sample
+## Values sample
 ```
 cluster:
 # kubernetes or openshift
