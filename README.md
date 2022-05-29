@@ -1,6 +1,6 @@
  # CNO<br/>Cloud Native Onboarding
 
- **CNO is a unified platform that simplifies the adoption and use of Kubernetes in a multi-cloud ecosystem.**
+**CNO is your Operations Center for Kubernetes -- a single management platform for Admins in a hybrid / multi-cloud ecosystem, a common experience for multiple Ops & Dev teams.**
 
 Through its interface, you can centralize, monitor, and automate the management of all your existing Kubernetes environments (cloud-based and on-premise) into the most straightforward adoption framework.
 
@@ -61,7 +61,9 @@ Suppose you only want to work with Kubernetes in specific scenarios but don't wa
  
 ## Core concepts
 
-Only four concepts, i.e., four steps, to achieve onboarding and deploying at scale
+Only four concepts, i.e., four steps, to achieve onboarding and deploying at scale.
+
+CNO core components run on Kubernetes, with remote agents in each of the other Kubernetes clusters in its scope. All CNO features are exposed through a REST API, a command-line tool, and a web User Interface.
 
 ### CNO Hub
 
