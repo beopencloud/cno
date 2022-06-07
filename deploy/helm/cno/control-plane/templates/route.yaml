@@ -1,4 +1,5 @@
 {{- if and (eq .Values.expose.type "route") (eq .Values.cluster.platform "openshift") }}
+---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -10,6 +11,24 @@ spec:
   to:
     kind: Service
     name: cno-api
+    weight: 100
+  wildcardPolicy: None
+  {{- if eq .Values.global.cnoAPI.protocol "https" }}
+  tls:
+    termination: edge
+  {{- end }}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  to:
+    kind: Service
+    name: cno-ui
     weight: 100
   wildcardPolicy: None
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
