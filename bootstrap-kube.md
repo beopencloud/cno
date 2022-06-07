@@ -2,7 +2,7 @@
 
 #### Amazon Elastic Kubernetes Service (EKS)
 
-It's easier to create a cluster with eksctl cli. At first, you need to install [eksctl](https://eksctl.io/introduction/#installation), then bootrap your eks cluster the following command:
+It's easier to create a cluster with eksctl cli. At first, you need to install [eksctl](https://eksctl.io/introduction/#installation), then bootstrap your eks cluster with the following command:
 
 ```
 export AWS_REGION="francecentral"
