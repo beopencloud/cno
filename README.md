@@ -110,9 +110,13 @@ CNO Secure helps you scan your infrastructure and ensure your clusters are compl
 You can refer to our documentation to try CNO:
 
 [Quickstart > ](https://gocno.io/docs/start/quickstart/)
+
 [Install CNO's CLI >](https://gocno.io/docs/start/cnocli/)
+
 [Tutorial: Multi-Cloud Management >](https://gocno.io/docs/tutorials/multi-cloud-management/)
+
 [Tutorial: Onboarding Projects and Teams >](https://gocno.io/docs/tutorials/onboard-project-team/)
+
 [Tutorial: Continuous Deployments with CNO >](https://gocno.io/docs/tutorials/continuous-deployment/)
 
 ## Support & Contributions Guidelines
@@ -142,10 +146,10 @@ At the top right of the github repository, click on the "Fork" button. This will
 - Create a pull request (click on "Create pull request").
 
 #### Specific contributions
-    > To contribute to CNO's API, please refer to [CNO's API Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-api_contributions.md)
-    > To contribute to CNO's Agent, please refer to [CNO's Agent Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-agent_contributions.md)
-    > To contribute to CNO's Kubernetes Operator, please refer to [CNO's K8S Operator Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-k8s-operator_contributions.md)
-    > To contribute to CNO's Notification System, please refer to [CNO's Notification Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-notification_contributions.md)
+- To contribute to CNO's API, please refer to [CNO's API Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-api_contributions.md)
+- To contribute to CNO's Agent, please refer to [CNO's Agent Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-agent_contributions.md)
+- To contribute to CNO's Kubernetes Operator, please refer to [CNO's K8S Operator Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-k8s-operator_contributions.md)
+- To contribute to CNO's Notification System, please refer to [CNO's Notification Contribution Guide](https://github.com/beopencloud/cno/blob/main/contributor_guide/cno-notification_contributions.md)
 
 ### Support
 
