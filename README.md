@@ -2,7 +2,9 @@
 
 **CNO is your Operations Center for Kubernetes -- a single management platform for Admins in a hybrid / multi-cloud ecosystem, a common experience for multiple Ops & Dev teams.**
 
-Through its interface, you can centralize, monitor, and automate the management of all your existing Kubernetes environments (cloud-based and on-premise) into the most straightforward adoption framework.
+CNO core components run on Kubernetes, with remote agents in each of the other Kubernetes clusters in its scope. All CNO features are exposed through a REST API, a command-line tool, and a web User Interface.
+
+Through CNO, you can take advantage of the Kubernetes ecosystem and set up the best Onboarding Experience for your Teams. 
 
 -   Website: [gocno.io](http://www.gocno.io)
 -   Full Documentation : [https://gocno.io/documentation](https://gocno.io/documentation/what-is-cno)
@@ -37,7 +39,7 @@ If you encounter any difficulties during your journey on CNO, don't hesitate to 
 
 - Allows you to deploy your applications faster by choosing the advanced deployment strategy that best suits your use case: Blue/Green, Canary, or A/B Testing
 
-## For what and for whom?
+## Audience
 ### What uses-cases CNO covers?
 
 Introducing Kubernetes is not easy for companies. Due to its natural complexity and youth, aligning people, hardware needs, and business goals is a real challenge.
