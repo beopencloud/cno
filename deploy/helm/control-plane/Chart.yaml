@@ -28,6 +28,7 @@ dependencies:
     version: "0.27.1"
     repository: "https://strimzi.io/charts"
     alias: strimziKafkaOperator
+    namespace: cno-system
   - name: cno-agent
     version: "1.0.0"
     repository: "file://../data-plane"
