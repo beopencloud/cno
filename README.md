@@ -1,6 +1,6 @@
  # CNO<br/>Cloud Native Onboarding
 
-**CNO is your Operations Center for Kubernetes -- a single management platform for Admins in a hybrid / multi-cloud ecosystem, a common experience for multiple Ops & Dev teams.**
+**CNO is your Operations Center for Kubernetes &ndash; a single management platform for Admins in a hybrid / multi-cloud ecosystem; a common experience for multiple Ops & Dev teams.**
 
 CNO core components run on Kubernetes, with remote agents in each of the other Kubernetes clusters in its scope. All CNO features are exposed through a REST API, a command-line tool, and a web User Interface.
 
@@ -11,33 +11,33 @@ Through CNO, you can take advantage of the Kubernetes ecosystem and set up the b
 -   Community : [CNO's slack](https://gocno.slack.com)
 
 **Your feedback is valuable:** We are particularly attentive to your experience with CNO. 
-If you encounter any difficulties during your journey on CNO, don't hesitate to get in touch with us at [cno@beopenit.com](mailto:cno@beopenit.com) or directly create an issue in this project.
+If you face any issue during your journey on CNO, don't hesitate to get in touch with us at [cno@beopenit.com](mailto:cno@beopenit.com) or directly create an issue in this project.
 
 ## Summary
-* Key features and advantages
+* [Key features and advantages](#Key-features-and-advantages)
 
-* For what and for whom?
+* [Audience](#audience)
 
-* Core Concepts
+* [Core Concepts](#core-concepts)
 
-* Getting Started
+* [Getting Started](#getting-started)
 
-* Support
+* [Support & Contributions Guidelines](#support--contributions-guidelines)
 
-* Roadmap
+* [Roadmap](#roadmap)
 
 
 ## Key features and advantages
 
-- Centralizes all your Kubernetes clusters in a single platform: public or on-premise.
+- Centralize all your Kubernetes clusters in a single platform: public or on-premise.
 
-- Adds, Deletes, Updates, and Monitors all your Kubernetes clusters in the CNO Hub.
+- Add, Delete, Update, and Monitor all your Kubernetes clusters in the CNO Hub.
 
-- Defines and Applies Kubernetes Implementation Framework for your company through Tagging Strategy, Resource Quota Strategy, and IAM Strategy.
+- Define and Apply Kubernetes Implementation Framework for your company through Tagging Strategy, Resource Quota Strategy, and IAM Strategy.
 
-- Onboards all your teams into CNO and lets them define their projects, onboard their team members, and multi-cloud environments.
+- Onboard all your teams into CNO and let them define their projects, onboard their team members &ndash; on multi-cloud environments.
 
-- Allows you to deploy your applications faster by choosing the advanced deployment strategy that best suits your use case: Blue/Green, Canary, or A/B Testing
+- Deploy your applications faster by choosing the strategy that fits your use-case: Blue/Green, Canary, or A/B Testing
 
 ## Audience
 ### What uses-cases CNO covers?
