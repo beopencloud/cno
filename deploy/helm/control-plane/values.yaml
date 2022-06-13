@@ -129,7 +129,7 @@ databaseConfig:
   #     memory: 512Mi
 
 agentConfig:
-  defaultCluster: false
+  defaultCluster: true
   defaultClusterType: EKS
   cnoAgent:
     metricServer: true
