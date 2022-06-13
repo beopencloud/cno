@@ -949,7 +949,7 @@ spec:
       serviceAccountName: onboarding-operator-kubernetes
       containers:
       - name: onboarding-operator-kubernetes
-        image: $CNO_ONBOARDING_OPERATOR_IMAGE #beopenit/onboarding-operator-kubernetes:latest
+        image: beopenit/onboarding-operator-kubernetes:v1.0.0 #beopenit/onboarding-operator-kubernetes:latest
         imagePullPolicy: Always
         env:
         - name: WATCH_NAMESPACE

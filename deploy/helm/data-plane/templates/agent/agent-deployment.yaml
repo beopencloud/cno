@@ -1,0 +1,98 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "3"
+    fluxcd.io/automated: 'true'
+  labels:
+    app: cno-agent
+  name: cno-agent
+  namespace: {{ .Release.Namespace }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: cno-agent
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cno-agent
+    spec:
+    {{- if .Values.defaultCluster }}
+      initContainers:
+        - name: cno-api-check
+          image: {{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              until curl -s -f -o /dev/null "{{ include "cno-agent.cnoAPIUrl" . }}{{ .Values.global.cnoAPI.heathCheck.endpoint }}"
+              do
+                echo cno API {{ include "cno-agent.cnoAPIUrl" . }}{{ .Values.global.cnoAPI.heathCheck.endpoint }} unvailable `date`
+                sleep 10
+              done
+              echo Successed: `date`
+    {{- end }}
+      containers:
+        - image: {{ .Values.cnoAgent.image.name }}:{{ .Values.cnoAgent.image.version }}
+          imagePullPolicy: Always
+          name: cno-agent
+          resources:
+          {{- if hasKey .Values.cnoAgent "resources" }}
+          {{- toYaml .Values.cnoAgent.resources | nindent 12 }}
+          {{- end }}
+          env:
+            - name: IN_CLUSTER
+              value: "true"
+            - name: KAFKA_TlS_ENABLED
+              value: "true"
+            - name: KAFKA_BROKERS
+              value: {{ .Values.cnoAgent.kafka.brokers }}
+            - name: KAFKA_CA_CERT
+              {{- if .Values.defaultCluster }}
+              value: /kafka/ca/ca.crt
+              {{- else }}
+              value: /kafka/user/ca.crt
+              {{- end }}
+            - name: KAFKA_CLIENT_CERT
+              value: /kafka/user/user.crt
+            - name: KAFKA_CLIENT_KEY
+              value: /kafka/user/user.key
+            - name: LICENCE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "cno-agent.licenceSecret" . }}
+                  key: uuid
+          volumeMounts:
+            - name: kafka-user
+              mountPath: /kafka/user
+            {{- if .Values.defaultCluster }}
+            - name: kafka-ca
+              mountPath: /kafka/ca
+            {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: cno-agent
+      volumes:
+        - name: kafka-user
+          secret:
+            {{- if .Values.defaultCluster }}
+            secretName: cno-kafka-superadmin
+            {{- else }}
+            secretName: {{ include "cno-agent.licenceSecret" . }}
+            {{- end }}
+        {{- if .Values.defaultCluster }}
+        - name: kafka-ca
+          secret:
+            secretName: cno-kafka-cluster-cluster-ca-cert
+        {{- end }}

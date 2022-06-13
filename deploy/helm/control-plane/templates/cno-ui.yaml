@@ -1,0 +1,92 @@
+{{- if eq .Values.cluster.platform "openshift" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cno-scc
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+  - kind: User
+    name: system:serviceaccount:{{.Release.Namespace}}:default
+{{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cno-ui
+  template:
+    metadata:
+      labels:
+        app: cno-ui
+    spec:
+      initContainers:
+        - name: cno-api-check
+          image: {{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              until curl -s -f -o /dev/null "http://{{ .Values.global.cnoAPI.internalServiceName }}{{ .Values.global.cnoAPI.heathCheck.endpoint }}"
+              do
+                echo cno API http://{{ .Values.global.cnoAPI.internalServiceName }}{{ .Values.global.cnoAPI.heathCheck.endpoint }} unvailable `date`
+                sleep 10
+              done
+              echo Successed: `date`
+      containers:
+        - image: {{ .Values.cnoUI.image.name }}:{{ .Values.cnoUI.image.version }}
+          name: cno-ui
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          {{- if hasKey .Values.cnoUI "resources" }}
+          resources:
+          {{- toYaml .Values.cnoUI.resources | nindent 12 }}
+          {{- end }}
+          env:
+            {{- if and (eq .Values.expose.type "nginx-ingress") (eq .Values.cluster.platform "kubernetes") }}
+            - name: API_URL
+              value: {{ .Values.global.cnoAPI.protocol }}://cno-api.{{ .Values.expose.ingress.domain }}
+            - name: NOTIFICATION_URL
+              value: {{ .Values.global.cnoAPI.protocol }}://cno-api.{{ .Values.expose.ingress.domain }}
+            {{- else }}
+            - name: API_URL
+              value: {{ .Values.global.cnoAPI.protocol }}://cno-api-url
+            - name: NOTIFICATION_URL
+              value: {{ .Values.global.cnoAPI.protocol }}://cno-api-url
+            {{- end }}
+            - name: OIDC_CLIENT_ID
+              value: "public"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cno-ui
+  name: cno-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: cno-ui
+  {{- if eq .Values.expose.type "loadbalancer" }}
+  type: LoadBalancer
+  {{- else }}
+  {{- if eq .Values.expose.type "nodeport" }}
+  type: NodePort
+  {{- else }}
+  type: ClusterIP
+  {{- end }}
+  {{- end }}
