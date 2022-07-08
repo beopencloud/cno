@@ -16,3 +16,6 @@ agentConfig:
   defaultClusterType: EKS
   cnoAgent:
     metricServer: true
+ persistentVolumeClaim:
+    name: cno-database-pvc
+    size: 500Mi
