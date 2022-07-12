@@ -89,7 +89,7 @@ keycloakConfig:
   #     memory: 512Mi
   admin:
     username: admin
-    password: admin
+    password: cno@2022!
     # set secret to customize admin credentials ADMIN_USERNAME ADMIN_PASSWORD
     # secret:
     #   name: my-keycloak-credentials
