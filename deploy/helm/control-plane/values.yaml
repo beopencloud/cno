@@ -12,7 +12,7 @@ expose:
     domain: dev.gocno.io
 # set super admin password (username admin)
 superadmin:
-  password: admin
+  password: cno@2022!
   # set secret if superadmin password is in custom secret
   # secret:
   #   name: cno-super-admin
