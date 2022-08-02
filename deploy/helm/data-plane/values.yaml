@@ -38,7 +38,7 @@ cnoAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/cno-agent
-    version: v1.0.1-staging
+    version: v1.0.1
   # resources:
   #   requests:
   #     cpu: 100m
