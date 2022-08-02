@@ -44,7 +44,7 @@ global:
 cnoUI:
   image:
     name: docker.io/beopenit/cno-ui
-    version: v1.0.0
+    version: v1.0.1
   # resources:
   #   requests:
   #     cpu: 100m
@@ -131,7 +131,7 @@ databaseConfig:
 
 agentConfig:
   defaultCluster: true
-  defaultClusterType: EKS
+  defaultClusterType: eks
   cnoAgent:
     metricServer: true
     licence:
