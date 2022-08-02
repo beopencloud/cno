@@ -9,6 +9,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  
   name: cno-cd-operator
   namespace: {{ .Release.Namespace }}
 spec:
@@ -18,14 +19,36 @@ spec:
       app: cno-cd-operator
   template:
     metadata:
+      annotations:
+         kubectl.kubernetes.io/default-container: manager
       labels:
         app: cno-cd-operator
     spec:
+      securityContext:
+        runAsNonRoot: true
       serviceAccountName: cno-cd-operator
       containers:
-        - name: cno-cd-operator
+        - command:
+          - /manager
+          args:
+          - --leader-elect
+          name: cno-cd-operator
           image: {{ .Values.cnoCD.image.name }}:{{ .Values.cnoCD.image.version }}
+          securityContext:
+            allowPrivilegeEscalation: false
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
           resources:
           {{- if hasKey .Values.cnoCD "resources" }}
           {{- toYaml .Values.cnoCD.resources | nindent 12 }}
@@ -47,51 +70,127 @@ metadata:
   name: cno-cd-operator
 rules:
   - apiGroups:
-      - ""
+    - ""
     resources:
-      - namespaces
-      - pods
-      - services
+    - namespaces
     verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
   - apiGroups:
-      - apps
+    - ""
     resources:
-      - daemonsets
+    - services
     verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
   - apiGroups:
-      - apps
+    - apps
     resources:
-      - deployments
+    - daemonsets
     verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
   - apiGroups:
-      - apps
+    - apps
     resources:
-      - statefulsets
+    - deployments
     verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+  - apiGroups:
+    - apps
+    resources:
+    - statefulsets
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+  - apiGroups:
+    - cnocd.beopenit.com
+    resources:
+    - workloads
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - cnocd.beopenit.com
+    resources:
+    - workloads/status
+    verbs:
+    - get
+    - patch
+    - update
+  - apiGroups:
+    - coordination.k8s.io
+    resources:
+    - leases
+    verbs:
+    - create
+    - get
+    - list
+    - update
+  - apiGroups:
+    - ""
+    resources:
+    - persistentvolumeclaims
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - serviceaccounts
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+  - apiGroups:
+    - networking.k8s.io
+    resources:
+    - ingresses
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+  - apiGroups:
+    - storage.k8s.io
+    resources:
+    - storageclasses
+    verbs:
+    - get
+    - list
+    - watch
   - apiGroups:
       - cnocd.beopenit.com
     resources:
@@ -112,18 +211,7 @@ rules:
       - get
       - patch
       - update
-  - apiGroups:
-      - extensions
-    resources:
-      - ingresses
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
-
+ 
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -149,32 +237,36 @@ metadata:
   namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups:
-      - ""
+    - ""
     resources:
-      - configmaps
+    - configmaps
     verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
   - apiGroups:
-      - ""
+    - coordination.k8s.io
     resources:
-      - configmaps/status
+    - leases
     verbs:
-      - get
-      - update
-      - patch
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
   - apiGroups:
-      - ""
+    - ""
     resources:
-      - events
+    - events
     verbs:
-      - create
-      - patch
+    - create
+    - patch
 
 ---
 
@@ -191,3 +283,67 @@ subjects:
   - kind: ServiceAccount
     name: cno-cd-operator
     namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: proxy-role
+subjects:
+- kind: ServiceAccount
+  name: cno-cd-operator
+  namespace: {{ .Release.Namespace }}
+
+--- 
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metrics-reader
+rules:
+- nonResourceURLs:
+  - "/metrics"
+  verbs:
+  - get
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cno-cd-operator
+  name: controller-manager-metrics-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app: cno-cd-operator

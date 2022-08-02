@@ -29,7 +29,7 @@ dependencies:
     repository: "https://strimzi.io/charts"
     alias: strimziKafkaOperator
   - name: cno-agent
-    version: "1.0.0"
+    version: "1.0.1"
     repository: "file://../data-plane"
     alias: agentConfig
     condition: agentConfig.defaultCluster
