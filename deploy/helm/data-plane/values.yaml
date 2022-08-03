@@ -10,7 +10,7 @@ global:
         version: latest
       endpoint: /api/v1/healthy
 # set defaultCluster=true if cluster content control plane
-defaultCluster: true
+defaultCluster: false
 defaultClusterType: EKS
 cnoOnboarding:
   image:
