@@ -56,7 +56,7 @@ entries:
     name: cno-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/charts/cno-agent-1.0.1.tgz
+    - https://beopencloud.github.io/cno/cno-agent-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.0.0
