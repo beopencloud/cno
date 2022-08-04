@@ -32,7 +32,7 @@ spec:
     spec:
       initContainers:
         - name: cno-api-check
-          image: {{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}
+          image: {{ .Values.global.cnoAPI.heathCheck.image.registry }}/{{ .Values.global.cnoAPI.heathCheck.image.repository }}/{{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}
           command: ["/bin/sh","-c"]
           args:
             - |
@@ -43,7 +43,7 @@ spec:
               done
               echo Successed: `date`
       containers:
-        - image: {{ .Values.cnoUI.image.name }}:{{ .Values.cnoUI.image.version }}
+        - image: {{ .Values.cnoUI.image.registry }}/{{ .Values.cnoUI.image.repository }}/{{ .Values.cnoUI.image.name }}:{{ .Values.cnoUI.image.version }}
           name: cno-ui
           imagePullPolicy: Always
           ports:

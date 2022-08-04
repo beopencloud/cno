@@ -33,7 +33,7 @@ spec:
         app: cno-mysql
     spec:
       containers:
-        - image: {{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}
+        - image: {{ .Values.databaseConfig.image.repository }}/{{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}
           name: mysql
           {{- if hasKey .Values.databaseConfig "resources" }}
           resources:
