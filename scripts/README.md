@@ -1,92 +1,100 @@
-# Quick Installation
+# User Guide
+## Install
 
-## Prerequisites
+    GO111MODULE=on go get github.com/beopenitcloud/cnoctl
+    
+###### NB:
+Make sure you have $GOPATH/bin in your path or move $GOPATH/bin/cno binary in a folder of your path 
 
-CNO supports Kubernetes **v1.16** or higher.
+## Commandes
+### config
+This command allows you to config the cno cli so that it can communicate correctly with the sso and the cno api
 
-**Important** Make sure your kubectl CLI is correctly configured. If you need help configuring the Kubernetes environment, follow [kubectl configuration ](configure-kube.md) documentation.
+Flags:
 
-**Important** If you are a beginner and don't have a Kubernetes cluster ready to use, you can follow [Bootstrap Kubernetes Cluster on any cloud provider in 1 minute](bootstrap-kube.md) documentation.
+|        name          |        description                             |           value example          |
+|----------------------|------------------------------------------------|----------------------------------|
+| server-url           |   application api URL                          | https://cno.beopenit.com         |
+| organization         |   name of the organization                     | default                         |
+
+Use:
+    
+    cnoctl config --server-url=https://cno.beopenit.com --organization=default
 
 
-#### Define your Ingress Controller multidomain.
+###### NB:
+If an flags is not set, the cli will invite you to enter his value 
+### get
+This command have tho others subcommand: env and project
+#### get project
+This command displays the list of projects to which you have access.
 
+Flags:
 
-```
-export INGRESS_DOMAIN=apps.example.com
-```
-If your INGRESS_DOMAIN is **apps.example.com**, CNO will create **cno.apps.example.com** ingress resource.
+|        name        |        description                          |
+|--------------------|---------------------------------------------|
+| username           |   your username                             |
+| password           |   your password                             |
 
-Your Ingress Controller needs to support SSL passthrough. Most Ingress controllers (NGINX, OpenShift Router, and Traefic) support SSL passthrough. Ensure that the SSL passthrough parameter is activated in your Kubernetes Ingress Controller or OpenShift Router.
+Use:
+    
+    cnoctl get project
 
-**Important** If you are a beginner and don't have an ingress controller in your Kubernetes cluster ready to use, you can follow [Install NGINX INGRESS Controller](bootstrap-ingress.md) documentation.
+#### get env
+This command displays the list of environment of a project.
 
-##### AWS Elastic Kubernetes Service (EKS) and Azure Kubernetes Service (AKS)
+Flags:
 
-Run the following command if you installed CNO in a Kubernetes cluster with PSP (Pod Security Policy) activated, such as EKS and AKS.
+|        name        |        description                          |
+|--------------------|---------------------------------------------|
+| project            |   name of the project                       |
+| username           |   your username                             |
+| password           |   your password                             |
 
-```
-export CNO_POD_POLICY_ACTIVITED=true
-```
+Use:
+    
+    cnoctl get env --project=<your-project>
 
-### Install CNO
+NB:
+If project flag is empty the cli will use the current project.
 
-> if your cluster has PSPs, set the CNO_POD_POLICY_ACTIVITED variable to true before installation:
+### use
+This command have an other subcommand: env
 
-```
-export CNO_POD_POLICY_ACTIVITED=true
-```
+#### use env
+This command allows you to have a valid kubeconfig allowing you to interact with the cluster on which the environment is deployed.
+The generated kubeconfig contains a certificate with your username as CN signed by the cluster k8s.
+Which will allow the k8s cluster to identify you. 
 
-#### 1. install using ingress to expose applications
+Flags:
 
-> You must provide a domain name for the ingress resources
+|        name        |        description                          |
+|--------------------|---------------------------------------------|
+| project            |   id of the project                         |
+| env (-e)           |   id of the environment you want to use  |
+| username           |   your username                             |
+| password           |   your password                             |
 
-> Replace \<namespace> with the desired target namespace. default is cno-system
+Use:
 
-```
-export INGRESS_DOMAIN=cluster1.beopenit.com"
-export CNO_VERSION=1.0.0-rc
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install.sh | sh -s -- -n <namespace>
-```
+    cnoctl use env --project=<your-project>  --e <your-env>
+    
+###### NB:
+- If env flag not set, the cli will invite you to select an environment from the list of project environments to which you have access
+- If project flags is empty the cli will use the current project if it exist. if not the cli will invite you to select the project 
 
-#### 2. install using service type LoadBalancer to expose applications
+# Developer's Guide
 
-> Replace \<namespace> with the desired target namespace. default is cno-system
+## Create and publish a new release
+1. Create a new tag and publish them
 
-```
-export CNO_VERSION=1.0.0-rc
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-lb.sh | sh -s -- -n <namespace>
-```
+        git tag -a v0.1.0 -m "First release"
+        git push origin v0.1.0
 
-#### 3. install using service type NodePort to expose applications
+2. Create a github access token and export GITHUB_TOKEN variable
 
-> You must give an address as the endpoint for the node ports, e.g., "LOADBALANCER_IP=x.x.x.x." could be one of the cluster nodes or a load balancer IP.
+        export GITHUB_TOKEN=<acces-token>
+        
+3. Create and publish the release
 
-> Replace \<namespace> with the desired target namespace. default is cno-system
-
-```
-export CNO_VERSION=1.0.0-rc
-export LOADBALANCER_IP=x.x.x.x
-curl -sSL https://raw.githubusercontent.com/beopencloud/cno/$CNO_VERSION/scripts/control-plane/install-nodeport.sh | sh -s -- -n <namespace>
-```
-####  Enjoy
-
-You can log in to your CNO console via cno.$INGRESS_DOMAIN if you installed with ingress or via the load balancer and node port addresses.
-You will see CNO URL and credentials in the post-installation output.
-
-```
-============================================================
-  INFO CNO installation success.
-     cno.apps.example.com  CNO Credentials USERNAME: admin    PASSWORD: xxxxxxxxxxxxxxxx
-============================================================
-```
-
-Now you can start onboarding your IT teams and projects and add clusters to CNO HUB.
-
-# Register a cluster into CNO Hub
-
-1. In the CNO Console, go to the clusters Hub page.
-2. Select Add Cluster.
-3. Enter a name for the cluster.
-4. Enter the cluster type (***EKS, AKS, GKE, Kubernetes, or OpenShift***) and click on Add Cluster
-5. Copy output commands and install the CNO agent in your new cluster.
+        goreleaser --rm-dist
