@@ -122,6 +122,8 @@ spec:
               value: "false"
             - name: KAFKA_CLUSTER_NAMESPACE
               value:  {{ .Release.Namespace }}
+            - name: UI_URL
+              value: https://cno.{{ .Values.expose.ingress.domain }}
             - name: KAFKA_CLUSTER_NAME
               value: cno-kafka-cluster
 {{ include "cno-chart.databaseConfig" . | indent 12 }}
