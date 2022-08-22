@@ -16,7 +16,7 @@ helm repo update
 ## Install Chart CNO data-plane
 
 ```
-helm install cno cno-repo/cno-agent --namespace cno-system --create-namespace
+helm install cno cno-repo/cno-agent --namespace cno-system --create-  namespace
 ```
 
 ## Uninstall CNO data-plane
