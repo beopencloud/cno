@@ -51,6 +51,8 @@ spec:
           env:
             - name: IN_CLUSTER
               value: "true"
+            - name: CNO_NAMESPACE
+              value: {{ .Release.Namespace }}
             - name: KAFKA_TlS_ENABLED
               value: "true"
             - name: KAFKA_BROKERS

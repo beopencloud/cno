@@ -12,6 +12,7 @@ export BINLOCATION="/usr/local/bin"
 ###############################
 
 version=$(curl -sI https://github.com/$OWNER/$REPO/releases/latest | grep -i "location:" | awk -F"/" '{ printf "%s", $NF }' | tr -d '\r')
+echo "Vesrion $version"
 if [ ! $version ]; then
     echo "Failed while attempting to install $REPO. Please manually install:"
     echo ""
@@ -69,10 +70,10 @@ getPackage() {
     ;;
     esac
 
-    versionWithoutV=$(echo "$version" | tr v _)    
-    targetFile="$(pwd)/cnoctl${versionWithoutV}${suffix}.tar.gz"
+#    versionWithoutV=$(echo "$version" | tr v _)    
+    targetFile="$(pwd)/cnoctl${version}${suffix}.tar.gz"
 
-    url=https://github.com/$OWNER/$REPO/releases/download/$version/cnoctl${versionWithoutV}${suffix}.tar.gz
+    url=https://github.com/$OWNER/$REPO/releases/download/$version/cnoctl_${version}${suffix}.tar.gz
     echo "Downloading package $url as $targetFile"
 
     curl -sSL $url --output "$targetFile"
