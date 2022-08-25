@@ -33,10 +33,12 @@ spec:
       labels:
         app: cno-onboarding-operator
     spec:
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets }}"
       serviceAccountName: cno-onboarding-operator
       containers:
         - name: cno-onboarding-operator
-          image: {{ .Values.cnoOnboarding.image.name }}:{{ .Values.cnoOnboarding.image.version }}
+          image: "{{ .Values.cnoOnboarding.image.registry }}/{{ .Values.cnoOnboarding.image.repository }}/{{ .Values.cnoOnboarding.image.name }}:{{ .Values.cnoOnboarding.image.version }}"
           imagePullPolicy: Always
           resources:
           {{- if hasKey .Values.cnoOnboarding "resources" }}

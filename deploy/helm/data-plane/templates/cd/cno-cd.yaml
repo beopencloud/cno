@@ -21,10 +21,12 @@ spec:
       labels:
         app: cno-cd-operator
     spec:
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets }}"
       serviceAccountName: cno-cd-operator
       containers:
         - name: cno-cd-operator
-          image: {{ .Values.cnoCD.image.name }}:{{ .Values.cnoCD.image.version }}
+          image: "{{ .Values.cnoCD.image.registry }}/{{ .Values.cnoCD.image.repository }}/{{ .Values.cnoCD.image.name }}:{{ .Values.cnoCD.image.version }}"
           imagePullPolicy: Always
           resources:
           {{- if hasKey .Values.cnoCD "resources" }}

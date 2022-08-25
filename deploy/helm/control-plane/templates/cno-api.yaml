@@ -46,9 +46,11 @@ spec:
       labels:
         app: cno-api
     spec:
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets }}"
       initContainers:
         - name: keycloak-check
-          image: {{ .Values.keycloakConfig.image.registry }}/{{ .Values.keycloakConfig.image.repository }}/{{ .Values.keycloakConfig.image.name }}:{{ .Values.keycloakConfig.image.version }}
+          image: "{{ .Values.keycloakConfig.image.registry }}/{{ .Values.keycloakConfig.image.repository }}/{{ .Values.keycloakConfig.image.name }}:{{ .Values.keycloakConfig.image.version }}"
           command: ["/bin/sh","-c"]
           args:
             - |
@@ -58,7 +60,7 @@ spec:
               done
               echo Successed: `date`
         - name: kafka-check
-          image: {{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
+          image: "{{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}"
           env:
             - name: KAFKA_BROKERS
               value: cno-kafka-cluster-kafka-bootstrap:9092
@@ -77,7 +79,7 @@ spec:
                  sleep 5
               done
       containers:
-        - image: {{ .Values.global.cnoAPI.image.registry }}/{{ .Values.global.cnoAPI.image.repository }}/{{ .Values.global.cnoAPI.image.name }}:{{ .Values.global.cnoAPI.image.version }}
+        - image: "{{ .Values.global.cnoAPI.image.registry }}/{{ .Values.global.cnoAPI.image.repository }}/{{ .Values.global.cnoAPI.image.name }}:{{ .Values.global.cnoAPI.image.version }}"
           imagePullPolicy: Always
           name: cno-api
           {{- if hasKey .Values.global.cnoAPI "resources" }}

@@ -26,10 +26,12 @@ spec:
       labels:
         app: cno-agent
     spec:
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets }}"
     {{- if .Values.defaultCluster }}
       initContainers:
         - name: cno-api-check
-          image: {{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}
+          image: "{{ .Values.global.cnoAPI.heathCheck.image.registry }}/{{ .Values.global.cnoAPI.heathCheck.image.repository }}/{{ .Values.global.cnoAPI.heathCheck.image.name }}:{{ .Values.global.cnoAPI.heathCheck.image.version }}"
           command: ["/bin/sh","-c"]
           args:
             - |
@@ -41,7 +43,7 @@ spec:
               echo Successed: `date`
     {{- end }}
       containers:
-        - image: {{ .Values.cnoAgent.image.name }}:{{ .Values.cnoAgent.image.version }}
+        - image: "{{ .Values.cnoAgent.image.registry }}/{{ .Values.cnoAgent.image.repository }}/{{ .Values.cnoAgent.image.name }}:{{ .Values.cnoAgent.image.version }}"
           imagePullPolicy: Always
           name: cno-agent
           resources:

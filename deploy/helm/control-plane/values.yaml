@@ -26,14 +26,14 @@ global:
     heathCheck:
       image:
         #name: docker.io/nginxinc/nginx-unprivileged
-        registry: docker.io
+        registry: registry.prod.gocno.io #docker.io
         repository: nginxinc
         name: nginx-unprivileged
         version: latest
       endpoint: /api/v1/healthy
     image:
       #name: docker.io/beopenit/cno-api
-      registry: docker.io
+      registry: registry.prod.gocno.io #docker.io
       repository: beopenit
       name: cno-api
       version: v1.0.0
@@ -49,7 +49,7 @@ global:
 cnoUI:
   image:
     #name: docker.io/beopenit/cno-ui
-    registry: docker.io
+    registry: registry.prod.gocno.io #docker.io
     repository: beopenit
     name: cno-ui
     version: v1.0.0
@@ -66,7 +66,7 @@ kafkaConfig:
   externalBrokersUrl: cno-kafka-cluster-kafka-external-bootstrap:9094
   image:
     #name: quay.io/strimzi/kafka
-    registry: quay.io
+    registry: registry.prod.gocno.io #quay.io
     repository: strimzi
     name: kafka
     version: 0.27.1-kafka-3.0.0
@@ -82,7 +82,7 @@ kafkaConfig:
 strimziOperator:
   # quay.io/strimzi/operator:0.27.1
   image:
-    registry: quay.io
+    registry: registry.prod.gocno.io #quay.io
     repository: strimzi
     name: operator
     tag: 0.27.1
@@ -90,8 +90,10 @@ strimziOperator:
 # Keycloak configuration
 keycloakConfig:
   image:
+    imagePullSecrets:
+      name: auth
     #name: quay.io/keycloak/keycloak
-    registry: quay.io
+    registry: registry.prod.gocno.io #quay.io
     repository: keycloak
     name: keycloak
     version: 15.1.1
@@ -130,7 +132,7 @@ databaseConfig:
     name: cno-db-credentals
   image:
     #name: docker.io/mysql
-    repository: docker.io
+    repository: registry.prod.gocno.io #docker.io
     name: mysql
     version: "8.0.28"
   # uncomment if you want to mount volume
@@ -146,6 +148,7 @@ databaseConfig:
   #     memory: 512Mi
 
 agentConfig:
+  imagePullSecrets: auth
   defaultCluster: true
   defaultClusterType: EKS
   cnoAgent:
@@ -156,3 +159,16 @@ agentConfig:
     kafka:
       brokers: cno-kafka-cluster-kafka-bootstrap:9093
 
+
+#configure helm to pull your images from your private registry
+imagePullSecrets: auth
+#Create the secret with the following command in comment and change the variables with yours
+#kubectl create secret docker-registry auth --docker-server=$DOCKER_REGISTRY_RUL --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=$EMAIL
+#Add these following lines in your template's images
+  #imagePullSecrets:
+    #- name: "{{ .Values.imagePullSecrets }}"
+
+#Configure the strimzi to pull his image from  your private registry
+strimziKafkaOperator:
+  image:
+    imagePullSecrets: auth

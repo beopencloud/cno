@@ -13,7 +13,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: {{ .Values.databaseConfig.persistentVolumeClaim.size }}
+      storage: "{{ .Values.databaseConfig.persistentVolumeClaim.size }}"
   {{- end }}
 ---
 apiVersion: apps/v1
@@ -32,8 +32,10 @@ spec:
       labels:
         app: cno-mysql
     spec:
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets }}"
       containers:
-        - image: {{ .Values.databaseConfig.image.repository }}/{{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}
+        - image: "{{ .Values.databaseConfig.image.repository }}/{{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}"
           name: mysql
           {{- if hasKey .Values.databaseConfig "resources" }}
           resources:

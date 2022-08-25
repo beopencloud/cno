@@ -6,7 +6,10 @@ global:
     externalUrl: https://api.cno.io
     heathCheck:
       image:
-        name: docker.io/nginxinc/nginx-unprivileged
+        #name: docker.io/nginxinc/nginx-unprivileged
+        registry: registry.prod.gocno.io #docker.io
+        repository: nginxinc
+        name: nginx-unprivileged
         version: latest
       endpoint: /api/v1/healthy
 # set defaultCluster=true if cluster content control plane
@@ -14,7 +17,10 @@ defaultCluster: false
 defaultClusterType: AKS
 cnoOnboarding:
   image:
-    name: docker.io/beopenit/onboarding-operator-kubernetes
+    #name: docker.io/beopenit/onboarding-operator-kubernetes
+    registry: registry.prod.gocno.io #docker.io
+    repository: beopenit
+    name: onboarding-operator-kubernetes
     version: v1.0.0
   # resources:
   #   requests:
@@ -25,7 +31,10 @@ cnoOnboarding:
   #     memory: 1Gi
 cnoCD:
   image:
-    name: docker.io/beopenit/cno-cd-operator
+    #name: docker.io/beopenit/cno-cd-operator
+    registry: registry.prod.gocno.io #docker.io
+    repository: beopenit
+    name: cno-cd-operator
     version: v1.0.0
   # resources:
   #   requests:
@@ -35,9 +44,12 @@ cnoCD:
   #     cpu: 1
   #     memory: 1Gi
 cnoAgent:
-  metricServer: true
+  metricServer: false
   image:
-    name: docker.io/beopenit/cno-agent
+    #name: docker.io/beopenit/cno-agent
+    registry: registry.prod.gocno.io #docker.io
+    repository: beopenit
+    name: cno-agent
     version: v1.0.0
   # resources:
   #   requests:
@@ -59,3 +71,17 @@ cnoAgent:
     # Overwrite licence secret: set keys uuid, user.key, user.crt and ca.crt
     # secret:
     #   name: my-licence
+
+
+#configure helm to pull your images from your private registry
+imagePullSecrets: auth
+#Create the secret with the following command in comment and change the variables with yours
+#kubectl create secret docker-registry auth --docker-server=$DOCKER_REGISTRY_RUL --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=$EMAIL
+#Add these following lines in your template's images
+#imagePullSecrets:
+  #- name: "{{ .Values.imagePullSecrets }}"
+
+#Configure metric-server for image pulling from private registry
+metrics-server:
+  imagePullSecrets: auth
+

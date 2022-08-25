@@ -32,6 +32,8 @@ spec:
       labels:
         app: cno-keycloak
     spec:
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecrets }}"
       initContainers:
       - name: init-db
         env:
@@ -51,7 +53,7 @@ spec:
               secretKeyRef:
                 name: {{ .Values.databaseConfig.secret.name }}
                 key: DB_PASSWORD
-        image: {{ .Values.databaseConfig.image.repository }}/{{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}
+        image: "{{ .Values.databaseConfig.image.repository }}/{{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}"
         command: ["/bin/sh","-c"]
         args:
           - |
@@ -63,7 +65,7 @@ spec:
             echo Successed: `date`
       containers:
         - name: keycloak
-          image: {{ .Values.keycloakConfig.image.registry }}/{{ .Values.keycloakConfig.image.repository }}/{{ .Values.keycloakConfig.image.name }}:{{ .Values.keycloakConfig.image.version }}
+          image: "{{ .Values.keycloakConfig.image.registry }}/{{ .Values.keycloakConfig.image.repository }}/{{ .Values.keycloakConfig.image.name }}:{{ .Values.keycloakConfig.image.version }}"
           {{- if hasKey .Values.keycloakConfig "resources" }}
           resources:
             {{- toYaml .Values.keycloakConfig.resources | nindent 12 }}

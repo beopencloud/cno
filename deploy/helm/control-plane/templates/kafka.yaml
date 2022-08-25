@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   kafka:
-    image: {{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
+    image: "{{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}"
     version: 3.0.0
     replicas: 1
     storage:
@@ -33,10 +33,10 @@ spec:
         {{- if eq .Values.expose.type "nodeport" }}
         type: nodeport
         {{- end }}
-        {{- if eq .Values.expose.type "nginx-ingress"}}
+        {{- if eq .Values.expose.type "nginx-ingress" }}
         type: ingress
         {{- end }}
-        {{- if eq .Values.expose.type "route"}}
+        {{- if eq .Values.expose.type "route" }}
         type: route
         {{- end }}
         tls: true
@@ -51,14 +51,14 @@ spec:
           class: nginx
           {{- end }}
           bootstrap:
-            host: bootstrap-cno.{{ .Values.expose.ingress.domain }}
+            host: bootstrap-cno."{{ .Values.expose.ingress.domain }}"
           brokers:
             - broker: 0
-              host: broker-0-cno.{{ .Values.expose.ingress.domain }}
+              host: broker-0-cno."{{ .Values.expose.ingress.domain }}"
             - broker: 1
-              host: broker-1-cno.{{ .Values.expose.ingress.domain }}
+              host: broker-1-cno."{{ .Values.expose.ingress.domain }}"
             - broker: 2
-              host: broker-2-cno.{{ .Values.expose.ingress.domain }}
+              host: broker-2-cno."{{ .Values.expose.ingress.domain }}"
         {{- end }}
     authorization:
       type: simple
@@ -75,7 +75,7 @@ spec:
       {{- end}}
       log.message.format.version: "3.0"
   zookeeper:
-    image: {{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
+    image: "{{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}"
     replicas: 1
     storage:
       {{- if eq .Values.kafkaConfig.storage.type "persistent-claim" }}
@@ -89,4 +89,4 @@ spec:
     userOperator:
       image: {{ include "cno-chart.topicOperatorImage" . }}
     tlsSidecar:
-      image: {{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
+      image: "{{ .Values.kafkaConfig.image.registry }}/{{ .Values.kafkaConfig.image.repository }}/{{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}"
