@@ -45,6 +45,8 @@ spec:
           env:
             - name: WATCH_NAMESPACE
               value: ""
+            - name: CNO_NAMESPACE
+              value:  {{ .Release.Namespace }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:
