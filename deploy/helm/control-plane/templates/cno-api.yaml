@@ -120,7 +120,7 @@ spec:
               value: "false"
             - name: KAFKA_VERBOSE
               value: "false"
-            - name: KAFKA_CLUSTER_NAMESPACE
+            - name: CNO_NAMESPACE
               value:  {{ .Release.Namespace }}
             - name: KAFKA_CLUSTER_NAME
               value: cno-kafka-cluster
