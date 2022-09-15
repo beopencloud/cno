@@ -6,7 +6,7 @@ metadata:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": hook-succeeded
-  name: cno-pres-install-job
+  name: cno-pre-install-job
 spec:
   template:
     spec:
