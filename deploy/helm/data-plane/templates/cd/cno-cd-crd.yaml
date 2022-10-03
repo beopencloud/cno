@@ -750,25 +750,16 @@ spec:
                     - blue
                     - green
                     type: string
+                  headers:
+                    additionalProperties:
+                      type: string
+                    type: object
                   live:
                     items:
                       description: Container defines the desired state of Workload
                       properties:
                         filter:
                           type: string
-                        headers:
-                          items:
-                            description: Header defines the desired state of Workload
-                            properties:
-                              key:
-                                type: string
-                              value:
-                                type: string
-                            required:
-                            - key
-                            - value
-                            type: object
-                          type: array
                         image:
                           type: string
                         name:
@@ -787,19 +778,6 @@ spec:
                       properties:
                         filter:
                           type: string
-                        headers:
-                          items:
-                            description: Header defines the desired state of Workload
-                            properties:
-                              key:
-                                type: string
-                              value:
-                                type: string
-                            required:
-                            - key
-                            - value
-                            type: object
-                          type: array
                         image:
                           type: string
                         name:
@@ -813,6 +791,7 @@ spec:
                       type: object
                     type: array
                   trafficSplitting:
+                    format: int32
                     maximum: 100
                     minimum: 0
                     type: integer
@@ -930,6 +909,9 @@ spec:
                           type: string
                         serviceName:
                           type: string
+                        servicePort:
+                          format: int32
+                          type: integer
                         tls:
                           type: boolean
                       required:
@@ -1001,6 +983,9 @@ spec:
                           type: string
                         serviceName:
                           type: string
+                        servicePort:
+                          format: int32
+                          type: integer
                         tls:
                           type: boolean
                       required:
@@ -1010,6 +995,8 @@ spec:
                       type: object
                     type: array
                 type: object
+              lastReconciledStragegy:
+                type: string
               liveReadyReplicas:
                 format: int32
                 type: integer
@@ -1320,17 +1307,6 @@ spec:
                 type: integer
               status:
                 type: string
-              traffics:
-                description: Traffic defines the observed state of Workload
-                properties:
-                  live:
-                    type: string
-                  staging:
-                    type: string
-                required:
-                - live
-                - staging
-                type: object
             type: object
         type: object
     served: true
