@@ -2,8 +2,28 @@ apiVersion: v1
 entries:
   cno:
   - apiVersion: v2
+    appVersion: v1.1.0-alpha
+    created: "2022-10-10T14:27:35.907055Z"
+    dependencies:
+    - alias: strimziKafkaOperator
+      name: strimzi-kafka-operator
+      repository: https://strimzi.io/charts
+      version: 0.27.1
+    - alias: agentConfig
+      condition: agentConfig.defaultCluster
+      name: cno-agent
+      repository: file://../data-plane
+      version: v1.1.0-alpha
+    description: Chart for CNO control plane
+    digest: 7f01aa53f670414088d45a1b1e5ce09f150b12a8fd32a6d697960a471b18e460
+    name: cno
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/cno-v1.1.0-alpha.tgz
+    version: v1.1.0-alpha
+  - apiVersion: v2
     appVersion: 1.1.0-alpha
-    created: "2022-10-03T13:15:36.918083Z"
+    created: "2022-10-10T14:27:17.997282Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -23,7 +43,7 @@ entries:
     version: 1.1.0-alpha
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2022-08-02T13:25:00.615813+02:00"
+    created: "2022-10-10T14:27:17.992279Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -35,7 +55,7 @@ entries:
       repository: file://../data-plane
       version: 1.0.1
     description: Chart for CNO control plane
-    digest: 4d29903b2f9c6f69d4cf345d5940d7f4645dac3101590ee98e8166474ea53aa3
+    digest: 7727a990edd7876d66ce9d06b1e23871c40fa5ad2848476ccf5c7ce2cb09a032
     name: cno
     type: application
     urls:
@@ -43,7 +63,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-11T11:25:35.983868Z"
+    created: "2022-10-10T14:27:17.987131Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -55,7 +75,7 @@ entries:
       repository: file://../data-plane
       version: 1.0.0
     description: Chart for CNO control plane
-    digest: 85356ab1b3998951137b208c375935ee61c3395f138950dae03628a14f99e8fd
+    digest: c87abdf10b1a9a62d6de167844779efaecd0081d97f1d23ee68699de1e68bc7f
     name: cno
     type: application
     urls:
@@ -64,7 +84,7 @@ entries:
   cno-agent:
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2022-09-23T11:54:30.372103Z"
+    created: "2022-10-10T14:27:18.002696Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -80,7 +100,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.1.0-alpha
-    created: "2022-10-03T13:15:36.919471Z"
+    created: "2022-10-10T14:27:18.0013Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -88,15 +108,15 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for CNO agent
-    digest: 052c6987a6c1f18105889d2c8f74a3e8f5ce6226d07c7f198e5b26a7059f56e1
+    digest: 0f0cd0a292b6250e1ee455be0a79bf78a81393e90f160b6364bf7f971cd9ab1e
     name: cno-agent
     type: application
     urls:
     - https://beopencloud.github.io/cno/cno-agent-1.1.0-alpha.tgz
     version: 1.1.0-alpha
   - apiVersion: v2
-    appVersion: 1.0.1
-    created: "2022-08-02T13:25:00.617942+02:00"
+    appVersion: v1.1.0-alpha
+    created: "2022-10-10T14:27:18.004111Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -104,7 +124,23 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for CNO agent
-    digest: a64dee5c9f4b39bd75e3bcc7fda0ce225b6087c18cc86e3f14ab5e485d2bff4e
+    digest: 5e3021872f2488f25df982da3597ee525ee851e81d660e1bcb2f158043d4a49f
+    name: cno-agent
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/cno-agent-v1.1.0-alpha.tgz
+    version: v1.1.0-alpha
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2022-10-10T14:27:17.99997Z"
+    dependencies:
+    - alias: metrics-server
+      condition: cnoAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for CNO agent
+    digest: 2654d755c5937dea95c17ea175fc197dc381106c52ad7adc29000d3c86aa5f63
     name: cno-agent
     type: application
     urls:
@@ -112,7 +148,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-11T11:25:35.987856Z"
+    created: "2022-10-10T14:27:17.998314Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -120,7 +156,7 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for CNO agent
-    digest: 12b60c941361c0881878005565a08c55a00b67575aa23852f81137bbaa297892
+    digest: 1b1fd97ac9588f69f7efeb3954ea2b417be584279dc2f5f51f3eacac63b55b10
     name: cno-agent
     type: application
     urls:
@@ -155,4 +191,4 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/charts/strimzi-kafka-operator-helm-3-chart-0.27.1.tgz
     version: 0.27.1
-generated: "2022-10-03T13:15:36.911587Z"
+generated: "2022-10-10T14:27:17.981534Z"
