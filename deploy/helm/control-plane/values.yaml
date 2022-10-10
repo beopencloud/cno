@@ -2,8 +2,7 @@
 cluster:
   # kubernetes or openshift
   platform: kubernetes
-  apiUrl: https://AFE3E9F7B96090A7DAC538A3B667FB08.gr7.eu-west-1.eks.amazonaws.com
-  # apiUrl: https://kubernetes.default.svc.cluster.local:443
+  apiUrl: https://kubernetes.default.svc.cluster.local:443
 # expose type
 expose:
   # values: loadbalancer, nodeport, route or nginx-ingress
@@ -13,7 +12,7 @@ expose:
     domain: cno-dev.gocno.io
 # set super admin password (username admin)
 superadmin:
-  password: cno@2022!
+  password: admin
   # set secret if superadmin password is in custom secret
   # secret:
   #   name: cno-super-admin
