@@ -3,7 +3,7 @@ entries:
   cno:
   - apiVersion: v2
     appVersion: v1.1.0-alpha
-    created: "2022-10-10T14:27:35.907055Z"
+    created: "2022-10-10T15:42:27.859889Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -15,7 +15,7 @@ entries:
       repository: file://../data-plane
       version: v1.1.0-alpha
     description: Chart for CNO control plane
-    digest: 7f01aa53f670414088d45a1b1e5ce09f150b12a8fd32a6d697960a471b18e460
+    digest: 0cd211cb58aba39ec1871e369e7df24e29c260571734b888eeb12b611b0a32c8
     name: cno
     type: application
     urls:
@@ -80,7 +80,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: v1.1.0-alpha
-    created: "2022-10-10T15:38:31.85432Z"
+    created: "2022-10-10T15:42:27.861669Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -92,7 +92,7 @@ entries:
     name: cno-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/cno-agent-v1.1.0-alpha.tgz
+    - https://beopencloud.github.io/cno/charts/cno-agent-v1.1.0-alpha.tgz
     version: v1.1.0-alpha
   - apiVersion: v2
     appVersion: 1.0.1
@@ -160,7 +160,7 @@ entries:
   strimzi-kafka-operator:
   - apiVersion: v2
     appVersion: 0.27.1
-    created: "2022-10-10T15:38:31.857912Z"
+    created: "2022-10-10T15:42:27.864798Z"
     description: 'Strimzi: Apache Kafka running on Kubernetes'
     digest: 4ef7787056fe1fc8e6aa9c8bfbb5d5e99220308a3e676c93a2ff157388a8bcc8
     home: https://strimzi.io/
@@ -186,4 +186,4 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/charts/strimzi-kafka-operator-helm-3-chart-0.27.1.tgz
     version: 0.27.1
-generated: "2022-10-10T15:38:31.851454Z"
+generated: "2022-10-10T15:42:27.851831Z"
