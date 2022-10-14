@@ -1,0 +1,40 @@
+
+
+# Install OpenShift on AWS
+
+## aws configure
+
+```sh
+export AWS_ACCESS_KEY_ID="xxxxx"
+export AWS_SECRET_ACCESS_KEY="xxxxxx"
+export AWS_SESSION_TOKEN="xxxxx"
+```
+
+## Login ROSA Console
+To login to your Red Hat account, get an offline access token at https://console.redhat.com/openshift/token/rosa
+
+```sh
+rosa login --token="eyxxxxxxx"
+```
+
+## Create account roles
+
+```sh
+rosa create account-roles --mode auto --region eu-west-1
+I: Creating roles using 'arn:aws:iam::1198xxxxxxx:role/AWSReservedSSO_AWSAdministratorAccess_xxxxxxxxxxxxx'
+? Create the 'ManagedOpenShift-Installer-Role' role? No
+? Create the 'ManagedOpenShift-ControlPlane-Role' role? No
+? Create the 'ManagedOpenShift-Worker-Role' role? No
+? Create the 'ManagedOpenShift-Support-Role' role? No
+```
+## Create rosa Cluster
+
+```sh
+ rosa create  cluster --cluster-name test48 --version 4.9.49 --sts --mode auto --region eu-west-1
+```
+
+## Create admin access
+
+```sh
+ rosa create admin --cluster=test41035 --region eu-west-1
+```
