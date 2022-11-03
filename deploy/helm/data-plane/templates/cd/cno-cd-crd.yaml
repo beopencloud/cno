@@ -739,12 +739,54 @@ spec:
                 - Deployment
                 - StatefulSet
                 - DaemonSet
+                - CronJob
+                - DeploymentConfig
                 type: string
               strategySpec:
                 description: StrategySpec defines the desired state of Workload
                 properties:
                   autoDeploy:
                     type: boolean
+                  autoProgression:
+                    properties:
+                      increment:
+                        format: int32
+                        type: integer
+                      interval:
+                        type: string
+                      maxWeight:
+                        format: int32
+                        type: integer
+                      metrics:
+                        additionalProperties:
+                          properties:
+                            max:
+                              format: int32
+                              type: integer
+                            min:
+                              format: int32
+                              type: integer
+                          type: object
+                        type: object
+                      minRequest:
+                        format: int32
+                        type: integer
+                      stop:
+                        type: boolean
+                      webhooks:
+                        items:
+                          properties:
+                            metadata:
+                              additionalProperties:
+                                type: string
+                              type: object
+                            name:
+                              type: string
+                            url:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
                   bascule:
                     enum:
                     - blue
@@ -995,6 +1037,9 @@ spec:
                       type: object
                     type: array
                 type: object
+              lastAutoProgressDate:
+                format: date-time
+                type: string
               lastReconciledStragegy:
                 type: string
               liveReadyReplicas:
