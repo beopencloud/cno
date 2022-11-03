@@ -283,7 +283,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: proxy-role
+  name: cno-proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -302,11 +302,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: proxy-rolebinding
+  name: cno-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: proxy-role
+  name: cno-proxy-role
 subjects:
 - kind: ServiceAccount
   name: cno-cd-operator

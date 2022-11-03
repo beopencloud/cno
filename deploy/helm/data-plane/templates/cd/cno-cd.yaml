@@ -60,8 +60,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: OPERATOR_NAME
-              value: "cno-cd-operator"
+            - name: CLUSTER_TYPE
+              value: {{ .Values.defaultClusterType }}
+            - name: DEFAULT_GATEWAY_NAMESPACE
+              value: "cno-gateway-api"
+            - name: DEFAULT_GATEWAY_NAME
+              value: "cno"
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -73,7 +77,24 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - events
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
   - namespaces
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - replicationcontrollers
   verbs:
   - create
   - delete
@@ -105,59 +126,44 @@ rules:
   - apps
   resources:
   - daemonsets
+  - daemonsets/finalizers
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
 - apiGroups:
   - apps
   resources:
   - deployments
+  - deployments/finalizers
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
   - replicasets
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
 - apiGroups:
   - apps
   resources:
   - statefulsets
+  - statefulsets/finalizers
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
+- apiGroups:
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  - deploymentconfigs/finalizers
+  verbs:
+  - '*'
 - apiGroups:
   - cnocd.beopenit.com
   resources:
   - workloads
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - cnocd.beopenit.com
-  resources:
+  - workloads/finalizers
   - workloads/status
   verbs:
-  - get
-  - patch
-  - update
+  - '*'
 - apiGroups:
   - coordination.k8s.io
   resources:
@@ -192,33 +198,22 @@ rules:
   - httproutes
   - tcproutes
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - '*'
 - apiGroups:
   - networking.k8s.io
   resources:
   - ingresses
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - networking.k8s.io
-  resources:
+  - ingresses/finalizers
   - ingresses/status
   verbs:
-  - get
-  - patch
-  - update
+  - '*'
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  - routes/finalizers
+  verbs:
+  - '*'
 - apiGroups:
   - storage.k8s.io
   resources:
@@ -227,7 +222,6 @@ rules:
   - get
   - list
   - watch
-
  
 ---
 
@@ -306,7 +300,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: proxy-role
+  name: cno-proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -329,7 +323,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: proxy-role
+  name: cno-proxy-role
 subjects:
 - kind: ServiceAccount
   name: cno-cd-operator
