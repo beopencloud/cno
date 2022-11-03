@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   cno:
   - apiVersion: v2
+    appVersion: v1.1.1-alpha
+    created: "2022-11-03T12:36:31.827896Z"
+    dependencies:
+    - alias: strimziKafkaOperator
+      name: strimzi-kafka-operator
+      repository: https://strimzi.io/charts
+      version: 0.27.1
+    - alias: agentConfig
+      condition: agentConfig.defaultCluster
+      name: cno-agent
+      repository: file://../data-plane
+      version: v1.1.1-alpha
+    description: Chart for CNO control plane
+    digest: 75a3b1950e13749943edf09c179d5af6cf283b7eec6e7d68df59f037c41c56eb
+    name: cno
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/cno-v1.1.1-alpha.tgz
+    version: v1.1.1-alpha
+  - apiVersion: v2
     appVersion: v1.1.0-alpha
     created: "2022-10-10T14:27:35.907055Z"
     dependencies:
@@ -62,6 +82,22 @@ entries:
     - https://beopencloud.github.io/cno/cno-1.0.0.tgz
     version: 1.0.0
   cno-agent:
+  - apiVersion: v2
+    appVersion: v1.1.1-alpha
+    created: "2022-11-03T12:34:23.838012Z"
+    dependencies:
+    - alias: metrics-server
+      condition: cnoAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for CNO agent
+    digest: c97bddfb1b600732c1ef280a5bfff911118b51f4874086b4c809e254b9f6cdeb
+    name: cno-agent
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/cno-agent-v1.1.1-alpha.tgz
+    version: v1.1.1-alpha
   - apiVersion: v2
     appVersion: 1.1.0
     created: "2022-10-10T14:27:18.002696Z"
