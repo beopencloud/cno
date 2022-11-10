@@ -62,6 +62,10 @@ spec:
           env:
             - name: KAFKA_BROKERS
               value: cno-kafka-cluster-kafka-bootstrap:9092
+            - name: SERVER_URL
+              value: {{ .Values.global.cnoAPI.protocol }}://cno-api.{{ .Values.expose.ingress.domain }}
+            - name: UI_URL
+              value: {{ .Values.global.cnoAPI.protocol }}://cno.{{ .Values.expose.ingress.domain }}
           command:
             - /bin/sh
             - -c
