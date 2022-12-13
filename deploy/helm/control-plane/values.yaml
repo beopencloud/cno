@@ -150,3 +150,9 @@ agentConfig:
         name: agent-licence
     kafka:
       brokers: cno-kafka-cluster-kafka-bootstrap:9093
+
+  cnoCD:
+    podLabels:
+      # You can add as many labels as you need
+    deploymentLabels:
+      # You can add as many labels as you need

@@ -24,6 +24,10 @@ cnoOnboarding:
   #     cpu: 1
   #     memory: 1Gi
 cnoCD:
+  podLabels:
+  # You can add as many labels as you need
+  deploymentLabels:
+    # You can add as many labels as you need
   image:
     name: docker.io/beopenit/cno-cd-operator
     version: v1.1.0-alpha
