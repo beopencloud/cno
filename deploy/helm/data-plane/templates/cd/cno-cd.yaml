@@ -325,7 +325,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: proxy-rolebinding
+  name: cno-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -334,19 +334,6 @@ subjects:
 - kind: ServiceAccount
   name: cno-cd-operator
   namespace: {{ .Release.Namespace }}
-
---- 
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: metrics-reader
-rules:
-- nonResourceURLs:
-  - "/metrics"
-  verbs:
-  - get
-
 
 ---
 apiVersion: v1
