@@ -18,6 +18,9 @@ kind: Deployment
 metadata:
   labels:
     app: cno-ui
+  {{- range $key, $value := .Values.cnoUI.deploymentLabels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
   name: cno-ui
   namespace: {{ .Release.Namespace }}
 spec:
@@ -29,6 +32,9 @@ spec:
     metadata:
       labels:
         app: cno-ui
+      {{- range $key, $value := .Values.cnoUI.podLabels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       initContainers:
         - name: cno-api-check

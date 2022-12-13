@@ -45,6 +45,10 @@ global:
 
 # cno-ui config
 cnoUI:
+  podLabels:
+    # You can add as many labels as you need
+  deploymentLabels:
+    # You can add as many labels as you need
   image:
     name: docker.io/beopenit/cno-ui
     version: v1.1.0-alpha
