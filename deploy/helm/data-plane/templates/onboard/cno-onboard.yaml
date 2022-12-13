@@ -23,6 +23,10 @@ kind: Deployment
 metadata:
   name: cno-onboarding-operator
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- range $key, $value := .Values.cnoOnboarding.deploymentLabels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   replicas: 1
   selector:
@@ -32,6 +36,9 @@ spec:
     metadata:
       labels:
         app: cno-onboarding-operator
+      {{- range $key, $value := .Values.cnoOnboarding.podLabels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       serviceAccountName: cno-onboarding-operator
       containers:

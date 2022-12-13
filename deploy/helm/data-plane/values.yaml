@@ -13,6 +13,10 @@ global:
 defaultCluster: false
 defaultClusterType: eks
 cnoOnboarding:
+  podLabels:
+    # You can add as many labels as you need
+  deploymentLabels:
+    # You can add as many labels as you need
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
     version: v1.1.0-alpha
