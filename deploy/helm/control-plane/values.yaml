@@ -140,6 +140,10 @@ agentConfig:
   defaultCluster: true
   defaultClusterType: eks
   cnoAgent:
+    podLabels:
+      # You can add as many labels as you need
+    deploymentLabels:
+      # You can add as many labels as you need
     metricServer: true
     licence:
       secret:
