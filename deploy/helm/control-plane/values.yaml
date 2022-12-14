@@ -81,6 +81,8 @@ strimziOperator:
 
 # Keycloak configuration
 keycloakConfig:
+  labels:
+    # will be applied to pods & statefulset
   image:
     name: quay.io/keycloak/keycloak
     version: 15.1.1
