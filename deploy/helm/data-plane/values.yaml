@@ -35,6 +35,8 @@ cnoCD:
   #     cpu: 1
   #     memory: 1Gi
 cnoAgent:
+  labels:
+    # will be applied to pods and deployment
   metricServer: true
   image:
     name: docker.io/beopenit/cno-agent

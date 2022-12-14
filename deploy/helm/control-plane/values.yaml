@@ -136,6 +136,8 @@ agentConfig:
   defaultCluster: true
   defaultClusterType: eks
   cnoAgent:
+    labels:
+      # will be applied to pods and deployment
     metricServer: true
     licence:
       secret:
