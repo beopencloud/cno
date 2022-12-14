@@ -148,3 +148,7 @@ agentConfig:
   cnoCD:
     labels:
     # will be applied to pods and deployment
+
+  cnoOnboarding:
+    labels:
+      # will be applied to pods and deployment
