@@ -144,3 +144,7 @@ agentConfig:
         name: agent-licence
     kafka:
       brokers: cno-kafka-cluster-kafka-bootstrap:9093
+
+  cnoCD:
+    labels:
+    # will be applied to pods and deployment

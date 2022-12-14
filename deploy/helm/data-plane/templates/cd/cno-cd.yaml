@@ -9,7 +9,10 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  
+  labels:
+  {{- range $key, $value := .Values.cnoCD.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
   name: cno-cd-operator
   namespace: {{ .Release.Namespace }}
 spec:
@@ -23,6 +26,9 @@ spec:
          kubectl.kubernetes.io/default-container: manager
       labels:
         app: cno-cd-operator
+      {{- range $key, $value := .Values.cnoCD.labels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       securityContext:
         runAsNonRoot: true
