@@ -27,6 +27,9 @@ metadata:
     fluxcd.io/automated: 'true'
   labels:
     app: cno-api
+  {{- range $key, $value := .Values.global.cnoAPI.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
   name: cno-api
   namespace: {{ .Release.Namespace }}
 spec:
@@ -45,6 +48,9 @@ spec:
     metadata:
       labels:
         app: cno-api
+      {{- range $key, $value := .Values.global.cnoAPI.labels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       initContainers:
         - name: keycloak-check
