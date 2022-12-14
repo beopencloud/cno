@@ -43,6 +43,8 @@ global:
 
 # cno-ui config
 cnoUI:
+  labels:
+    # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-ui
     version: v1.1.0-alpha
