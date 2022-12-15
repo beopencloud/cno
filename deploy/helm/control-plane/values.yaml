@@ -109,6 +109,9 @@ keycloakConfig:
     secret: cno-api-client-secret
 
 databaseConfig:
+  labels:
+    # will be applied to pods and deployment
+
   # internalDatabase=false if you have existing database
   internalDatabase: true
   # Only MYSQL database is supported at this time
