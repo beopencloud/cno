@@ -1,6 +1,8 @@
 global:
   # cno-api config
   cnoAPI:
+    labels:
+      # will be applied to pods and deployment
     protocol: http
     # internalServiceName: cno-api-svc
     externalUrl: https://api.cno.io
