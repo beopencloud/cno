@@ -58,6 +58,8 @@ cnoUI:
 
 # kafka configuration
 kafkaConfig:
+  labels:
+    # will be applied to pods and deployment
   externalBrokersUrl: cno-kafka-cluster-kafka-external-bootstrap:9094
   image:
     name: quay.io/strimzi/kafka
