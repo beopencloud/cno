@@ -21,6 +21,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: cno-keycloak
+  {{- range $key, $value := .Values.keycloakConfig.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   serviceName: keycloak
   replicas: 1
@@ -31,6 +34,9 @@ spec:
     metadata:
       labels:
         app: cno-keycloak
+      {{- range $key, $value := .Values.keycloakConfig.labels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       initContainers:
       - name: init-db

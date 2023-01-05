@@ -3,6 +3,10 @@ kind: Kafka
 metadata:
   name: cno-kafka-cluster
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- range $key, $value := .Values.kafkaConfig.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   kafka:
     image: {{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}

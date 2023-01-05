@@ -21,6 +21,10 @@ kind: Deployment
 metadata:
   name: cno-mysql
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- range $key, $value := .Values.databaseConfig.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -31,6 +35,9 @@ spec:
     metadata:
       labels:
         app: cno-mysql
+      {{- range $key, $value := .Values.databaseConfig.labels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       containers:
         - image: {{ .Values.databaseConfig.image.name }}:{{ .Values.databaseConfig.image.version }}

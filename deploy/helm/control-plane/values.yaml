@@ -9,7 +9,7 @@ expose:
   type: nginx-ingress
   # set if expose equal to route or nginx-ingress
   ingress:
-    domain: cno-dev.gocno.io
+    domain: dev.gocno.io
 # set super admin password (username admin)
 superadmin:
   password: admin
@@ -21,6 +21,8 @@ superadmin:
 global:
   # cno-api config
   cnoAPI:
+    labels:
+      # will be applied to pods and deployment
     protocol: https
     internalServiceName: cno-api
     heathCheck:
@@ -41,6 +43,8 @@ global:
 
 # cno-ui config
 cnoUI:
+  labels:
+    # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-ui
     version: v1.1.0-alpha
@@ -54,6 +58,8 @@ cnoUI:
 
 # kafka configuration
 kafkaConfig:
+  labels:
+    # will be applied to pods and deployment
   externalBrokersUrl: cno-kafka-cluster-kafka-external-bootstrap:9094
   image:
     name: quay.io/strimzi/kafka
@@ -77,6 +83,8 @@ strimziOperator:
 
 # Keycloak configuration
 keycloakConfig:
+  labels:
+    # will be applied to pods & statefulset
   image:
     name: quay.io/keycloak/keycloak
     version: 15.1.1
@@ -103,6 +111,9 @@ keycloakConfig:
     secret: cno-api-client-secret
 
 databaseConfig:
+  labels:
+    # will be applied to pods and deployment
+
   # internalDatabase=false if you have existing database
   internalDatabase: true
   # Only MYSQL database is supported at this time
@@ -120,18 +131,20 @@ databaseConfig:
 #  persistentVolumeClaim:
 #     name: cno-database-pvc
 #     size: 500m
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 512Mi
-  #   limits:
-  #     cpu: 100m
-  #     memory: 512Mi
+# resources:
+#   requests:
+#     cpu: 100m
+#     memory: 512Mi
+#   limits:
+#     cpu: 100m
+#     memory: 512Mi
 
 agentConfig:
   defaultCluster: true
   defaultClusterType: eks
   cnoAgent:
+    labels:
+      # will be applied to pods and deployment
     metricServer: true
     licence:
       secret:
@@ -139,3 +152,10 @@ agentConfig:
     kafka:
       brokers: cno-kafka-cluster-kafka-bootstrap:9093
 
+  cnoCD:
+    labels:
+    # will be applied to pods and deployment
+
+  cnoOnboarding:
+    labels:
+      # will be applied to pods and deployment

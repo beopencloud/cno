@@ -17,6 +17,7 @@ spec:
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   {{- end }}
 ---
 apiVersion: route.openshift.io/v1
@@ -36,5 +37,6 @@ spec:
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   {{- end }}
 {{- end }}
