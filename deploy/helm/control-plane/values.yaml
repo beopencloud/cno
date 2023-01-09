@@ -87,7 +87,7 @@ keycloakConfig:
     # will be applied to pods & statefulset
   image:
     name: quay.io/keycloak/keycloak
-    version: 15.1.1
+    version: 20.0.1
   # resources:
   #   requests:
   #     cpu: 100m
@@ -117,7 +117,7 @@ databaseConfig:
   # internalDatabase=false if you have existing database
   internalDatabase: true
   # Only MYSQL database is supported at this time
-  type: MYSQL
+  type: mysql
   host: cno-api-mysql
   database: cnoapi
   port: 3306

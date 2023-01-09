@@ -70,6 +70,7 @@ spec:
       containers:
         - name: keycloak
           image: {{ .Values.keycloakConfig.image.name }}:{{ .Values.keycloakConfig.image.version }}
+          args: ["start-dev --import-realm --db $KC_DB --db-username $KC_DB_USERNAME --db-password $KC_DB_PASSWORD --db-schema $KC_DB_SCHEMA --db-url-host $KC_DB_URL_HOST --db-url-database $KC_DB_URL_DATABASE"]
           {{- if hasKey .Values.keycloakConfig "resources" }}
           resources:
             {{- toYaml .Values.keycloakConfig.resources | nindent 12 }}
@@ -85,35 +86,37 @@ spec:
                 secretKeyRef:
                   name: {{ include "cno-chart.keycloakAdminSecret" . }}
                   key: ADMIN_PASSWORD
-            - name: PROXY_ADDRESS_FORWARDING
+            - name: KC_PROXY_ADDRESS_FORWARDING
               value: "true"
-            - name: DB_VENDOR
+            - name: KC_DB
               value: {{ .Values.databaseConfig.type }}
-            - name: DB_ADDR
+            - name: KC_DB_URL_HOST
               value: {{ .Values.databaseConfig.host }}
-            - name: DB_DATABASE
+            - name: KC_DB_URL_DATABASE
               value: {{ .Values.databaseConfig.database }}
-            - name: DB_PORT
+            - name: KC_DB_SCHEMA
+              value: {{ .Values.databaseConfig.database }}
+            - name: KC_DB_PORT
               value: {{ .Values.databaseConfig.port | quote }}
-            - name: DB_USER
+            - name: KC_DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.databaseConfig.secret.name }}
                   key: DB_USERNAME
-            - name: DB_PASSWORD
+            - name: KC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.databaseConfig.secret.name }}
                   key: DB_PASSWORD
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
             - name : KEYCLOAK_HTTP_PORT
               value : "80"
             - name: KEYCLOAK_HTTPS_PORT
               value: "443"
-            - name: KEYCLOAK_IMPORT
-              value: /cno/cno-realm.json
           volumeMounts:
             - name: cno-realm
-              mountPath: /cno
+              mountPath: /opt/keycloak/data/import
           ports:
             - name: http
               containerPort: 8080
