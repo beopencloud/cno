@@ -63,7 +63,7 @@ kafkaConfig:
   externalBrokersUrl: cno-kafka-cluster-kafka-external-bootstrap:9094
   image:
     name: quay.io/strimzi/kafka
-    version: 0.27.1-kafka-3.0.0
+    version: 0.32.0-kafka-3.2.1
   storage:
     # ephemeral or persistent-claim
     type: ephemeral
@@ -79,7 +79,7 @@ strimziOperator:
     registry: quay.io
     repository: strimzi
     name: operator
-    tag: 0.27.1
+    tag: 0.32.0
 
 # Keycloak configuration
 keycloakConfig:

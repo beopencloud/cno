@@ -25,7 +25,7 @@ appVersion: "v1.1.1-alpha"
 
 dependencies:
   - name: strimzi-kafka-operator
-    version: "0.27.1"
+    version: "0.32.0"
     repository: "https://strimzi.io/charts"
     alias: strimziKafkaOperator
   - name: cno-agent

@@ -9,8 +9,7 @@ metadata:
   {{- end }}
 spec:
   kafka:
-    image: {{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
-    version: 3.0.0
+    version: 3.3.1
     replicas: 1
     storage:
       {{- if eq .Values.kafkaConfig.storage.type "persistent-claim" }}
@@ -57,12 +56,12 @@ spec:
           bootstrap:
             host: bootstrap-cno.{{ .Values.expose.ingress.domain }}
           brokers:
-            - broker: 0
-              host: broker-0-cno.{{ .Values.expose.ingress.domain }}
-            - broker: 1
-              host: broker-1-cno.{{ .Values.expose.ingress.domain }}
-            - broker: 2
-              host: broker-2-cno.{{ .Values.expose.ingress.domain }}
+          - broker: 0
+            host: broker-0-cno.{{ .Values.expose.ingress.domain }}
+          - broker: 1
+            host: broker-1-cno.{{ .Values.expose.ingress.domain }}
+          - broker: 2
+            host: broker-2-cno.{{ .Values.expose.ingress.domain }}
         {{- end }}
     authorization:
       type: simple
@@ -75,11 +74,10 @@ spec:
       {{- if eq .Values.expose.type "nginx-ingress"}}
       default.replication.factor: 1
       min.insync.replicas: 1
-      inter.broker.protocol.version: "3.0"
+      inter.broker.protocol.version: "3.3"
       {{- end}}
       log.message.format.version: "3.0"
   zookeeper:
-    image: {{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
     replicas: 1
     storage:
       {{- if eq .Values.kafkaConfig.storage.type "persistent-claim" }}
@@ -88,9 +86,5 @@ spec:
       {{- end }}
       type: {{ .Values.kafkaConfig.storage.type }}
   entityOperator:
-    topicOperator:
-      image: {{ include "cno-chart.topicOperatorImage" . }}
-    userOperator:
-      image: {{ include "cno-chart.topicOperatorImage" . }}
-    tlsSidecar:
-      image: {{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
+    topicOperator: {}
+    userOperator: {}
