@@ -126,7 +126,7 @@ databaseConfig:
     name: cno-db-credentals
   image:
     name: docker.io/mysql
-    version: "8.0.28"
+    version: "8.0.31"
   # uncomment if you want to mount volume
 #  persistentVolumeClaim:
 #     name: cno-database-pvc
