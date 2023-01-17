@@ -9,7 +9,7 @@ expose:
   type: nginx-ingress
   # set if expose equal to route or nginx-ingress
   ingress:
-    domain: cno-dev.gocno.io
+    domain: dev.gocno.io
 # set super admin password (username admin)
 superadmin:
   password: admin
@@ -21,6 +21,8 @@ superadmin:
 global:
   # cno-api config
   cnoAPI:
+    labels:
+      # will be applied to pods and deployment
     protocol: https
     internalServiceName: cno-api
     heathCheck:
@@ -41,6 +43,8 @@ global:
 
 # cno-ui config
 cnoUI:
+  labels:
+    # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-ui
     version: v1.1.0-alpha
@@ -54,10 +58,12 @@ cnoUI:
 
 # kafka configuration
 kafkaConfig:
+  labels:
+    # will be applied to pods and deployment
   externalBrokersUrl: cno-kafka-cluster-kafka-external-bootstrap:9094
   image:
     name: quay.io/strimzi/kafka
-    version: 0.27.1-kafka-3.0.0
+    version: 0.32.0-kafka-3.2.1
   storage:
     # ephemeral or persistent-claim
     type: ephemeral
@@ -73,13 +79,15 @@ strimziOperator:
     registry: quay.io
     repository: strimzi
     name: operator
-    tag: 0.27.1
+    tag: 0.32.0
 
 # Keycloak configuration
 keycloakConfig:
+  labels:
+    # will be applied to pods & statefulset
   image:
     name: quay.io/keycloak/keycloak
-    version: 15.1.1
+    version: 20.0.1
   # resources:
   #   requests:
   #     cpu: 100m
@@ -103,10 +111,13 @@ keycloakConfig:
     secret: cno-api-client-secret
 
 databaseConfig:
+  labels:
+    # will be applied to pods and deployment
+
   # internalDatabase=false if you have existing database
   internalDatabase: true
   # Only MYSQL database is supported at this time
-  type: MYSQL
+  type: mysql
   host: cno-api-mysql
   database: cnoapi
   port: 3306
@@ -115,23 +126,25 @@ databaseConfig:
     name: cno-db-credentals
   image:
     name: docker.io/mysql
-    version: "8.0.28"
+    version: "8.0.31"
   # uncomment if you want to mount volume
 #  persistentVolumeClaim:
 #     name: cno-database-pvc
 #     size: 500m
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 512Mi
-  #   limits:
-  #     cpu: 100m
-  #     memory: 512Mi
+# resources:
+#   requests:
+#     cpu: 100m
+#     memory: 512Mi
+#   limits:
+#     cpu: 100m
+#     memory: 512Mi
 
 agentConfig:
   defaultCluster: true
   defaultClusterType: eks
   cnoAgent:
+    labels:
+      # will be applied to pods and deployment
     metricServer: true
     licence:
       secret:
@@ -139,3 +152,10 @@ agentConfig:
     kafka:
       brokers: cno-kafka-cluster-kafka-bootstrap:9093
 
+  cnoCD:
+    labels:
+    # will be applied to pods and deployment
+
+  cnoOnboarding:
+    labels:
+      # will be applied to pods and deployment
