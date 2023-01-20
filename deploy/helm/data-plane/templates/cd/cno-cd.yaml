@@ -117,12 +117,14 @@ rules:
   - delete
   - get
   - list
+  - patch
   - update
   - watch
 - apiGroups:
   - ""
   resources:
   - services
+  - services/finalizers
   verbs:
   - create
   - delete
@@ -206,6 +208,13 @@ rules:
   - gateways
   - httproutes
   - tcproutes
+  verbs:
+  - '*'
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreams
+  - imagestreams/finalizers
   verbs:
   - '*'
 - apiGroups:

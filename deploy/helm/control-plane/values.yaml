@@ -32,7 +32,7 @@ global:
       endpoint: /api/v1/healthy
     image:
       name: docker.io/beopenit/cno-api
-      version: v1.1.0-alpha
+      version: v1.1.0
     # resources:
     #   requests:
     #     cpu: 100m
@@ -47,7 +47,7 @@ cnoUI:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-ui
-    version: v1.1.0-alpha
+    version: v1.1.0
   # resources:
   #   requests:
   #     cpu: 100m
