@@ -1,7 +1,7 @@
 apiVersion: v2
 name: cno
 description: Chart for CNO control plane
-
+ 
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
@@ -15,21 +15,21 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: v1.1.1-alpha
+version: v1.1.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "v1.1.1-alpha"
+appVersion: "v1.1.0"
 
 dependencies:
   - name: strimzi-kafka-operator
-    version: "0.27.1"
+    version: "0.32.0"
     repository: "https://strimzi.io/charts"
     alias: strimziKafkaOperator
   - name: cno-agent
-    version: "v1.1.1-alpha"
+    version: "v1.1.0"
     repository: "file://../data-plane"
     alias: agentConfig
     condition: agentConfig.defaultCluster

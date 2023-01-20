@@ -7,6 +7,9 @@ metadata:
     fluxcd.io/automated: 'true'
   labels:
     app: cno-agent
+  {{- range $key, $value := .Values.cnoAgent.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
   name: cno-agent
   namespace: {{ .Release.Namespace }}
 spec:
@@ -25,6 +28,9 @@ spec:
     metadata:
       labels:
         app: cno-agent
+      {{- range $key, $value := .Values.cnoAgent.labels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
     {{- if .Values.defaultCluster }}
       initContainers:

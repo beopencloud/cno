@@ -9,7 +9,10 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  
+  labels:
+  {{- range $key, $value := .Values.cnoCD.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
   name: cno-cd-operator
   namespace: {{ .Release.Namespace }}
 spec:
@@ -23,6 +26,9 @@ spec:
          kubectl.kubernetes.io/default-container: manager
       labels:
         app: cno-cd-operator
+      {{- range $key, $value := .Values.cnoCD.labels }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
     spec:
       securityContext:
         runAsNonRoot: true
@@ -107,13 +113,18 @@ rules:
   resources:
   - secrets
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
   - ""
   resources:
   - services
+  - services/finalizers
   verbs:
   - create
   - delete
@@ -197,6 +208,13 @@ rules:
   - gateways
   - httproutes
   - tcproutes
+  verbs:
+  - '*'
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - imagestreams
+  - imagestreams/finalizers
   verbs:
   - '*'
 - apiGroups:
@@ -319,7 +337,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: proxy-rolebinding
+  name: cno-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -328,19 +346,6 @@ subjects:
 - kind: ServiceAccount
   name: cno-cd-operator
   namespace: {{ .Release.Namespace }}
-
---- 
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: metrics-reader
-rules:
-- nonResourceURLs:
-  - "/metrics"
-  verbs:
-  - get
-
 
 ---
 apiVersion: v1

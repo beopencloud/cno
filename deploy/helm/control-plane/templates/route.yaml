@@ -8,6 +8,7 @@ metadata:
   name: cno-api
   namespace: {{ .Release.Namespace }}
 spec:
+  host: cno-api.{{ .Values.expose.ingress.domain }}
   to:
     kind: Service
     name: cno-api
@@ -16,6 +17,7 @@ spec:
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   {{- end }}
 ---
 apiVersion: route.openshift.io/v1
@@ -26,6 +28,7 @@ metadata:
   name: cno-ui
   namespace: {{ .Release.Namespace }}
 spec:
+  host: cno.{{ .Values.expose.ingress.domain }}
   to:
     kind: Service
     name: cno-ui
@@ -34,5 +37,6 @@ spec:
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   {{- end }}
 {{- end }}

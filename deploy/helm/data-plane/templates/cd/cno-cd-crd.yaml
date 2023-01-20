@@ -749,6 +749,8 @@ spec:
                     type: boolean
                   autoProgression:
                     properties:
+                      enabled:
+                        type: boolean
                       increment:
                         format: int32
                         type: integer
@@ -771,8 +773,11 @@ spec:
                       minRequest:
                         format: int32
                         type: integer
-                      stop:
-                        type: boolean
+                      steps:
+                        items:
+                          format: int32
+                          type: integer
+                        type: array
                       webhooks:
                         items:
                           properties:
@@ -865,11 +870,14 @@ spec:
                             type: string
                           name:
                             type: string
+                          sha265:
+                            type: string
                         required:
-                        - createdAt
                         - name
                         type: object
                       type: array
+                    stagingVersion:
+                      type: string
                     version:
                       type: string
                     versionHistory:

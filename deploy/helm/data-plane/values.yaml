@@ -1,6 +1,8 @@
 global:
   # cno-api config
   cnoAPI:
+    labels:
+      # will be applied to pods and deployment
     protocol: http
     # internalServiceName: cno-api-svc
     externalUrl: https://api.cno.io
@@ -13,9 +15,11 @@ global:
 defaultCluster: false
 defaultClusterType: eks
 cnoOnboarding:
+  labels:
+    # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v1.1.0-alpha
+    version: v1.1.0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -24,9 +28,11 @@ cnoOnboarding:
   #     cpu: 1
   #     memory: 1Gi
 cnoCD:
+  labels:
+    # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-cd-operator
-    version: v1.1.0-alpha
+    version: v1.1.0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -35,10 +41,12 @@ cnoCD:
   #     cpu: 1
   #     memory: 1Gi
 cnoAgent:
+  labels:
+    # will be applied to pods and deployment
   metricServer: true
   image:
     name: docker.io/beopenit/cno-agent
-    version: v1.1.0-alpha
+    version: v1.1.0
   # resources:
   #   requests:
   #     cpu: 100m
