@@ -17,7 +17,7 @@ spec:
     app: prometheus-server
   type: ClusterIP  
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 9090
 
 ---
