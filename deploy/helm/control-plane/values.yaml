@@ -159,3 +159,7 @@ agentConfig:
   cnoOnboarding:
     labels:
       # will be applied to pods and deployment
+
+strimziKafkaOperator:
+  labels:
+  # will be applied to pods and deployment

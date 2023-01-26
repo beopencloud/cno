@@ -9,6 +9,13 @@ metadata:
   {{- end }}
 spec:
   kafka:
+    template:
+      pod:
+        metadata:
+          labels:
+          {{- range $key, $value := .Values.kafkaConfig.labels }}
+            {{ $key  }}: {{ $value  }}
+          {{- end }}
     version: 3.3.1
     replicas: 1
     storage:
@@ -80,6 +87,13 @@ spec:
       {{- end}}
       log.message.format.version: "3.0"
   zookeeper:
+    template:
+      pod:
+        metadata:
+          labels:
+          {{- range $key, $value := .Values.kafkaConfig.labels }}
+            {{ $key  }}: {{ $value  }}
+          {{- end }}
     replicas: 1
     storage:
       {{- if eq .Values.kafkaConfig.storage.type "persistent-claim" }}
