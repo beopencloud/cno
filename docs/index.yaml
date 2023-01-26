@@ -3,7 +3,7 @@ entries:
   cno:
   - apiVersion: v2
     appVersion: v1.1.0
-    created: "2023-01-20T13:58:21.80519Z"
+    created: "2023-01-26T15:26:18.081914Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -15,7 +15,7 @@ entries:
       repository: file://../data-plane
       version: v1.1.0
     description: Chart for CNO control plane
-    digest: d5633eb2f76ea820069a1927b15d3d837c90e0cc48850bf7a8503be6c6470ea3
+    digest: 82f6de80f63be415f080039ca20a0a08a2636fce4054ab1b029faba20a1565ba
     name: cno
     type: application
     urls:
@@ -23,7 +23,7 @@ entries:
     version: v1.1.0
   - apiVersion: v2
     appVersion: 1.1.0-alpha
-    created: "2023-01-20T13:58:21.788311Z"
+    created: "2023-01-26T15:26:18.065629Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -43,7 +43,7 @@ entries:
     version: 1.1.0-alpha
   - apiVersion: v2
     appVersion: v1.1.0-alpha
-    created: "2023-01-20T13:58:21.799542Z"
+    created: "2023-01-26T15:26:18.07652Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -63,7 +63,7 @@ entries:
     version: v1.1.0-alpha
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2023-01-20T13:58:21.783083Z"
+    created: "2023-01-26T15:26:18.061283Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -83,7 +83,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-01-20T13:58:21.777794Z"
+    created: "2023-01-26T15:26:18.056942Z"
     dependencies:
     - alias: strimziKafkaOperator
       name: strimzi-kafka-operator
@@ -104,7 +104,7 @@ entries:
   cno-agent:
   - apiVersion: v2
     appVersion: v1.1.0
-    created: "2023-01-20T13:58:21.794276Z"
+    created: "2023-01-26T15:26:18.071924Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -112,7 +112,7 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for CNO agent
-    digest: 266db06e96bdfeea0a254b04a91f7e62d96ddcae397924e417214f6a81011055
+    digest: adb83c71038a1808617374355897cf66918b8a83144e03d1cf015534676653ed
     name: cno-agent
     type: application
     urls:
@@ -120,7 +120,7 @@ entries:
     version: v1.1.0
   - apiVersion: v2
     appVersion: 1.1.0-alpha
-    created: "2023-01-20T13:58:21.791625Z"
+    created: "2023-01-26T15:26:18.069572Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -136,7 +136,7 @@ entries:
     version: 1.1.0-alpha
   - apiVersion: v2
     appVersion: v1.1.0-alpha
-    created: "2023-01-20T13:58:21.792983Z"
+    created: "2023-01-26T15:26:18.07063Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -152,7 +152,7 @@ entries:
     version: v1.1.0-alpha
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2023-01-20T13:58:21.790271Z"
+    created: "2023-01-26T15:26:18.068535Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -168,7 +168,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-01-20T13:58:21.789281Z"
+    created: "2023-01-26T15:26:18.066634Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -182,4 +182,4 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/cno-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-01-20T13:58:21.772485Z"
+generated: "2023-01-26T15:26:18.052394Z"
