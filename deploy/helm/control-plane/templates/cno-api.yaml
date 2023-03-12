@@ -121,7 +121,7 @@ spec:
               value: {{ .Values.agentConfig.defaultCluster | quote }}
             {{- if and (eq .Values.expose.type "nginx-ingress") }}
             - name: DEFAULT_EXTERNAL_BROKERS_URL
-              value: broker-0-cno.{{ .Values.expose.ingress.domain }}:443
+              value: endpoint-0-cno.{{ .Values.expose.ingress.domain }}:443
             - name: SERVER_URL
               value: https://cno-api.{{ .Values.expose.ingress.domain }}
             {{- end }}
