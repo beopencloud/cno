@@ -24,16 +24,16 @@ Expand the name of the chart.
   value: {{ .Values.databaseConfig.port | quote }}
 - name: DB_NAME
   value: {{ .Values.databaseConfig.database }}
-- name: DB_USERNAME
+- name: {{ .Values.databaseConfig.secret.databaseKey }}
   valueFrom:
     secretKeyRef:
       name: {{ .Values.databaseConfig.secret.name }}
-      key: DB_USERNAME
+      key: {{ .Values.databaseConfig.secret.usernameKey }}
 - name: DB_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Values.databaseConfig.secret.name }}
-      key: DB_PASSWORD
+      key: {{ .Values.databaseConfig.secret.passwordKey }}
 {{- end }}
 
 {{- define "cno-chart.licenceSecret" -}}

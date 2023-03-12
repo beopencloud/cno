@@ -124,6 +124,9 @@ databaseConfig:
   secret:
     # Create secret and Overwrite DB_USERNAME DB_PASSWORD KEYS
     name: cno-db-credentals
+    usernameKey: username
+    passwordKey: password
+    databaseKey: database
   image:
     name: docker.io/mysql
     version: "8.0.31"
