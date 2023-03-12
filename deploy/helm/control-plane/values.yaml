@@ -9,7 +9,7 @@ expose:
   type: nginx-ingress
   # set if expose equal to route or nginx-ingress
   ingress:
-    domain: dev.gocno.io
+    domain: cno.app
 # set super admin password (username admin)
 superadmin:
   password: admin
