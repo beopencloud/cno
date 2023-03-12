@@ -16,11 +16,11 @@ spec:
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
   tls:
     - hosts:
-        - cno-api.{{ .Values.expose.ingress.domain }}
+        - api.{{ .Values.expose.ingress.domain }}
       secretName: cno-dev.gocno.io-tls
   {{- end }}
   rules:
-    - host: cno-api.{{ .Values.expose.ingress.domain }}
+    - host: api.{{ .Values.expose.ingress.domain }}
       http:
         paths:
           - path: /
@@ -48,11 +48,11 @@ spec:
   {{- if eq .Values.global.cnoAPI.protocol "https" }}
   tls:
     - hosts:
-        - cno.{{ .Values.expose.ingress.domain }}
+        - {{ .Values.expose.ingress.domain }}
       secretName: cno-dev.gocno.io-tls
   {{- end }}
   rules:
-    - host: cno.{{ .Values.expose.ingress.domain }}
+    - host: {{ .Values.expose.ingress.domain }}
       http:
         paths:
           - path: /
