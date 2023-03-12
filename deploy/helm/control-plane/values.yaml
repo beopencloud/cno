@@ -143,6 +143,8 @@ agentConfig:
   defaultCluster: true
   defaultClusterType: eks
   cnoAgent:
+    image:
+      version: v1.1.0
     labels:
       # will be applied to pods and deployment
     metricServer: true
@@ -153,10 +155,14 @@ agentConfig:
       brokers: cno-kafka-cluster-kafka-bootstrap:9093
 
   cnoCD:
+    image:
+      version: v1.1.0
     labels:
     # will be applied to pods and deployment
 
   cnoOnboarding:
+    image:
+      version: v1.1.0
     labels:
       # will be applied to pods and deployment
 
