@@ -64,11 +64,11 @@ spec:
             host: bootstrap-cno.{{ .Values.expose.ingress.domain }}
           brokers:
           - broker: 0
-            host: broker-0-cno.{{ .Values.expose.ingress.domain }}
+            host: endpoint-0-cno.{{ .Values.expose.ingress.domain }}
           - broker: 1
-            host: broker-1-cno.{{ .Values.expose.ingress.domain }}
+            host: endpoint-1-cno.{{ .Values.expose.ingress.domain }}
           - broker: 2
-            host: broker-2-cno.{{ .Values.expose.ingress.domain }}
+            host: endpoint-2-cno.{{ .Values.expose.ingress.domain }}
         {{- end }}
     authorization:
       type: simple
