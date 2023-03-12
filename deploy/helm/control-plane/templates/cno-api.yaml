@@ -53,16 +53,6 @@ spec:
       {{- end }}
     spec:
       initContainers:
-        - name: keycloak-check
-          image: {{ .Values.keycloakConfig.image.name }}:{{ .Values.keycloakConfig.image.version }}
-          command: ["/bin/sh","-c"]
-          args:
-            - |
-              until $(curl --output /dev/null --silent --head --fail {{ .Values.keycloakConfig.service.protocol }}://{{ .Values.keycloakConfig.service.name }}:{{ .Values.keycloakConfig.service.port }}/auth/realms/cno); do
-                echo keycloak unvailable `date`
-                sleep 10
-              done
-              echo Successed: `date`
         - name: kafka-check
           image: {{ .Values.kafkaConfig.image.name }}:{{ .Values.kafkaConfig.image.version }}
           env:
@@ -114,14 +104,6 @@ spec:
               value: "true"
             - name: SERVER_PORT
               value: "8080"
-            - name: OIDC_REALM
-              value: {{ .Values.keycloakConfig.realm }}
-            - name: OIDC_SERVER_BASE_URL
-              value: "{{ .Values.keycloakConfig.service.protocol }}://{{ .Values.keycloakConfig.service.name }}:{{ .Values.keycloakConfig.service.port }}"
-            - name: OIDC_CLIENT_ID
-              value: {{ .Values.keycloakConfig.client.id }}
-            - name: OIDC_CLIENT_SECRET
-              value: {{ .Values.keycloakConfig.client.secret | quote }}
             - name: KAFKA_BROKERS
               value: cno-kafka-cluster-kafka-bootstrap:9093
             - name: KAFKA_TlS_ENABLED
