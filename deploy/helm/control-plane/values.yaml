@@ -142,6 +142,7 @@ databaseConfig:
 agentConfig:
   defaultCluster: true
   defaultClusterType: eks
+  includeMonitoring: true
   cnoAgent:
     labels:
       # will be applied to pods and deployment

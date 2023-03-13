@@ -67,3 +67,5 @@ cnoAgent:
     # Overwrite licence secret: set keys uuid, user.key, user.crt and ca.crt
     # secret:
     #   name: my-licence
+
+includeMonitoring: true
