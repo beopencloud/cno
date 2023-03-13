@@ -78,3 +78,7 @@ cnoApiGateway:
     # key:
     # - value1
     # - value2
+  nodeAntiAffinity:
+    # key:
+    # - value1
+    # - value2

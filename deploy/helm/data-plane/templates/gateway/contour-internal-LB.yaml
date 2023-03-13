@@ -632,6 +632,19 @@ spec:
         {{ $key  }}: {{ $value  }}
       {{- end }}
       affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
+              matchExpressions:
+              - key: {{ $key }}
+                operator: In
+                values:
+              {{- range $values }}
+                - {{ . }}
+              {{- end }}
+            {{- end }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:

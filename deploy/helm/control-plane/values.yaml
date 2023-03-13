@@ -154,6 +154,10 @@ agentConfig:
       # key:
         # - value1
         # - value2
+    nodeAntiAffinity:
+      # key:
+      # - value1
+      # - value2
   cnoAgent:
     labels:
       # will be applied to pods and deployment
