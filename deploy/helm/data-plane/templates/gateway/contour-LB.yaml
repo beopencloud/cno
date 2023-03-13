@@ -7030,6 +7030,11 @@ spec:
       labels:
         app: envoy
     spec:
+      nodeSelector:
+      {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
+        {{ $key  }}: {{ $value  }}
+      {{- end }}
+          
       containers:
       - command:
         - /bin/contour

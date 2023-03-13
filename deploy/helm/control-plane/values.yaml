@@ -147,6 +147,8 @@ agentConfig:
   apiGateway:
     type: loadBalancer
 
+    nodeSelector:
+      # key: value
   cnoAgent:
     labels:
       # will be applied to pods and deployment

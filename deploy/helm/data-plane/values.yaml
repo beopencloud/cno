@@ -70,5 +70,7 @@ cnoAgent:
 
 includeMonitoring: true
 
-apiGateway:
+cnoApiGateway:
   type: loadBalancer
+  nodeSelector:
+    # key: value
