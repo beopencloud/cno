@@ -143,6 +143,10 @@ agentConfig:
   defaultCluster: true
   defaultClusterType: eks
   includeMonitoring: true
+
+  apiGateway:
+    type: loadBalancer
+
   cnoAgent:
     labels:
       # will be applied to pods and deployment

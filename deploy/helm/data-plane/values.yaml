@@ -69,3 +69,6 @@ cnoAgent:
     #   name: my-licence
 
 includeMonitoring: true
+
+apiGateway:
+  type: loadBalancer

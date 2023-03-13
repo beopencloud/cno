@@ -13,6 +13,8 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
+{{- if eq .Values.cnoApiGateway.type "hostPort" }}
+
 ---
 apiVersion: v1
 kind: Namespace
@@ -7166,3 +7168,5 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
+
+{{- end -}}

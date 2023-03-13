@@ -13,6 +13,8 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
+{{- if eq .Values.cnoApiGateway.type "loadBalancer" }}
+
 ---
 apiVersion: v1
 kind: Namespace
@@ -856,3 +858,5 @@ data:
               max_pending_requests: 100000
               max_requests: 60000000
               max_retries: 50
+
+{{- end -}}
