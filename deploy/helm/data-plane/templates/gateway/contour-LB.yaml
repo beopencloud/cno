@@ -7034,7 +7034,19 @@ spec:
       {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
         {{ $key  }}: {{ $value  }}
       {{- end }}
-          
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
+            - matchExpressions:
+              - key: {{ $key  }}
+                operator: In
+                values:
+              {{- range $values }}
+                - {{ . }}
+              {{- end }}
+            {{- end }}
       containers:
       - command:
         - /bin/contour

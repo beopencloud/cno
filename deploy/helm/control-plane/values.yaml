@@ -149,6 +149,11 @@ agentConfig:
 
     nodeSelector:
       # key: value
+    
+    nodeAffinity:
+      # key:
+        # - value1
+        # - value2
   cnoAgent:
     labels:
       # will be applied to pods and deployment
