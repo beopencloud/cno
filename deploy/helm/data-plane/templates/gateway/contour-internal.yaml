@@ -644,8 +644,8 @@ spec:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
               matchExpressions:
+            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
               - key: {{ $key }}
                 operator: In
                 values:
@@ -657,8 +657,8 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
             - matchExpressions:
+            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
               - key: {{ $key  }}
                 operator: In
                 values:
