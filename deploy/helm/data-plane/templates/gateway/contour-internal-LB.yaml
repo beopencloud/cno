@@ -694,8 +694,6 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 4
         volumeMounts:
-          - name: envoy-config-contour
-            mountPath: /config
           - name: envoy-config
             mountPath: /config
             readOnly: true
@@ -727,8 +725,6 @@ spec:
         imagePullPolicy: IfNotPresent
         name: envoy-initconfig
         volumeMounts:
-        - name: envoy-config-contour
-          mountPath: /config
         - name: envoy-config
           mountPath: /config
         - name: envoycert
@@ -744,8 +740,6 @@ spec:
       terminationGracePeriodSeconds: 300
       volumes:
         - name: envoy-admin
-          emptyDir: {}
-        - name: envoy-config-contour
           emptyDir: {}
         - name: envoy-config
           configMap:
