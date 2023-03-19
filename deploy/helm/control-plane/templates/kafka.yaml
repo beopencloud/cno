@@ -61,14 +61,14 @@ spec:
           class: nginx
           {{- end }}
           bootstrap:
-            host: bootstrap-cno.{{ .Values.expose.ingress.domain }}
+            host: bootstrap.{{ .Values.expose.ingress.domain }}
           brokers:
           - broker: 0
-            host: endpoint-0-cno.{{ .Values.expose.ingress.domain }}
+            host: endpoint-0.{{ .Values.expose.ingress.domain }}
           - broker: 1
-            host: endpoint-1-cno.{{ .Values.expose.ingress.domain }}
+            host: endpoint-1.{{ .Values.expose.ingress.domain }}
           - broker: 2
-            host: endpoint-2-cno.{{ .Values.expose.ingress.domain }}
+            host: endpoint-2.{{ .Values.expose.ingress.domain }}
         {{- end }}
     authorization:
       type: simple
