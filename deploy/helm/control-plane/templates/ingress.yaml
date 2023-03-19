@@ -17,7 +17,7 @@ spec:
   tls:
     - hosts:
         - api.{{ .Values.expose.ingress.domain }}
-      secretName: cno-dev.gocno.io-tls
+      secretName: cno-certificate-secret
   {{- end }}
   rules:
     - host: api.{{ .Values.expose.ingress.domain }}
@@ -49,7 +49,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.expose.ingress.domain }}
-      secretName: cno-dev.gocno.io-tls
+      secretName: cno-certificate-secret
   {{- end }}
   rules:
     - host: {{ .Values.expose.ingress.domain }}
