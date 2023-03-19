@@ -9,7 +9,7 @@ expose:
   type: nginx-ingress
   # set if expose equal to route or nginx-ingress
   ingress:
-    domain: cno.app
+    domain: dev.cno.app
 # set super admin password (username admin)
 superadmin:
   password: admin
@@ -32,7 +32,7 @@ global:
       endpoint: /api/v1/healthy
     image:
       name: docker.io/beopenit/cno-api
-      version: v1.1.0
+      version: v2.1.1-rc
     # resources:
     #   requests:
     #     cpu: 100m
@@ -47,7 +47,7 @@ cnoUI:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-ui
-    version: v1.1.0
+    version: v2.1.2-rc
   # resources:
   #   requests:
   #     cpu: 100m
@@ -118,12 +118,13 @@ databaseConfig:
   internalDatabase: true
   # Only MYSQL database is supported at this time
   type: mysql
-  host: cno-api-mysql
-  database: cnoapi
+  host: localhost
+  database: cno-db
+  databaseConnectionName: 
   port: 3306
   secret:
     # Create secret and Overwrite DB_USERNAME DB_PASSWORD KEYS
-    name: cno-db-credentals
+    name: cno-db-credentials
     usernameKey: username
     passwordKey: password
     databaseKey: database
@@ -145,12 +146,16 @@ databaseConfig:
 agentConfig:
   defaultCluster: true
   defaultClusterType: eks
+  includeMonitoring: false
+
+  cnoApiGateway:
+    asLoadBalancer: true
   cnoAgent:
     image:
-      version: v1.1.0
+      version: v1.1.0-alpha
     labels:
       # will be applied to pods and deployment
-    metricServer: true
+    metricServer: false
     licence:
       secret:
         name: agent-licence
@@ -159,7 +164,7 @@ agentConfig:
 
   cnoCD:
     image:
-      version: v1.1.0
+      version: v1.1.0-alpha
     labels:
     # will be applied to pods and deployment
 

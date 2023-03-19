@@ -158,7 +158,7 @@ spec:
 
             # Replace DB_PORT with the port the proxy should listen on
             - "--port=3306"
-            - "cno-saas-prod:europe-west1:cno-db-instance"
+            - {{ .Values.databaseConfig.databaseConnectionName | quote }}
             - "--credentials-file=/secrets/service_account.json"
           volumeMounts:
             - name: cloudsql-sa

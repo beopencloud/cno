@@ -24,7 +24,7 @@ Expand the name of the chart.
   value: {{ .Values.databaseConfig.port | quote }}
 - name: DB_NAME
   value: {{ .Values.databaseConfig.database }}
-- name: {{ .Values.databaseConfig.secret.databaseKey }}
+- name: DB_USERNAME
   valueFrom:
     secretKeyRef:
       name: {{ .Values.databaseConfig.secret.name }}
