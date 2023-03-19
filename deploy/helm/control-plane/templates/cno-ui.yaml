@@ -49,14 +49,14 @@ spec:
           env:
             {{- if or (eq .Values.expose.type "nginx-ingress") (eq .Values.expose.type "route") }}
             - name: API_URL
-              value: {{ .Values.global.cnoAPI.protocol }}://cno-api.{{ .Values.expose.ingress.domain }}
+              value: {{ .Values.global.cnoAPI.protocol }}://api.{{ .Values.expose.ingress.domain }}
             - name: NOTIFICATION_URL
-              value: {{ .Values.global.cnoAPI.protocol }}://cno-api.{{ .Values.expose.ingress.domain }}
+              value: {{ .Values.global.cnoAPI.protocol }}://api.{{ .Values.expose.ingress.domain }}
             {{- else }}
             - name: API_URL
-              value: {{ .Values.global.cnoAPI.protocol }}://cno-api-url
+              value: {{ .Values.global.cnoAPI.protocol }}://api-url
             - name: NOTIFICATION_URL
-              value: {{ .Values.global.cnoAPI.protocol }}://cno-api-url
+              value: {{ .Values.global.cnoAPI.protocol }}://api-url
             {{- end }}
             - name: OIDC_CLIENT_ID
               value: "public"

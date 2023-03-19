@@ -8,7 +8,7 @@ metadata:
   name: cno-api
   namespace: {{ .Release.Namespace }}
 spec:
-  host: cno-api.{{ .Values.expose.ingress.domain }}
+  host: api.{{ .Values.expose.ingress.domain }}
   to:
     kind: Service
     name: cno-api
@@ -28,7 +28,7 @@ metadata:
   name: cno-ui
   namespace: {{ .Release.Namespace }}
 spec:
-  host: cno.{{ .Values.expose.ingress.domain }}
+  host: {{ .Values.expose.ingress.domain }}
   to:
     kind: Service
     name: cno-ui

@@ -59,9 +59,9 @@ spec:
             - name: KAFKA_BROKERS
               value: cno-kafka-cluster-kafka-bootstrap:9092
             - name: SERVER_URL
-              value: {{ .Values.global.cnoAPI.protocol }}://cno-api.{{ .Values.expose.ingress.domain }}
+              value: {{ .Values.global.cnoAPI.protocol }}://api.{{ .Values.expose.ingress.domain }}
             - name: UI_URL
-              value: {{ .Values.global.cnoAPI.protocol }}://cno.{{ .Values.expose.ingress.domain }}
+              value: {{ .Values.global.cnoAPI.protocol }}://{{ .Values.expose.ingress.domain }}
           command:
             - /bin/sh
             - -c
@@ -121,9 +121,9 @@ spec:
               value: {{ .Values.agentConfig.defaultCluster | quote }}
             {{- if and (eq .Values.expose.type "nginx-ingress") }}
             - name: DEFAULT_EXTERNAL_BROKERS_URL
-              value: endpoint-0-cno.{{ .Values.expose.ingress.domain }}:443
+              value: endpoint-0.{{ .Values.expose.ingress.domain }}:443
             - name: SERVER_URL
-              value: https://cno-api.{{ .Values.expose.ingress.domain }}
+              value: https://api.{{ .Values.expose.ingress.domain }}
             {{- end }}
             {{- if .Values.agentConfig.defaultCluster }}
             - name: DEFAULT_CLUSTER_ID
