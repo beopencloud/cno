@@ -117,10 +117,22 @@ databaseConfig:
 agentConfig:
   defaultCluster: true
   defaultClusterType: eks
-  includeMonitoring: false
+  includeMonitoring: true
 
-  cnoApiGateway:
-    asLoadBalancer: true
+  apiGateway:
+    type: loadBalancer
+
+    nodeSelector:
+      # key: value
+    
+    nodeAffinity:
+      # key:
+        # - value1
+        # - value2
+    nodeAntiAffinity:
+      # key:
+      # - value1
+      # - value2
   cnoAgent:
     image:
       version: v1.1.0-alpha

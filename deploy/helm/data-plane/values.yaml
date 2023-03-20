@@ -73,3 +73,18 @@ cnoAgent:
     # Overwrite licence secret: set keys uuid, user.key, user.crt and ca.crt
     # secret:
     #   name: my-licence
+
+includeMonitoring: true
+
+cnoApiGateway:
+  type: loadBalancer
+  nodeSelector:
+    # key: value
+  nodeAffinity:
+    # key:
+    # - value1
+    # - value2
+  nodeAntiAffinity:
+    # key:
+    # - value1
+    # - value2
