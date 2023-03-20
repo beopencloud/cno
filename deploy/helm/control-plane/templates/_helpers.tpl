@@ -9,13 +9,6 @@ Expand the name of the chart.
 {{- printf "%s/%s/%s:%s" .Values.strimziOperator.image.registry .Values.strimziOperator.image.repository .Values.strimziOperator.image.name .Values.strimziOperator.image.tag }}
 {{- end }}
 
-{{- define "cno-chart.keycloakAdminSecret" -}}
-{{- if hasKey .Values.keycloakConfig.admin "secret" }}
-{{- .Values.keycloakConfig.admin.secret.name }}
-{{- else }}
-{{- "cno-keycloak-admin" }}
-{{- end }}
-{{- end }}
 
 {{- define "cno-chart.databaseConfig" -}}
 - name: DB_HOST

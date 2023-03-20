@@ -81,35 +81,6 @@ strimziOperator:
     name: operator
     tag: 0.32.0
 
-# Keycloak configuration
-keycloakConfig:
-  labels:
-    # will be applied to pods & statefulset
-  image:
-    name: quay.io/keycloak/keycloak
-    version: 20.0.1
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 512Mi
-  #   limits:
-  #     cpu: 100m
-  #     memory: 512Mi
-  admin:
-    username: admin
-    password: cno@2022!
-    # set secret to customize admin credentials ADMIN_USERNAME ADMIN_PASSWORD
-    # secret:
-    #   name: my-keycloak-credentials
-  service:
-    name: cno-keycloak
-    port: 8080
-    protocol: http
-  realm: cno
-  client:
-    id: cno-api
-    secret: cno-api-client-secret
-
 databaseConfig:
   labels:
     # will be applied to pods and deployment
