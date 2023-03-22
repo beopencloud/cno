@@ -61,7 +61,7 @@ spec:
           class: nginx
           {{- end }}
           bootstrap:
-            host: bootstrap.{{ .Values.expose.ingress.domain }}
+            host: endpoint.{{ .Values.expose.ingress.domain }}
           brokers:
           - broker: 0
             host: endpoint-0.{{ .Values.expose.ingress.domain }}
