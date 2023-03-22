@@ -530,15 +530,36 @@ spec:
       labels:
         app: contour
     spec:
+      nodeSelector:
+        {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
+          {{ $key  }}: {{ $value  }}
+        {{- end }}  
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchLabels:
-                  app: contour
-              topologyKey: kubernetes.io/hostname
-            weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
+              - key: {{ $key }}
+                operator: In
+                values:
+              {{- range $values }}
+                - {{ . }}
+              {{- end }}
+            {{- end }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
+              - key: {{ $key  }}
+                operator: In
+                values:
+              {{- range $values }}
+                - {{ . }}
+              {{- end }}
+            {{- end }}
       containers:
       - args:
         - serve
