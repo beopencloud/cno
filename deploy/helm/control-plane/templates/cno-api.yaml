@@ -114,6 +114,10 @@ spec:
               value: "false"
             - name: CNO_NAMESPACE
               value:  {{ .Release.Namespace }}
+            - name: FIREBASE_API_KEY
+              value: {{ .Values.global.cnoAPI.firebaseApiKey }}
+            - name: FIREBASE_LOGIN_URL
+              value: {{ .Values.global.cnoAPI.firebaseLoginUrl }}
             - name: KAFKA_CLUSTER_NAME
               value: cno-kafka-cluster
 {{ include "cno-chart.databaseConfig" . | indent 12 }}
