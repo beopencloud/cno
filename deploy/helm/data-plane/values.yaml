@@ -28,11 +28,6 @@ cnoOnboarding:
   #     cpu: 1
   #     memory: 1Gi
 
-includeMonitoring: false
-
-cnoApiGateway:
-  asLoadBalancer: true
-
 cnoCD:
   labels:
     # will be applied to pods and deployment
