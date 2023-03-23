@@ -13,6 +13,7 @@ spec:
       pod:
         metadata:
           labels:
+            cnocd.gocno.io/ignore: true
           {{- range $key, $value := .Values.kafkaConfig.labels }}
             {{ $key  }}: {{ $value  }}
           {{- end }}
@@ -91,6 +92,7 @@ spec:
       pod:
         metadata:
           labels:
+            cnocd.gocno.io/ignore: true
           {{- range $key, $value := .Values.kafkaConfig.labels }}
             {{ $key  }}: {{ $value  }}
           {{- end }}
@@ -104,3 +106,11 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
+    template:
+      pod:
+        metadata:
+          labels:
+            cnocd.gocno.io/ignore: true
+          {{- range $key, $value := .Values.kafkaConfig.labels }}
+            {{ $key  }}: {{ $value  }}
+          {{- end }}
