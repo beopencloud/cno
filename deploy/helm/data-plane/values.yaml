@@ -72,13 +72,22 @@ includeMonitoring: true
 
 cnoApiGateway:
   type: loadBalancer
+  
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: node-role.kubernetes.io/ingress-cno
+            operator: Exists
+        topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "ingress-cno"
+      value: "reserved"
+      effect: "NoSchedule"
+    - key: "ingress-cno"
+      value: "reserved"
+      effect: "NoExecute"
+
   nodeSelector:
-    # key: value
-  nodeAffinity:
-    # key:
-    # - value1
-    # - value2
-  nodeAntiAffinity:
-    # key:
-    # - value1
-    # - value2
+    node-role.kubernetes.io/ingress-cno: ""
