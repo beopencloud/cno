@@ -531,35 +531,18 @@ spec:
         app: contour
     spec:
       nodeSelector:
-        {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
-          {{ $key  }}: {{ $value  }}
-        {{- end }}  
+        {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
+          {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
+        {{- end }}
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key  }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
+          {{- if hasKey .Values.cnoApiGateway "podAntiAffinity" -}}
+            {{- toYaml .Values.cnoApiGateway.podAntiAffinity | nindent 10 -}}
+          {{- end }}
+      tolerations:
+        {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
+          {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
+        {{- end }}
       containers:
       - args:
         - serve
@@ -655,35 +638,13 @@ spec:
         app: envoy
     spec:
       nodeSelector:
-      {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
-        {{ $key  }}: {{ $value  }}
-      {{- end }}
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key  }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
+        {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
+          {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
+        {{- end }}  
+      tolerations:
+        {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
+          {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
+        {{- end }}
       containers:
       - command:
         - /bin/contour

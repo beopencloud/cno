@@ -525,35 +525,18 @@ spec:
         app: contour
     spec:
       nodeSelector:
-      {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
-        {{ $key  }}: {{ $value  }}
+      {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
+        {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
       {{- end }}
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key  }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
+          {{- if hasKey .Values.cnoApiGateway "podAntiAffinity" -}}
+            {{- toYaml .Values.cnoApiGateway.podAntiAffinity | nindent 10 -}}
+          {{- end }}
+      tolerations:
+      {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
+        {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
+      {{- end }}
       containers:
       - args:
         - serve
@@ -607,15 +590,6 @@ spec:
               fieldPath: metadata.name
       dnsPolicy: ClusterFirst
       serviceAccountName: contour
-      nodeSelector:
-        node-role.kubernetes.io/ingress-cno: ""
-      tolerations:
-      - key: "ingress-cno"
-        value: "reserved"
-        effect: "NoSchedule"
-      - key: "ingress-cno"
-        value: "reserved"
-        effect: "NoExecute"
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
@@ -658,35 +632,13 @@ spec:
         app: envoy
     spec:
       nodeSelector:
-      {{- range $key, $value := .Values.cnoApiGateway.nodeSelector }}
-        {{ $key  }}: {{ $value  }}
-      {{- end }}
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-            {{- range $key, $values := .Values.cnoApiGateway.nodeAffinity }}
-              - key: {{ $key  }}
-                operator: In
-                values:
-              {{- range $values }}
-                - {{ . }}
-              {{- end }}
-            {{- end }}
+        {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
+          {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
+        {{- end }}
+      tolerations:
+        {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
+          {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
+        {{- end }}
       containers:
       - command:
         - /bin/contour
