@@ -33,13 +33,13 @@ cnoCD:
   image:
     name: docker.io/beopenit/cno-cd-operator
     version: v1.1.0
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 512Mi
-  #   limits:
-  #     cpu: 1
-  #     memory: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 2
+      memory: 2Gi
 cnoAgent:
   labels:
     # will be applied to pods and deployment
@@ -47,13 +47,13 @@ cnoAgent:
   image:
     name: docker.io/beopenit/cno-agent
     version: v1.1.0
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 512Mi
-  #   limits:
-  #     cpu: 1
-  #     memory: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
   kafka:
     brokers: cno-kafka-cluster-kafka-external-bootstrap:9094
   licence:
