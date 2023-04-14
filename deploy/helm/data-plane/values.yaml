@@ -67,3 +67,27 @@ cnoAgent:
     # Overwrite licence secret: set keys uuid, user.key, user.crt and ca.crt
     # secret:
     #   name: my-licence
+
+includeMonitoring: true
+
+cnoApiGateway:
+  type: loadBalancer
+  
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: node-role.kubernetes.io/ingress-cno
+            operator: Exists
+        topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "ingress-cno"
+      value: "reserved"
+      effect: "NoSchedule"
+    - key: "ingress-cno"
+      value: "reserved"
+      effect: "NoExecute"
+
+  nodeSelector:
+    node-role.kubernetes.io/ingress-cno: ""
