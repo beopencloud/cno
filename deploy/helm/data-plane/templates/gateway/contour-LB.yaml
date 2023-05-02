@@ -441,19 +441,6 @@ spec:
       labels:
         app: contour
     spec:
-      nodeSelector:
-        {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
-          {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
-        {{- end }}
-      affinity:
-        podAntiAffinity:
-          {{- if hasKey .Values.cnoApiGateway "podAntiAffinity" -}}
-            {{- toYaml .Values.cnoApiGateway.podAntiAffinity | nindent 10 -}}
-          {{- end }}
-      tolerations:
-        {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
-          {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
-        {{- end }}
       containers:
       - args:
         - serve
@@ -548,14 +535,6 @@ spec:
       labels:
         app: envoy
     spec:
-      nodeSelector:
-        {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
-          {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
-        {{- end }}
-      tolerations:
-        {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
-          {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
-        {{- end }}
       containers:
       - command:
         - /bin/contour
