@@ -69,7 +69,7 @@ spec:
             - name: CLUSTER_TYPE
               value: {{ .Values.defaultClusterType }}
             - name: DEFAULT_GATEWAY_NAMESPACE
-              value: "cno-gateway-api"
+              value: "cno-apigateway"
             - name: DEFAULT_GATEWAY_NAME
               value: "cno"
 

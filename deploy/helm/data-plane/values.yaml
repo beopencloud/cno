@@ -13,13 +13,13 @@ global:
       endpoint: /api/v1/healthy
 # set defaultCluster=true if cluster content control plane
 defaultCluster: false
-defaultClusterType: eks
+defaultClusterType: gke
 cnoOnboarding:
   labels:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v1.1.0
+    version: v2.0.0-beta
   # resources:
   #   requests:
   #     cpu: 100m
@@ -32,21 +32,21 @@ cnoCD:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/cno-cd-operator
-    version: v1.1.0
+    version: v2.0.0-beta
   # resources:
   #   requests:
   #     cpu: 100m
-  #     memory: 512Mi
+  #     memory: 256Mi
   #   limits:
-  #     cpu: 1
-  #     memory: 1Gi
+  #     cpu: 2
+  #     memory: 2Gi
 cnoAgent:
   labels:
     # will be applied to pods and deployment
   metricServer: true
   image:
     name: docker.io/beopenit/cno-agent
-    version: v1.1.0
+    version: v2.0.0-beta
   # resources:
   #   requests:
   #     cpu: 100m
@@ -67,3 +67,27 @@ cnoAgent:
     # Overwrite licence secret: set keys uuid, user.key, user.crt and ca.crt
     # secret:
     #   name: my-licence
+
+includeMonitoring: true
+
+cnoApiGateway:
+  type: loadBalancer
+  
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: node-role.kubernetes.io/ingress-cno
+            operator: Exists
+        topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "ingress-cno"
+      value: "reserved"
+      effect: "NoSchedule"
+    - key: "ingress-cno"
+      value: "reserved"
+      effect: "NoExecute"
+
+  nodeSelector:
+    node-role.kubernetes.io/ingress-cno: ""
