@@ -103,7 +103,7 @@ entries:
     version: 1.0.0
   cno-agent:
   - apiVersion: v2
-    appVersion: v2.0.0
+    appVersion: v2.0.0-beta
     created: "2023-05-02T14:11:56.618073272Z"
     dependencies:
     - alias: metrics-server
@@ -116,8 +116,8 @@ entries:
     name: cno-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/cno-agent-v2.0.0.tgz
-    version: v2.0.0
+    - https://beopencloud.github.io/cno/cno-agent-v2.0.0-beta.tgz
+    version: v2.0.0-beta
   - apiVersion: v2
     appVersion: v1.1.0
     created: "2023-01-26T15:26:18.071924Z"
