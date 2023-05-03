@@ -21,7 +21,18 @@ spec:
   ports:
     - port: 80
       targetPort: 9090
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-cno-monitoring-pvc
+  namespace: cno-monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,6 +57,7 @@ spec:
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus/"
+            - '--storage.tsdb.retention.time=7d'
           ports:
             - containerPort: 9090
           volumeMounts:
@@ -60,8 +72,12 @@ spec:
             name: prometheus-server-conf
   
         - name: prometheus-storage-volume
-          emptyDir: {}
-
+          persistentVolumeClaim:
+            claimName: my-cno-monitoring-pvc
+      securityContext:
+        fsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 1000
 ---
 apiVersion: v1
 kind: ConfigMap
