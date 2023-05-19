@@ -106,8 +106,6 @@ spec:
                   type: array
               required:
                 - name
-                - resources
-                - storage
                 - users
               type: object
             status:
