@@ -68,7 +68,9 @@ cnoAgent:
     # secret:
     #   name: my-licence
 
-includeMonitoring: true
+monitoring:
+  include: true
+  pvcSize: 15Gi
 
 cnoApiGateway:
   type: loadBalancer
