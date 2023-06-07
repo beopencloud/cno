@@ -3,7 +3,7 @@ entries:
   cno-agent:
   - apiVersion: v2
     appVersion: v2.0.1
-    created: "2023-05-19T18:28:14.957743Z"
+    created: "2023-06-07T14:31:45.6031826Z"
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
@@ -11,11 +11,11 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for CNO agent
-    digest: 0af757f3e6f3d207a72461ad59c74b728f0623030a1cfe8007c77e989b7caa38
+    digest: 271584f4d4c6bb49728dc3f12c30657299f5f76487e24bebd2d53e8c59717541
     name: cno-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/cno-agent-v2.0.1.tgz
+    - cno-agent-v2.0.1.tgz
     version: v2.0.1
   metrics-server:
   - annotations:
@@ -24,7 +24,7 @@ entries:
           description: "Allow probes to be turned off completly (this is not advised unless you know what you're doing)."
     apiVersion: v2
     appVersion: 0.6.1
-    created: "2023-05-19T18:28:14.958299Z"
+    created: "2023-06-07T14:31:45.604285401Z"
     description: Metrics Server is a scalable, efficient source of container resource
       metrics for Kubernetes built-in autoscaling pipelines.
     digest: 4358fb2014c1e8311653d9495216555e4897db28464b95c96619b0be94b253ec
@@ -46,6 +46,6 @@ entries:
     - https://github.com/kubernetes-sigs/metrics-server
     type: application
     urls:
-    - https://beopencloud.github.io/cno/charts/metrics-server-3.8.2.tgz
+    - charts/metrics-server-3.8.2.tgz
     version: 3.8.2
-generated: "2023-05-19T18:28:14.952614Z"
+generated: "2023-06-07T14:31:45.583821554Z"

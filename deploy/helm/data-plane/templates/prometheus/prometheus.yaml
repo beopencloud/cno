@@ -1,4 +1,4 @@
-{{- if eq .Values.includeMonitoring true -}}
+{{- if eq .Values.monitoring.include true -}}
 
 ---
 apiVersion: v1
@@ -32,7 +32,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: {{ .Values.monitoring.pvcSize }}
 ---
 apiVersion: apps/v1
 kind: Deployment
