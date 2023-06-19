@@ -155,8 +155,6 @@ At the top right of the github repository, click on the "Fork" button. This will
 
 You can contact us through the mail adress [cno@beopenit.com](mailto:cno@beopenit.com) (we answer in a matter of hours)
 
-<--- You can submit a meeting with us [here](https://gocno.io/demo/) --->
-
 You can directly send a message in CNO's slack [here](https://gocno.slack.com)
 
 ## Roadmap
