@@ -71,7 +71,7 @@ Only four concepts, i.e., four steps, to achieve onboarding and deploying at sca
 
 CNO core components run on Kubernetes, with remote agents in each of the other Kubernetes clusters in its scope. All CNO features are exposed through a REST API, a command-line tool, and a web User Interface.
 
-### CNO Hub
+### CNO Clusters(Hub)
 
 Hide the complexity of multi-cloud or multi-cluster Kubernetes infrastructure management.
 CNO Hub centralizes management, governance, and monitoring of your Kubernetes clusters on any cloud from a single Console. 
@@ -79,7 +79,7 @@ May it be public or on-premise.
 
 [More about CNO Hub >](https://docs.gocno.io/concepts/cno-hub/)
 
-### CNO Onboard
+### CNO Projects(Onboard)
 
 Quickly onboard and manage your team's or organization's projects within a unifying management platform.
 
@@ -97,7 +97,7 @@ Take advantage of CNO Deploy with advanced deployment strategies such as Canary,
 
 [More about CNO Deploy >](https://docs.gocno.io/concepts/cno-deploy/) 
 
-### CNO Secure
+### CNO Members(Secure)
 
 Learn how to ensure an entire lifecycle of Kubernetes security for all your clusters and containerized cloud-native applications.
 
