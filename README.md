@@ -7,7 +7,7 @@ CNO core components run on Kubernetes, with remote agents in each of the other K
 Through CNO, you can take advantage of the Kubernetes ecosystem and set up the best Onboarding Experience for your Teams. 
 
 -   Website: [gocno.io](http://www.gocno.io)
--   Full Documentation : [https://gocno.io/docs](https://gocno.io/docs/about/what-is-cno)
+-   Full Documentation : [https://docs.gocno.io/](https://docs.gocno.io/about/what-is-cno)
 -   Community : [CNO's slack](https://gocno.slack.com)
 
 **Your feedback is valuable:** We are particularly attentive to your experience with CNO. 
@@ -71,15 +71,15 @@ Only four concepts, i.e., four steps, to achieve onboarding and deploying at sca
 
 CNO core components run on Kubernetes, with remote agents in each of the other Kubernetes clusters in its scope. All CNO features are exposed through a REST API, a command-line tool, and a web User Interface.
 
-### CNO Hub
+### CNO Clusters(Hub)
 
 Hide the complexity of multi-cloud or multi-cluster Kubernetes infrastructure management.
 CNO Hub centralizes management, governance, and monitoring of your Kubernetes clusters on any cloud from a single Console. 
 May it be public or on-premise.
 
-[More about CNO Hub >](https://gocno.io/docs/concepts/cno-hub/)
+[More about CNO Hub >](https://docs.gocno.io/concepts/cno-hub/)
 
-### CNO Onboard
+### CNO Projects(Onboard)
 
 Quickly onboard and manage your team's or organization's projects within a unifying management platform.
 
@@ -87,7 +87,7 @@ CNO Onboard is the platform's flagship feature, providing a turnkey framework fo
 
 How does it work? Each Project Owner takes control of their projects by choosing their work environment and setting up teams with specific fields of action according to the professions.
 
-[More about CNO Onboard >](https://gocno.io/docs/concepts/cno-onboard/) 
+[More about CNO Onboard >](https://docs.gocno.io/concepts/cno-onboard/) 
 
 ### CNO Deploy
 
@@ -95,29 +95,29 @@ Choose the fastest way to deliver applications across your multiple environments
 
 Take advantage of CNO Deploy with advanced deployment strategies such as Canary, Blue Green & A/B testing in your production environment.
 
-[More about CNO Deploy >](https://gocno.io/docs/concepts/cno-deploy/) 
+[More about CNO Deploy >](https://docs.gocno.io/concepts/cno-deploy/) 
 
-### CNO Secure
+### CNO Members(Secure)
 
 Learn how to ensure an entire lifecycle of Kubernetes security for all your clusters and containerized cloud-native applications.
 
 CNO Secure helps you scan your infrastructure and ensure your clusters are compliant with standards like CIS, PCI DSS, NIST, MITRE ATTACK…
 
-[More about CNO Secure >](https://gocno.io/docs/concepts/cno-secure/) 
+[More about CNO Secure >](https://docs.gocno.io/concepts/cno-secure/) 
 
 ## Getting Started
 
 You can refer to our documentation to try CNO:
 
-[Quickstart > ](https://gocno.io/docs/start/quickstart/)
+[Quickstart > ](https://docs.gocno.io/start/quickstart/)
 
-[Install CNO's CLI >](https://gocno.io/docs/start/cnocli/)
+[Install CNO's CLI >](https://docs.gocno.io/start/cnocli/)
 
-[Tutorial: Multi-Cloud Management >](https://gocno.io/docs/tutorials/multi-cloud-management/)
+[Tutorial: Multi-Cloud Management >](https://docs.gocno.io/tutorials/multi-cloud-management/)
 
-[Tutorial: Onboarding Projects and Teams >](https://gocno.io/docs/tutorials/onboard-project-team/)
+[Tutorial: Onboarding Projects and Teams >](https://docs.gocno.io/tutorials/onboard-project-team/)
 
-[Tutorial: Continuous Deployments with CNO >](https://gocno.io/docs/tutorials/continuous-deployment/)
+[Tutorial: Continuous Deployments with CNO >](https://docs.gocno.io/tutorials/continuous-deployment/)
 
 ## Support & Contributions Guidelines
 
@@ -154,8 +154,6 @@ At the top right of the github repository, click on the "Fork" button. This will
 ### Support
 
 You can contact us through the mail adress [cno@beopenit.com](mailto:cno@beopenit.com) (we answer in a matter of hours)
-
-You can submit a meeting with us [here](https://gocno.io/demo/)
 
 You can directly send a message in CNO's slack [here](https://gocno.slack.com)
 
