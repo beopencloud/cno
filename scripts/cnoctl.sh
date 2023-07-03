@@ -73,7 +73,7 @@ getPackage() {
 #    versionWithoutV=$(echo "$version" | tr v _)    
     targetFile="$(pwd)/cnoctl${version}${suffix}.tar.gz"
 
-    url=https://github.com/$OWNER/$REPO/releases/download/$version/cnoctl_${suffix}.tar.gz
+    url=https://github.com/$OWNER/$REPO/releases/download/$version/cnoctl${suffix}.tar.gz
     echo "Downloading package $url as $targetFile"
 
     curl -sSL $url --output "$targetFile"
