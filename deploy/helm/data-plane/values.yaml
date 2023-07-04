@@ -33,7 +33,7 @@ cnoCD:
   # maxStagingReplicas: -22
   envs:
     - name: MAX_STAGING_REPLICAS
-      value: -2
+      value: -1
     - name: CNO_AUTO_GEN_LISTENER
       value: false
     - name: INSECURE_REGISTRIES
