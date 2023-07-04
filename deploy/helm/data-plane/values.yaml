@@ -30,6 +30,16 @@ cnoOnboarding:
 cnoCD:
   labels:
     # will be applied to pods and deployment
+  # maxStagingReplicas: -22
+  envs:
+    - name: MAX_STAGING_REPLICAS
+      value: -2
+    - name: CNO_AUTO_GEN_LISTENER
+      value: false
+    - name: INSECURE_REGISTRIES
+      value: ""
+    - name: DEFAULT_INTERNAL_GATEWAY_DOMAIN
+      value: cno.local
   image:
     name: docker.io/beopenit/cno-cd-operator
     version: v2.0.2

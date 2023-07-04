@@ -72,6 +72,10 @@ spec:
               value: "cno-apigateway"
             - name: DEFAULT_GATEWAY_NAME
               value: "cno"
+            {{- if hasKey .Values.cnoCD "envs" }}
+              {{ toYaml .Values.cnoCD.envs | nindent 12 }}
+            {{- end }}
+          
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
