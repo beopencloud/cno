@@ -379,7 +379,7 @@ spec:
     targetPort: 8443
   selector:
     app: envoy
-  type: LoadBalancer
+  type: ClusterIP
 
 ---
 kind: GatewayClass
@@ -404,17 +404,6 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
-  - name: https
-    protocol: HTTPS
-    port: 443
-    allowedRoutes:
-      namespaces:
-        from: All
-    tls:
-      certificateRefs:
-      - kind: Secret
-        group: ""
-        name: cno-apigateway-internal-tls
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -442,19 +431,23 @@ spec:
       labels:
         app: contour
     spec:
-      nodeSelector:
-      {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
-        {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
-      {{- end }}
       affinity:
         podAntiAffinity:
-          {{- if hasKey .Values.cnoApiGateway "podAntiAffinity" -}}
-            {{- toYaml .Values.cnoApiGateway.podAntiAffinity | nindent 10 -}}
-          {{- end }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: {{ .Values.cnoApiGateway.nodeSelector }}
+                  operator: Exists
+              topologyKey: kubernetes.io/hostname
+      nodeSelector:
+        {{ .Values.cnoApiGateway.nodeSelector }}: ""
       tolerations:
-      {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
-        {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
-      {{- end }}
+        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+          value: "reserved"
+          effect: "NoSchedule"
+        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+          value: "reserved"
+          effect: "NoExecute"
       containers:
       - args:
         - serve
@@ -550,13 +543,15 @@ spec:
         app: envoy
     spec:
       nodeSelector:
-        {{- if hasKey .Values.cnoApiGateway "nodeSelector" -}}
-          {{- toYaml .Values.cnoApiGateway.nodeSelector | nindent 8 -}}
-        {{- end }}
+        {{ .Values.cnoApiGateway.nodeSelector }}: ""
       tolerations:
-        {{- if hasKey .Values.cnoApiGateway "tolerations" -}}
-          {{- toYaml .Values.cnoApiGateway.tolerations | nindent 8 -}}
-        {{- end }}
+        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+          value: "reserved"
+          effect: "NoSchedule"
+        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+          value: "reserved"
+          effect: "NoExecute"
+      
       containers:
       - command:
         - /bin/contour
@@ -606,11 +601,9 @@ spec:
               fieldPath: metadata.name
         ports:
         - containerPort: 8080
-          hostPort: 80
           name: http
           protocol: TCP
         - containerPort: 8443
-          hostPort: 443
           name: https
           protocol: TCP
         readinessProbe:
