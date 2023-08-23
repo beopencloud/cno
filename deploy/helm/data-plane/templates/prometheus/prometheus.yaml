@@ -4,13 +4,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cno-monitoring
+  name: boor-monitoring
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: prometheus-service
-  namespace: cno-monitoring
+  namespace: boor-monitoring
   annotations:
       prometheus.io/scrape: 'true'
       prometheus.io/port:   '9090'
@@ -25,8 +25,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: my-cno-monitoring-pvc
-  namespace: cno-monitoring
+  name: my-boor-monitoring-pvc
+  namespace: boor-monitoring
 spec:
   accessModes:
     - ReadWriteOnce
@@ -38,7 +38,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus-deployment
-  namespace: cno-monitoring
+  namespace: boor-monitoring
   labels:
     app: prometheus-server
 spec:
@@ -73,7 +73,7 @@ spec:
   
         - name: prometheus-storage-volume
           persistentVolumeClaim:
-            claimName: my-cno-monitoring-pvc
+            claimName: my-boor-monitoring-pvc
       securityContext:
         fsGroup: 2000
         runAsNonRoot: true
@@ -85,7 +85,7 @@ metadata:
   name: prometheus-server-conf
   labels:
     name: prometheus-server-conf
-  namespace: cno-monitoring
+  namespace: boor-monitoring
 data:
   prometheus.rules: |-
     groups:
@@ -109,7 +109,7 @@ data:
       - scheme: http
         static_configs:
         - targets:
-          - "alertmanager.cno-monitoring.svc:9093"
+          - "alertmanager.boor-monitoring.svc:9093"
 
     scrape_configs:
       - job_name: 'node-exporter'
@@ -243,7 +243,7 @@ data:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: cno-monitoring
+  name: boor-monitoring
 rules:
 - apiGroups: [""]
   resources:
@@ -264,14 +264,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: cno-monitoring
+  name: boor-monitoring
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cno-monitoring
+  name: boor-monitoring
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: cno-monitoring
+  namespace: boor-monitoring
 
 {{- end -}}

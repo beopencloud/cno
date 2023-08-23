@@ -1,23 +1,23 @@
-{{- define "cno-agent.licenceSecret" -}}
-{{- if hasKey .Values.cnoAgent.licence "secret" }}
-{{- .Values.cnoAgent.licence.secret.name }}
+{{- define "boor-agent.licenceSecret" -}}
+{{- if hasKey .Values.boorAgent.licence "secret" }}
+{{- .Values.boorAgent.licence.secret.name }}
 {{- else }}
 {{- "my-licence" }}
 {{- end }}
 {{- end }}
 
-{{- define "cno-agent.cnoAPIUrl" -}}
-{{- if hasKey .Values.global.cnoAPI "internalServiceName" }}
-{{- printf "http://%s" .Values.global.cnoAPI.internalServiceName }}
+{{- define "boor-agent.boorAPIUrl" -}}
+{{- if hasKey .Values.global.boorAPI "internalServiceName" }}
+{{- printf "http://%s" .Values.global.boorAPI.internalServiceName }}
 {{- else }}
-{{- .Values.global.cnoAPI.externalUrl }}
+{{- .Values.global.boorAPI.externalUrl }}
 {{- end }}
 {{- end }}
 
-{{- define "cno-agent.apiProtocol" -}}
+{{- define "boor-agent.apiProtocol" -}}
 {{- if  .Values.defaultCluster }}
 {{- "http" }}
 {{- else }}
-{{- .Values.global.cnoAPI.protocol }}
+{{- .Values.global.boorAPI.protocol }}
 {{- end }}
 {{- end }}

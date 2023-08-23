@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cno-cd-operator
+  name: boor-cd-operator
   namespace: {{ .Release.Namespace }}
 ---
 
@@ -10,36 +10,36 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-  {{- range $key, $value := .Values.cnoCD.labels }}
+  {{- range $key, $value := .Values.boorCD.labels }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
-  name: cno-cd-operator
+  name: boor-cd-operator
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cno-cd-operator
+      app: boor-cd-operator
   template:
     metadata:
       annotations:
          kubectl.kubernetes.io/default-container: manager
       labels:
-        app: cno-cd-operator
-      {{- range $key, $value := .Values.cnoCD.labels }}
+        app: boor-cd-operator
+      {{- range $key, $value := .Values.boorCD.labels }}
         {{ $key  }}: {{ $value  }}
       {{- end }}
     spec:
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: cno-cd-operator
+      serviceAccountName: boor-cd-operator
       containers:
         - command:
           - /manager
           args:
           - --leader-elect
-          name: cno-cd-operator
-          image: {{ .Values.cnoCD.image.name }}:{{ .Values.cnoCD.image.version }}
+          name: boor-cd-operator
+          image: {{ .Values.boorCD.image.name }}:{{ .Values.boorCD.image.version }}
           securityContext:
             allowPrivilegeEscalation: false
           imagePullPolicy: Always
@@ -56,8 +56,8 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
-          {{- if hasKey .Values.cnoCD "resources" }}
-          {{- toYaml .Values.cnoCD.resources | nindent 12 }}
+          {{- if hasKey .Values.boorCD "resources" }}
+          {{- toYaml .Values.boorCD.resources | nindent 12 }}
           {{- end }}
           env:
             - name: WATCH_NAMESPACE
@@ -69,11 +69,11 @@ spec:
             - name: CLUSTER_TYPE
               value: {{ .Values.defaultClusterType }}
             - name: DEFAULT_GATEWAY_NAMESPACE
-              value: "cno-apigateway"
+              value: "boor-apigateway"
             - name: DEFAULT_GATEWAY_NAME
-              value: "cno"
-            {{- if hasKey .Values.cnoCD "envs" }}
-              {{ toYaml .Values.cnoCD.envs | nindent 12 }}
+              value: "boor"
+            {{- if hasKey .Values.boorCD "envs" }}
+              {{ toYaml .Values.boorCD.envs | nindent 12 }}
             {{- end }}
           
 
@@ -82,7 +82,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: cno-cd-operator
+  name: boor-cd-operator
 rules:
 - apiGroups:
   - ""
@@ -196,7 +196,7 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - cnocd.beopenit.com
+  - boorcd.beopenit.com
   resources:
   - workloads
   - workloads/finalizers
@@ -274,14 +274,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: cno-cd-operator
+  name: boor-cd-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cno-cd-operator
+  name: boor-cd-operator
 subjects:
   - kind: ServiceAccount
-    name: cno-cd-operator
+    name: boor-cd-operator
     namespace: {{ .Release.Namespace }}
 
 ---
@@ -290,7 +290,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: cno-cd-operator-leader-election-role
+  name: boor-cd-operator-leader-election-role
   namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups:
@@ -330,15 +330,15 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: cno-cd-operator-leader-election-rolebinding
+  name: boor-cd-operator-leader-election-rolebinding
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: cno-cd-operator-leader-election-role
+  name: boor-cd-operator-leader-election-role
 subjects:
   - kind: ServiceAccount
-    name: cno-cd-operator
+    name: boor-cd-operator
     namespace: {{ .Release.Namespace }}
 
 ---
@@ -346,7 +346,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: cno-proxy-role
+  name: boor-proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -365,14 +365,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: cno-proxy-rolebinding
+  name: boor-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cno-proxy-role
+  name: boor-proxy-role
 subjects:
 - kind: ServiceAccount
-  name: cno-cd-operator
+  name: boor-cd-operator
   namespace: {{ .Release.Namespace }}
 
 ---
@@ -380,7 +380,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: cno-cd-operator
+    app: boor-cd-operator
   name: controller-manager-metrics-service
   namespace: {{ .Release.Namespace }}
 spec:
@@ -390,4 +390,4 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
-    app: cno-cd-operator
+    app: boor-cd-operator

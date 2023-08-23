@@ -1,29 +1,29 @@
-## CNO data-plane helm chart
+## BOOR data-plane helm chart
 
 ## Prerequisites
 - Kubernetes: 1.20, 1.21, 1.22
 
 - ```shell
-   kubectl create namespace cno-system
+   kubectl create namespace boor-system
   ```
 ## Get Repo Info
 
 ```
-helm repo add cno-repo https://beopencloud.github.io/cno
+helm repo add boor-repo https://beopencloud.github.io/boor
 helm repo update 
 ```
 
-## Install Chart CNO data-plane
+## Install Chart BOOR data-plane
 
 ```
-helm install cno cno-repo/cno-agent --namespace cno-system --create-  namespace
+helm install boor boor-repo/boor-agent --namespace boor-system --create-  namespace
 ```
 
-## Uninstall CNO data-plane
+## Uninstall BOOR data-plane
 
 ```
-helm uninstall cno-agent --namespace cno-system
-kubectl delete namespace cno-system
+helm uninstall boor-agent --namespace boor-system
+kubectl delete namespace boor-system
 ```
 
 ## Configuration
@@ -33,30 +33,30 @@ kubectl create secret generic my-licence \
 --from-file=user.key=<user.key>
 --from-file=user.crt=<user.crt>
 --from-file=ca.crt=<ca.crt>
---namespace cno-system
+--namespace boor-system
 ```
 
-- __CNO API infos__
+- __BOOR API infos__
 
 ```yaml
 global:
-  # cno-api config
-  cnoAPI:
+  # boor-api config
+  boorAPI:
     protocol: http
-    # internalServiceName: cno-api-svc
-    externalUrl: api.cno.io
+    # internalServiceName: boor-api-svc
+    externalUrl: api.boor.io
     ...
 ```
 
-- __Config CNO Agent__
+- __Config BOOR Agent__
 
 Set metricServer to false if you already have metric server installed in the cluster.
 
 ```yaml
-cnoAgent:
+boorAgent:
   metricServer: true
   image:
-    name: docker.io/beopenit/cno-agent
+    name: docker.io/beopenit/boor-agent
     version: v1.0.0
   kafka:
     brokers: <kafka brokers>

@@ -13,32 +13,32 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.cnoApiGateway.type "loadBalancer" }}
+{{- if eq .Values.boorApiGateway.type "loadBalancer" }}
 
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cno-apigateway
+  name: boor-apigateway
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: envoy
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 data:
   contour.yaml: |
     #
@@ -81,10 +81,10 @@ data:
     # SNI defined for a vhost.
       fallback-certificate:
     #   name: fallback-secret-name
-    #   namespace: cno-apigateway
+    #   namespace: boor-apigateway
       envoy-client-certificate:
     #   name: envoy-client-cert-secret-name
-    #   namespace: cno-apigateway
+    #   namespace: boor-apigateway
     ####
     # ExternalName Services are disabled by default due to CVE-2021-XXXXX
     # You can re-enable them by setting this setting to `true`.
@@ -214,13 +214,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: contour-certgen
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -228,13 +228,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: contour-certgen
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: contour-certgen
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 rules:
 - apiGroups:
   - ""
@@ -248,7 +248,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: contour-certgen-v1.23.0
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 spec:
   template:
     metadata:
@@ -294,13 +294,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: contour-rolebinding
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -308,7 +308,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -316,7 +316,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 rules:
 - apiGroups:
   - ""
@@ -340,7 +340,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 spec:
   ports:
   - port: 8001
@@ -356,7 +356,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: envoy
-  namespace: cno-apigateway
+  namespace: boor-apigateway
   annotations:
     # This annotation puts the AWS ELB into "TCP" mode so that it does not
     # do HTTP negotiation for HTTPS connections at the ELB edge.
@@ -384,7 +384,7 @@ spec:
 kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/v1beta1
 metadata:
-  name: cno-gateway
+  name: boor-gateway
 spec:
   controllerName: projectcontour.io/projectcontour/contour
 
@@ -392,10 +392,10 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  name: cno
-  namespace: cno-apigateway
+  name: boor
+  namespace: boor-apigateway
 spec:
-  gatewayClassName: cno-gateway
+  gatewayClassName: boor-gateway
   listeners:
   - name: http
     protocol: HTTP
@@ -413,7 +413,7 @@ spec:
       certificateRefs:
       - kind: Secret
         group: ""
-        name: cno-apigateway-tls
+        name: boor-apigateway-tls
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -421,7 +421,7 @@ metadata:
   labels:
     app: contour
   name: contour
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 spec:
   replicas: 2
   strategy:
@@ -517,7 +517,7 @@ metadata:
   labels:
     app: envoy
   name: envoy
-  namespace: cno-apigateway
+  namespace: boor-apigateway
 spec:
   updateStrategy:
     type: RollingUpdate
