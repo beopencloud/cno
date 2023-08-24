@@ -1,29 +1,29 @@
-## BOOR data-plane helm chart
+## DOOR data-plane helm chart
 
 ## Prerequisites
 - Kubernetes: 1.20, 1.21, 1.22
 
 - ```shell
-   kubectl create namespace boor-system
+   kubectl create namespace door-system
   ```
 ## Get Repo Info
 
 ```
-helm repo add boor-repo https://beopencloud.github.io/boor
+helm repo add door-repo https://beopencloud.github.io/door
 helm repo update 
 ```
 
-## Install Chart BOOR data-plane
+## Install Chart DOOR data-plane
 
 ```
-helm install boor boor-repo/boor-agent --namespace boor-system --create-  namespace
+helm install door door-repo/door-agent --namespace door-system --create-  namespace
 ```
 
-## Uninstall BOOR data-plane
+## Uninstall DOOR data-plane
 
 ```
-helm uninstall boor-agent --namespace boor-system
-kubectl delete namespace boor-system
+helm uninstall door-agent --namespace door-system
+kubectl delete namespace door-system
 ```
 
 ## Configuration
@@ -33,30 +33,30 @@ kubectl create secret generic my-licence \
 --from-file=user.key=<user.key>
 --from-file=user.crt=<user.crt>
 --from-file=ca.crt=<ca.crt>
---namespace boor-system
+--namespace door-system
 ```
 
-- __BOOR API infos__
+- __DOOR API infos__
 
 ```yaml
 global:
-  # boor-api config
-  boorAPI:
+  # door-api config
+  doorAPI:
     protocol: http
-    # internalServiceName: boor-api-svc
-    externalUrl: api.boor.io
+    # internalServiceName: door-api-svc
+    externalUrl: api.door.io
     ...
 ```
 
-- __Config BOOR Agent__
+- __Config DOOR Agent__
 
 Set metricServer to false if you already have metric server installed in the cluster.
 
 ```yaml
-boorAgent:
+doorAgent:
   metricServer: true
   image:
-    name: docker.io/beopenit/boor-agent
+    name: docker.io/beopenit/door-agent
     version: v1.0.0
   kafka:
     brokers: <kafka brokers>

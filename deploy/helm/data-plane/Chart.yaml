@@ -1,6 +1,6 @@
 apiVersion: v2
-name: boor-agent
-description: Chart for BOOR agent
+name: door-agent
+description: Chart for DOOR agent
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -28,4 +28,4 @@ dependencies:
     version: "3.8.2"
     repository: "https://kubernetes-sigs.github.io/metrics-server"
     alias: metrics-server   
-    condition: boorAgent.metricServer
+    condition: doorAgent.metricServer

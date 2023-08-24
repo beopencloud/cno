@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: boor-onboarding-operator
+  name: door-onboarding-operator
   namespace: {{ .Release.Namespace }}
 
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: boor-onboarding-operator
+  name: door-onboarding-operator
 subjects:
   - kind: ServiceAccount
-    name: boor-onboarding-operator
+    name: door-onboarding-operator
     namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
@@ -21,43 +21,43 @@ roleRef:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: boor-onboarding-operator
+  name: door-onboarding-operator
   namespace: {{ .Release.Namespace }}
   labels:
-  {{- range $key, $value := .Values.boorOnboarding.labels }}
+  {{- range $key, $value := .Values.doorOnboarding.labels }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: boor-onboarding-operator
+      app: door-onboarding-operator
   template:
     metadata:
       labels:
-        app: boor-onboarding-operator
-      {{- range $key, $value := .Values.boorOnboarding.labels }}
+        app: door-onboarding-operator
+      {{- range $key, $value := .Values.doorOnboarding.labels }}
         {{ $key  }}: {{ $value  }}
       {{- end }}
     spec:
-      serviceAccountName: boor-onboarding-operator
+      serviceAccountName: door-onboarding-operator
       containers:
-        - name: boor-onboarding-operator
-          image: {{ .Values.boorOnboarding.image.name }}:{{ .Values.boorOnboarding.image.version }}
+        - name: door-onboarding-operator
+          image: {{ .Values.doorOnboarding.image.name }}:{{ .Values.doorOnboarding.image.version }}
           imagePullPolicy: Always
           resources:
-          {{- if hasKey .Values.boorOnboarding "resources" }}
-          {{- toYaml .Values.boorOnboarding.resources | nindent 12 }}
+          {{- if hasKey .Values.doorOnboarding "resources" }}
+          {{- toYaml .Values.doorOnboarding.resources | nindent 12 }}
           {{- end }}
           env:
             - name: WATCH_NAMESPACE
               value: ""
-            - name: BOOR_NAMESPACE
+            - name: DOOR_NAMESPACE
               value:  {{ .Release.Namespace }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "boor-onboarding-operator"
+              value: "door-onboarding-operator"
 

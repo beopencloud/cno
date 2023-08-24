@@ -6,11 +6,11 @@ metadata:
     deployment.kubernetes.io/revision: "3"
     fluxcd.io/automated: 'true'
   labels:
-    app: boor-agent
-  {{- range $key, $value := .Values.boorAgent.labels }}
+    app: door-agent
+  {{- range $key, $value := .Values.doorAgent.labels }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
-  name: boor-agent
+  name: door-agent
   namespace: {{ .Release.Namespace }}
 spec:
   progressDeadlineSeconds: 600
@@ -18,7 +18,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: boor-agent
+      app: door-agent
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -27,42 +27,42 @@ spec:
   template:
     metadata:
       labels:
-        app: boor-agent
-      {{- range $key, $value := .Values.boorAgent.labels }}
+        app: door-agent
+      {{- range $key, $value := .Values.doorAgent.labels }}
         {{ $key  }}: {{ $value  }}
       {{- end }}
     spec:
     {{- if .Values.defaultCluster }}
       initContainers:
-        - name: boor-api-check
-          image: {{ .Values.global.boorAPI.heathCheck.image.name }}:{{ .Values.global.boorAPI.heathCheck.image.version }}
+        - name: door-api-check
+          image: {{ .Values.global.doorAPI.heathCheck.image.name }}:{{ .Values.global.doorAPI.heathCheck.image.version }}
           command: ["/bin/sh","-c"]
           args:
             - |
-              until curl -s -f -o /dev/null "{{ include "boor-agent.boorAPIUrl" . }}{{ .Values.global.boorAPI.heathCheck.endpoint }}"
+              until curl -s -f -o /dev/null "{{ include "door-agent.doorAPIUrl" . }}{{ .Values.global.doorAPI.heathCheck.endpoint }}"
               do
-                echo boor API {{ include "boor-agent.boorAPIUrl" . }}{{ .Values.global.boorAPI.heathCheck.endpoint }} unvailable `date`
+                echo door API {{ include "door-agent.doorAPIUrl" . }}{{ .Values.global.doorAPI.heathCheck.endpoint }} unvailable `date`
                 sleep 10
               done
               echo Successed: `date`
     {{- end }}
       containers:
-        - image: {{ .Values.boorAgent.image.name }}:{{ .Values.boorAgent.image.version }}
+        - image: {{ .Values.doorAgent.image.name }}:{{ .Values.doorAgent.image.version }}
           imagePullPolicy: Always
-          name: boor-agent
+          name: door-agent
           resources:
-          {{- if hasKey .Values.boorAgent "resources" }}
-          {{- toYaml .Values.boorAgent.resources | nindent 12 }}
+          {{- if hasKey .Values.doorAgent "resources" }}
+          {{- toYaml .Values.doorAgent.resources | nindent 12 }}
           {{- end }}
           env:
             - name: IN_CLUSTER
               value: "true"
-            - name: BOOR_NAMESPACE
+            - name: DOOR_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: KAFKA_TlS_ENABLED
               value: "true"
             - name: KAFKA_BROKERS
-              value: {{ .Values.boorAgent.kafka.brokers }}
+              value: {{ .Values.doorAgent.kafka.brokers }}
             - name: KAFKA_CA_CERT
               {{- if .Values.defaultCluster }}
               value: /kafka/ca/ca.crt
@@ -76,7 +76,7 @@ spec:
             - name: LICENCE
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "boor-agent.licenceSecret" . }}
+                  name: {{ include "door-agent.licenceSecret" . }}
                   key: uuid
           volumeMounts:
             - name: kafka-user
@@ -90,17 +90,17 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-      serviceAccountName: boor-agent
+      serviceAccountName: door-agent
       volumes:
         - name: kafka-user
           secret:
             {{- if .Values.defaultCluster }}
-            secretName: boor-kafka-superadmin
+            secretName: door-kafka-superadmin
             {{- else }}
-            secretName: {{ include "boor-agent.licenceSecret" . }}
+            secretName: {{ include "door-agent.licenceSecret" . }}
             {{- end }}
         {{- if .Values.defaultCluster }}
         - name: kafka-ca
           secret:
-            secretName: boor-kafka-cluster-cluster-ca-cert
+            secretName: door-kafka-cluster-cluster-ca-cert
         {{- end }}

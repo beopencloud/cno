@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.0
   creationTimestamp: null
-  name: workloads.boorcd.beopenit.com
+  name: workloads.doorcd.beopenit.com
 spec:
-  group: boorcd.beopenit.com
+  group: doorcd.beopenit.com
   names:
     kind: Workload
     listKind: WorkloadList

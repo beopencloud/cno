@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: boor-cd-operator
+  name: door-cd-operator
   namespace: {{ .Release.Namespace }}
 ---
 
@@ -10,36 +10,36 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-  {{- range $key, $value := .Values.boorCD.labels }}
+  {{- range $key, $value := .Values.doorCD.labels }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
-  name: boor-cd-operator
+  name: door-cd-operator
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: boor-cd-operator
+      app: door-cd-operator
   template:
     metadata:
       annotations:
          kubectl.kubernetes.io/default-container: manager
       labels:
-        app: boor-cd-operator
-      {{- range $key, $value := .Values.boorCD.labels }}
+        app: door-cd-operator
+      {{- range $key, $value := .Values.doorCD.labels }}
         {{ $key  }}: {{ $value  }}
       {{- end }}
     spec:
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: boor-cd-operator
+      serviceAccountName: door-cd-operator
       containers:
         - command:
           - /manager
           args:
           - --leader-elect
-          name: boor-cd-operator
-          image: {{ .Values.boorCD.image.name }}:{{ .Values.boorCD.image.version }}
+          name: door-cd-operator
+          image: {{ .Values.doorCD.image.name }}:{{ .Values.doorCD.image.version }}
           securityContext:
             allowPrivilegeEscalation: false
           imagePullPolicy: Always
@@ -56,8 +56,8 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
-          {{- if hasKey .Values.boorCD "resources" }}
-          {{- toYaml .Values.boorCD.resources | nindent 12 }}
+          {{- if hasKey .Values.doorCD "resources" }}
+          {{- toYaml .Values.doorCD.resources | nindent 12 }}
           {{- end }}
           env:
             - name: WATCH_NAMESPACE
@@ -69,11 +69,11 @@ spec:
             - name: CLUSTER_TYPE
               value: {{ .Values.defaultClusterType }}
             - name: DEFAULT_GATEWAY_NAMESPACE
-              value: "boor-apigateway"
+              value: "door-apigateway"
             - name: DEFAULT_GATEWAY_NAME
-              value: "boor"
-            {{- if hasKey .Values.boorCD "envs" }}
-              {{ toYaml .Values.boorCD.envs | nindent 12 }}
+              value: "door"
+            {{- if hasKey .Values.doorCD "envs" }}
+              {{ toYaml .Values.doorCD.envs | nindent 12 }}
             {{- end }}
           
 
@@ -82,7 +82,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: boor-cd-operator
+  name: door-cd-operator
 rules:
 - apiGroups:
   - ""
@@ -196,7 +196,7 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - boorcd.beopenit.com
+  - doorcd.beopenit.com
   resources:
   - workloads
   - workloads/finalizers
@@ -274,14 +274,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: boor-cd-operator
+  name: door-cd-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: boor-cd-operator
+  name: door-cd-operator
 subjects:
   - kind: ServiceAccount
-    name: boor-cd-operator
+    name: door-cd-operator
     namespace: {{ .Release.Namespace }}
 
 ---
@@ -290,7 +290,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: boor-cd-operator-leader-election-role
+  name: door-cd-operator-leader-election-role
   namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups:
@@ -330,15 +330,15 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: boor-cd-operator-leader-election-rolebinding
+  name: door-cd-operator-leader-election-rolebinding
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: boor-cd-operator-leader-election-role
+  name: door-cd-operator-leader-election-role
 subjects:
   - kind: ServiceAccount
-    name: boor-cd-operator
+    name: door-cd-operator
     namespace: {{ .Release.Namespace }}
 
 ---
@@ -346,7 +346,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: boor-proxy-role
+  name: door-proxy-role
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -365,14 +365,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: boor-proxy-rolebinding
+  name: door-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: boor-proxy-role
+  name: door-proxy-role
 subjects:
 - kind: ServiceAccount
-  name: boor-cd-operator
+  name: door-cd-operator
   namespace: {{ .Release.Namespace }}
 
 ---
@@ -380,7 +380,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: boor-cd-operator
+    app: door-cd-operator
   name: controller-manager-metrics-service
   namespace: {{ .Release.Namespace }}
 spec:
@@ -390,4 +390,4 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
-    app: boor-cd-operator
+    app: door-cd-operator

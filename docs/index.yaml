@@ -101,22 +101,22 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/cno-1.0.0.tgz
     version: 1.0.0
-  boor-agent:
+  door-agent:
   - apiVersion: v2
     appVersion: v2.1.0
-    created: "2023-08-23T14:08:24.265148Z"
+    created: "2023-08-24T17:02:21.993732Z"
     dependencies:
     - alias: metrics-server
-      condition: boorAgent.metricServer
+      condition: doorAgent.metricServer
       name: metrics-server
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
-    description: Chart for BOOR agent
-    digest: 1193a7f69f10794510a6a3aaf9afec885494b45d8f654fe2da4ec328a5ced4c0
-    name: boor-agent
+    description: Chart for DOOR agent
+    digest: 59883d959182b079c8e1dccfdc3cbca344ad79a55629644604669de9b50995a0
+    name: door-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/boor-agent-v2.1.0.tgz
+    - https://beopencloud.github.io/cno/door-agent-v2.1.0.tgz
     version: v2.1.0
   cno-agent:
   - apiVersion: v2
