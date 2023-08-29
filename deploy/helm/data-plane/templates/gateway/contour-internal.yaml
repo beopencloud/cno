@@ -367,7 +367,7 @@ metadata:
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
 spec:
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
   ports:
   - port: 80
     name: http
