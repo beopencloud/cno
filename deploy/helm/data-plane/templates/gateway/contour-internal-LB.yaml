@@ -454,6 +454,9 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+  # {{- range $key, $value := .Values.doorApiGateway.annotations }}
+  #   {{ $key  }}: {{ $value  }}
+  # {{- end }}
 spec:
   externalTrafficPolicy: Local
   ports:
@@ -483,6 +486,10 @@ kind: Gateway
 metadata:
   name: door-internal
   namespace: door-apigateway-internal
+  # annotations:
+  # {{- range $key, $value := .Values.doorApiGateway.annotations }}
+  #   {{ $key  }}: {{ $value  }}
+  # {{- end }}
 spec:
   gatewayClassName: door-gateway-internal
   listeners:
