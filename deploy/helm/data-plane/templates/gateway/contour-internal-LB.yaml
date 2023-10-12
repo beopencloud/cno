@@ -13,11 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-<<<<<<< HEAD
-{{- if eq .Values.cnoApiGatewayInternal.type "loadBalancer" }}
-=======
 {{- if eq .Values.doorApiGatewayInternal.type "loadBalancer" }}
->>>>>>> bd6137eaa5f8ee7482455788b774318ec39ea07f
 
 ---
 apiVersion: v1
