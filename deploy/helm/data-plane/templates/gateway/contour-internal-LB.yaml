@@ -484,21 +484,12 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-<<<<<<< HEAD
   name: cno-internal
   namespace: cno-apigateway-internal
   annotations:
   {{- range $key, $value := .Values.doorApiGatewayInternal.annotations }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
-=======
-  name: door-internal
-  namespace: door-apigateway-internal
-  # annotations:
-  # {{- range $key, $value := .Values.doorApiGateway.annotations }}
-  #   {{ $key  }}: {{ $value  }}
-  # {{- end }}
->>>>>>> 4af8bebefcba9f63f31caf66466ae853168ee1ca
 spec:
   gatewayClassName: door-gateway-internal
   listeners:
