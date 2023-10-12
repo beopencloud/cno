@@ -13,32 +13,32 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.cnoApiGateway.type "loadBalancer" }}
+{{- if eq .Values.doorApiGateway.type "loadBalancer" }}
 
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cno-apigateway
+  name: door-apigateway
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: envoy
-  namespace: cno-apigateway
+  namespace: door-apigateway
 
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 data:
   contour.yaml: |
     #
@@ -81,10 +81,10 @@ data:
     # SNI defined for a vhost.
       fallback-certificate:
     #   name: fallback-secret-name
-    #   namespace: cno-apigateway
+    #   namespace: door-apigateway
       envoy-client-certificate:
     #   name: envoy-client-cert-secret-name
-    #   namespace: cno-apigateway
+    #   namespace: door-apigateway
     ####
     # ExternalName Services are disabled by default due to CVE-2021-XXXXX
     # You can re-enable them by setting this setting to `true`.
@@ -214,13 +214,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: contour-certgen
-  namespace: cno-apigateway
+  namespace: door-apigateway
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -228,13 +228,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: contour-certgen
-  namespace: cno-apigateway
+  namespace: door-apigateway
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: contour-certgen
-  namespace: cno-apigateway
+  namespace: door-apigateway
 rules:
 - apiGroups:
   - ""
@@ -248,7 +248,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: contour-certgen-v1.23.0
-  namespace: cno-apigateway
+  namespace: door-apigateway
 spec:
   template:
     metadata:
@@ -294,13 +294,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: contour-rolebinding
-  namespace: cno-apigateway
+  namespace: door-apigateway
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -308,7 +308,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -316,7 +316,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 rules:
 - apiGroups:
   - ""
@@ -340,7 +340,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 spec:
   ports:
   - port: 8001
@@ -351,12 +351,13 @@ spec:
     app: contour
   type: ClusterIP
 
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: envoy
-  namespace: cno-apigateway
+  namespace: door-apigateway
   annotations:
     # This annotation puts the AWS ELB into "TCP" mode so that it does not
     # do HTTP negotiation for HTTPS connections at the ELB edge.
@@ -365,7 +366,11 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+<<<<<<< HEAD
   {{- range $key, $value := .Values.cnoApiGateway.annotations }}
+=======
+  {{- range $key, $value := .Values.doorApiGateway.annotations }}
+>>>>>>> 4af8bebefcba9f63f31caf66466ae853168ee1ca
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:
@@ -387,7 +392,7 @@ spec:
 kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/v1beta1
 metadata:
-  name: cno-gateway
+  name: door-gateway
 spec:
   controllerName: projectcontour.io/projectcontour/contour
 
@@ -395,14 +400,21 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
+<<<<<<< HEAD
   name: cno
   namespace: cno-apigateway
   annotations:
   {{- range $key, $value := .Values.cnoApiGateway.annotations }}
+=======
+  name: door
+  namespace: door-apigateway
+  annotations:
+  {{- range $key, $value := .Values.doorApiGateway.annotations }}
+>>>>>>> 4af8bebefcba9f63f31caf66466ae853168ee1ca
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:
-  gatewayClassName: cno-gateway
+  gatewayClassName: door-gateway
   listeners:
   - name: http
     protocol: HTTP
@@ -420,7 +432,7 @@ spec:
       certificateRefs:
       - kind: Secret
         group: ""
-        name: cno-apigateway-tls
+        name: door-apigateway-tls
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -428,7 +440,7 @@ metadata:
   labels:
     app: contour
   name: contour
-  namespace: cno-apigateway
+  namespace: door-apigateway
 spec:
   replicas: 2
   strategy:
@@ -524,7 +536,7 @@ metadata:
   labels:
     app: envoy
   name: envoy
-  namespace: cno-apigateway
+  namespace: door-apigateway
 spec:
   updateStrategy:
     type: RollingUpdate
