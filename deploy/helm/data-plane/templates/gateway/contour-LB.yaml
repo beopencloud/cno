@@ -366,11 +366,7 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-<<<<<<< HEAD
-  {{- range $key, $value := .Values.cnoApiGateway.annotations }}
-=======
   {{- range $key, $value := .Values.doorApiGateway.annotations }}
->>>>>>> 4af8bebefcba9f63f31caf66466ae853168ee1ca
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:
@@ -400,17 +396,10 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-<<<<<<< HEAD
-  name: cno
-  namespace: cno-apigateway
-  annotations:
-  {{- range $key, $value := .Values.cnoApiGateway.annotations }}
-=======
   name: door
   namespace: door-apigateway
   annotations:
   {{- range $key, $value := .Values.doorApiGateway.annotations }}
->>>>>>> 4af8bebefcba9f63f31caf66466ae853168ee1ca
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:

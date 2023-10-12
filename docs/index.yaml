@@ -137,11 +137,7 @@ entries:
   cno-agent:
   - apiVersion: v2
     appVersion: v2.0.3
-<<<<<<< HEAD
     created: "2023-10-12T10:25:05.806530932+02:00"
-=======
-    created: "2023-08-30T12:43:05.806530932+02:00"
->>>>>>> 4af8bebefcba9f63f31caf66466ae853168ee1ca
     dependencies:
     - alias: metrics-server
       condition: cnoAgent.metricServer
