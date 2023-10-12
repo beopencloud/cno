@@ -1,29 +1,29 @@
-## CNO data-plane helm chart
+## DOOR data-plane helm chart
 
 ## Prerequisites
 - Kubernetes: 1.20, 1.21, 1.22
 
 - ```shell
-   kubectl create namespace cno-system
+   kubectl create namespace door-system
   ```
 ## Get Repo Info
 
 ```
-helm repo add cno-repo https://beopencloud.github.io/cno
+helm repo add door-repo https://beopencloud.github.io/door
 helm repo update 
 ```
 
-## Install Chart CNO data-plane
+## Install Chart DOOR data-plane
 
 ```
-helm install cno cno-repo/cno-agent --namespace cno-system --create-  namespace
+helm install door door-repo/door-agent --namespace door-system --create-  namespace
 ```
 
-## Uninstall CNO data-plane
+## Uninstall DOOR data-plane
 
 ```
-helm uninstall cno-agent --namespace cno-system
-kubectl delete namespace cno-system
+helm uninstall door-agent --namespace door-system
+kubectl delete namespace door-system
 ```
 
 ## Configuration
@@ -33,30 +33,30 @@ kubectl create secret generic my-licence \
 --from-file=user.key=<user.key>
 --from-file=user.crt=<user.crt>
 --from-file=ca.crt=<ca.crt>
---namespace cno-system
+--namespace door-system
 ```
 
-- __CNO API infos__
+- __DOOR API infos__
 
 ```yaml
 global:
-  # cno-api config
-  cnoAPI:
+  # door-api config
+  doorAPI:
     protocol: http
-    # internalServiceName: cno-api-svc
-    externalUrl: api.cno.io
+    # internalServiceName: door-api-svc
+    externalUrl: api.door.io
     ...
 ```
 
-- __Config CNO Agent__
+- __Config DOOR Agent__
 
 Set metricServer to false if you already have metric server installed in the cluster.
 
 ```yaml
-cnoAgent:
+doorAgent:
   metricServer: true
   image:
-    name: docker.io/beopenit/cno-agent
+    name: docker.io/beopenit/door-agent
     version: v1.0.0
   kafka:
     brokers: <kafka brokers>

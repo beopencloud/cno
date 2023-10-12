@@ -1,22 +1,38 @@
 apiVersion: v1
 entries:
-  cno-agent:
+  door-agent:
   - apiVersion: v2
-    appVersion: v2.0.4
-    created: "2023-10-12T13:36:24.418584954+02:00"
+    appVersion: v2.1.1
+    created: "2023-08-29T11:26:23.603893Z"
     dependencies:
     - alias: metrics-server
-      condition: cnoAgent.metricServer
+      condition: doorAgent.metricServer
       name: metrics-server
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
-    description: Chart for CNO agent
-    digest: bb0cc23f0aafdfb815d3b2a40a2bdf9af9eba8c7111691585505c3335bdab844
-    name: cno-agent
+    description: Chart for DOOR agent
+    digest: 7c6a65888b8a5b9458f965ab9de2018a2ba1ee5d0105d7a1349e27ce978c8ccd
+    name: door-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/cno-agent-v2.0.4.tgz
-    version: v2.0.4
+    - https://beopencloud.github.io/cno/door-agent-v2.1.1.tgz
+    version: v2.1.1
+  - apiVersion: v2
+    appVersion: v2.1.0
+    created: "2023-08-29T11:16:02.92149Z"
+    dependencies:
+    - alias: metrics-server
+      condition: doorAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for DOOR agent
+    digest: 719e686212b9ed16a0ff47f8651823924ec7f87b4338a6de960a608e3563de6b
+    name: door-agent
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/door-agent-v2.1.0.tgz
+    version: v2.1.0
   metrics-server:
   - annotations:
       artifacthub.io/changes: |
@@ -24,7 +40,7 @@ entries:
           description: "Allow probes to be turned off completly (this is not advised unless you know what you're doing)."
     apiVersion: v2
     appVersion: 0.6.1
-    created: "2023-10-12T13:36:24.419270438+02:00"
+    created: "2023-08-29T11:26:23.604711Z"
     description: Metrics Server is a scalable, efficient source of container resource
       metrics for Kubernetes built-in autoscaling pipelines.
     digest: 4358fb2014c1e8311653d9495216555e4897db28464b95c96619b0be94b253ec
@@ -48,4 +64,4 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/charts/metrics-server-3.8.2.tgz
     version: 3.8.2
-generated: "2023-10-12T13:36:24.412566366+02:00"
+generated: "2023-08-29T11:26:23.596445Z"

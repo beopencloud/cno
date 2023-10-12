@@ -1,23 +1,23 @@
-{{- define "cno-agent.licenceSecret" -}}
-{{- if hasKey .Values.cnoAgent.licence "secret" }}
-{{- .Values.cnoAgent.licence.secret.name }}
+{{- define "door-agent.licenceSecret" -}}
+{{- if hasKey .Values.doorAgent.licence "secret" }}
+{{- .Values.doorAgent.licence.secret.name }}
 {{- else }}
 {{- "my-licence" }}
 {{- end }}
 {{- end }}
 
-{{- define "cno-agent.cnoAPIUrl" -}}
-{{- if hasKey .Values.global.cnoAPI "internalServiceName" }}
-{{- printf "http://%s" .Values.global.cnoAPI.internalServiceName }}
+{{- define "door-agent.doorAPIUrl" -}}
+{{- if hasKey .Values.global.doorAPI "internalServiceName" }}
+{{- printf "http://%s" .Values.global.doorAPI.internalServiceName }}
 {{- else }}
-{{- .Values.global.cnoAPI.externalUrl }}
+{{- .Values.global.doorAPI.externalUrl }}
 {{- end }}
 {{- end }}
 
-{{- define "cno-agent.apiProtocol" -}}
+{{- define "door-agent.apiProtocol" -}}
 {{- if  .Values.defaultCluster }}
 {{- "http" }}
 {{- else }}
-{{- .Values.global.cnoAPI.protocol }}
+{{- .Values.global.doorAPI.protocol }}
 {{- end }}
 {{- end }}

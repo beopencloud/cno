@@ -1,11 +1,11 @@
 global:
-  # cno-api config
-  cnoAPI:
+  # door-api config
+  doorAPI:
     labels:
       # will be applied to pods and deployment
     protocol: http
-    # internalServiceName: cno-api-svc
-    externalUrl: https://api.cno.io
+    # internalServiceName: door-api-svc
+    externalUrl: https://api.door.io
     heathCheck:
       image:
         name: docker.io/nginxinc/nginx-unprivileged
@@ -14,12 +14,12 @@ global:
 # set defaultCluster=true if cluster content control plane
 defaultCluster: false
 defaultClusterType: gke
-cnoOnboarding:
+doorOnboarding:
   labels:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v2.0.2
+    version: v2.1.0-2023-08-23T15-00-40-352db25b
   # resources:
   #   requests:
   #     cpu: 100m
@@ -27,22 +27,22 @@ cnoOnboarding:
   #   limits:
   #     cpu: 1
   #     memory: 1Gi
-cnoCD:
+doorCD:
   labels:
     # will be applied to pods and deployment
   # maxStagingReplicas: -22
   envs:
     - name: MAX_STAGING_REPLICAS
       value: "-1"
-    - name: CNO_AUTO_GEN_LISTENER
+    - name: DOOR_AUTO_GEN_LISTENER
       value: "false"
     - name: INSECURE_REGISTRIES
       value: ""
     - name: DEFAULT_INTERNAL_GATEWAY_DOMAIN
-      value: cno.local
+      value: door.local
   image:
-    name: docker.io/beopenit/cno-cd-operator
-    version: v2.0.2
+    name: docker.io/beopenit/door-cd-operator
+    version: v2.1.0-2023-08-23T13-50-49-1c2c7b90
   # resources:
   #   requests:
   #     cpu: 100m
@@ -50,13 +50,13 @@ cnoCD:
   #   limits:
   #     cpu: 2
   #     memory: 2Gi
-cnoAgent:
+doorAgent:
   labels:
     # will be applied to pods and deployment
   metricServer: true
   image:
-    name: docker.io/beopenit/cno-agent
-    version: v2.0.2
+    name: docker.io/beopenit/door-agent
+    version: v2.1.0-2023-08-23T17-04-37-53875b9f
   # resources:
   #   requests:
   #     cpu: 100m
@@ -65,7 +65,7 @@ cnoAgent:
   #     cpu: 1
   #     memory: 1Gi
   kafka:
-    brokers: cno-kafka-cluster-kafka-external-bootstrap:9094
+    brokers: door-kafka-cluster-kafka-external-bootstrap:9094
   licence:
     uuid: aa
     key: |
@@ -82,7 +82,7 @@ monitoring:
   include: true
   pvcSize: 15Gi
 
-cnoApiGateway:
+doorApiGateway:
   type: loadBalancer
-  nodeSelector: node-role.kubernetes.io/ingress-cno
-  tolerationsKey: ingress-cno
+  nodeSelector: node-role.kubernetes.io/ingress-door
+  tolerationsKey: ingress-door
