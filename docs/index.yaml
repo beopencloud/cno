@@ -103,6 +103,22 @@ entries:
     version: 1.0.0
   cno-agent:
   - apiVersion: v2
+    appVersion: v2.0.4
+    created: "2023-10-12T13:37:09.500484Z"
+    dependencies:
+    - alias: metrics-server
+      condition: cnoAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for CNO agent
+    digest: c472323835915f86baeff6a69323121cf80a5a87eaf5aa3f772eb8264cf6fe00
+    name: cno-agent
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/cno-agent-v2.0.4.tgz
+    version: v2.0.4
+  - apiVersion: v2
     appVersion: v2.0.2
     created: "2023-06-19T16:48:09.500484Z"
     dependencies:
