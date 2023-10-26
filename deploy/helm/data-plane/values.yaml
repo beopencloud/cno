@@ -42,7 +42,7 @@ doorCD:
       value: door.local
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.1.0-2023-08-23T13-50-49-1c2c7b90
+    version: v2.1.0-2023-08-31T13-56-51-27d4efd0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -50,6 +50,22 @@ doorCD:
   #   limits:
   #     cpu: 2
   #     memory: 2Gi
+
+doorHelm:
+  labels:
+    # will be applied to pods and deployment
+  # maxStagingReplicas: -22
+  image:
+    name: beopenit/door-helm
+    version: 0.0.3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 2
+      memory: 2Gi
+
 doorAgent:
   labels:
     # will be applied to pods and deployment
