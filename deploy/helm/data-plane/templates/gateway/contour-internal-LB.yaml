@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.doorApiGateway.type "loadBalancer" }}
+{{- if eq .Values.doorApiGatewayInternal.type "loadBalancer" }}
 
 ---
 apiVersion: v1
@@ -454,6 +454,9 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+  {{- range $key, $value := .Values.doorApiGatewayInternal.annotations }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   externalTrafficPolicy: Local
   ports:
@@ -483,6 +486,10 @@ kind: Gateway
 metadata:
   name: door-internal
   namespace: door-apigateway-internal
+  annotations:
+  {{- range $key, $value := .Values.doorApiGatewayInternal.annotations }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   gatewayClassName: door-gateway-internal
   listeners:
