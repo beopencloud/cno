@@ -99,6 +99,11 @@ monitoring:
   pvcSize: 15Gi
 
 doorApiGateway:
-  type: loadBalancer
-  nodeSelector: node-role.kubernetes.io/ingress-door
-  tolerationsKey: ingress-door
+  internal: 
+    type: loadBalancer
+    nodeSelector: node-role.kubernetes.io/ingress-door
+    tolerationsKey: ingress-door
+  external:
+    type: loadBalancer
+    nodeSelector: node-role.kubernetes.io/ingress-door
+    tolerationsKey: ingress-door
