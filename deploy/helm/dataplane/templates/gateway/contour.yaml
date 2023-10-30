@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.cnoApiGateway.type "hostPort" }}
+{{- if eq .Values.cnoApiGateway.external.type "hostPort" }}
 
 ---
 apiVersion: v1
@@ -528,16 +528,16 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                - key: {{ .Values.cnoApiGateway.nodeSelector }}
+                - key: {{ .Values.cnoApiGateway.external.nodeSelector }}
                   operator: Exists
               topologyKey: kubernetes.io/hostname
       nodeSelector:
-        {{ .Values.cnoApiGateway.nodeSelector }}: ""
+        {{ .Values.cnoApiGateway.external.nodeSelector }}: ""
       tolerations:
-        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+        - key: {{ .Values.cnoApiGateway.external.tolerationsKey }}
           value: "reserved"
           effect: "NoSchedule"
-        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+        - key: {{ .Values.cnoApiGateway.external.tolerationsKey }}
           value: "reserved"
           effect: "NoExecute"
       containers:
@@ -635,12 +635,12 @@ spec:
         app: envoy
     spec:
       nodeSelector:
-        {{ .Values.cnoApiGateway.nodeSelector }}: ""
+        {{ .Values.cnoApiGateway.external.nodeSelector }}: ""
       tolerations:
-        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+        - key: {{ .Values.cnoApiGateway.external.tolerationsKey }}
           value: "reserved"
           effect: "NoSchedule"
-        - key: {{ .Values.cnoApiGateway.tolerationsKey }}
+        - key: {{ .Values.cnoApiGateway.external.tolerationsKey }}
           value: "reserved"
           effect: "NoExecute"
       containers:
