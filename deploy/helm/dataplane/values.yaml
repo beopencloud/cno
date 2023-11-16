@@ -98,6 +98,11 @@ monitoring:
   pvcSize: 15Gi
 
 cnoApiGateway:
-  type: loadBalancer
-  nodeSelector: node-role.kubernetes.io/ingress-cno
-  tolerationsKey: ingress-cno
+  internal: 
+    type: loadBalancer
+    nodeSelector: node-role.kubernetes.io/ingress-cno
+    tolerationsKey: ingress-cno
+  external:
+    type: loadBalancer
+    nodeSelector: node-role.kubernetes.io/ingress-cno
+    tolerationsKey: ingress-cno

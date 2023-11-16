@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.cnoApiGateway.type "loadBalancer" }}
+{{- if eq .Values.cnoApiGateway.internal.type "loadBalancer" }}
 
 ---
 apiVersion: v1
@@ -454,6 +454,9 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+  {{- range $key, $value := .Values.cnoApiGateway.internal.annotations }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   externalTrafficPolicy: Local
   ports:
@@ -483,6 +486,10 @@ kind: Gateway
 metadata:
   name: cno-internal
   namespace: cno-apigateway-internal
+  annotations:
+  {{- range $key, $value := .Values.cnoApiGateway.internal.annotations }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   gatewayClassName: cno-gateway-internal
   listeners:

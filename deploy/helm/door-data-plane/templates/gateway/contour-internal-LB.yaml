@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.doorApiGatewayInternal.type "loadBalancer" }}
+{{- if eq .Values.doorApiGateway.internal.type "loadBalancer" }}
 
 ---
 apiVersion: v1
@@ -484,7 +484,7 @@ metadata:
   name: door-internal
   namespace: door-apigateway-internal
   annotations:
-  {{- range $key, $value := .Values.doorApiGatewayInternal.annotations }}
+  {{- range $key, $value := .Values.doorApiGateway.internal.annotations }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:

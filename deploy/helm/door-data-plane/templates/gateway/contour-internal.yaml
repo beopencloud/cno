@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.doorApiGateway.type "hostPort" }}
+{{- if eq .Values.doorApiGateway.internal.type "hostPort" }}
 
 ---
 apiVersion: v1
@@ -436,16 +436,16 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                - key: {{ .Values.doorApiGateway.nodeSelector }}
+                - key: {{ .Values.doorApiGateway.internal.nodeSelector }}
                   operator: Exists
               topologyKey: kubernetes.io/hostname
       nodeSelector:
-        {{ .Values.doorApiGateway.nodeSelector }}: ""
+        {{ .Values.doorApiGateway.internal.nodeSelector }}: ""
       tolerations:
-        - key: {{ .Values.doorApiGateway.tolerationsKey }}
+        - key: {{ .Values.doorApiGateway.internal.tolerationsKey }}
           value: "reserved"
           effect: "NoSchedule"
-        - key: {{ .Values.doorApiGateway.tolerationsKey }}
+        - key: {{ .Values.doorApiGateway.internal.tolerationsKey }}
           value: "reserved"
           effect: "NoExecute"
       containers:
@@ -544,12 +544,12 @@ spec:
         app: envoy
     spec:
       nodeSelector:
-        {{ .Values.doorApiGateway.nodeSelector }}: ""
+        {{ .Values.doorApiGateway.internal.nodeSelector }}: ""
       tolerations:
-        - key: {{ .Values.doorApiGateway.tolerationsKey }}
+        - key: {{ .Values.doorApiGateway.internal.tolerationsKey }}
           value: "reserved"
           effect: "NoSchedule"
-        - key: {{ .Values.doorApiGateway.tolerationsKey }}
+        - key: {{ .Values.doorApiGateway.internal.tolerationsKey }}
           value: "reserved"
           effect: "NoExecute"
       
