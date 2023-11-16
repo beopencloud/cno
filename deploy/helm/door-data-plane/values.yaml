@@ -19,7 +19,7 @@ doorOnboarding:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v2.1.0-2023-08-23T15-00-40-352db25b
+    version: v2.1.0-2023-08-24T16-46-45-4145d73b
   # resources:
   #   requests:
   #     cpu: 100m
@@ -40,9 +40,11 @@ doorCD:
       value: ""
     - name: DEFAULT_INTERNAL_GATEWAY_DOMAIN
       value: door.local
+    - name: DEFAULT_TIMEOUT
+      value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.1.0-2023-08-31T13-56-51-27d4efd0
+    version: v2.2.0-2023-11-16T20-55-46-2de634ed
   # resources:
   #   requests:
   #     cpu: 100m
@@ -72,7 +74,7 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.1.0-2023-08-23T17-04-37-53875b9f
+    version: v2.1.0-2023-08-24T16-45-21-03083bcc
   # resources:
   #   requests:
   #     cpu: 100m

@@ -550,6 +550,7 @@ spec:
         - --contour-cert-file=/certs/tls.crt
         - --contour-key-file=/certs/tls.key
         - --config-path=/config/contour.yaml
+        - --ingress-class-name=door-external
         command: ["contour"]
         image: ghcr.io/projectcontour/contour:v1.23.0
         imagePullPolicy: IfNotPresent

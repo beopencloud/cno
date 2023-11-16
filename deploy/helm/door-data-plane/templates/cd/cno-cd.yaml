@@ -68,14 +68,9 @@ spec:
                   fieldPath: metadata.name
             - name: CLUSTER_TYPE
               value: {{ .Values.defaultClusterType }}
-            - name: DEFAULT_GATEWAY_NAMESPACE
-              value: "door-apigateway"
-            - name: DEFAULT_GATEWAY_NAME
-              value: "door"
             {{- if hasKey .Values.doorCD "envs" }}
               {{ toYaml .Values.doorCD.envs | nindent 12 }}
             {{- end }}
-          
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -230,6 +225,12 @@ rules:
   - list
   - update
   - watch
+- apiGroups:
+  - projectcontour.io
+  resources:
+  - httpproxies
+  verbs:
+  - '*'
 - apiGroups:
   - gateway.networking.k8s.io
   resources:

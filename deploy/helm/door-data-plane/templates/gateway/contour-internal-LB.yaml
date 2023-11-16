@@ -454,9 +454,6 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-  {{- range $key, $value := .Values.doorApiGatewayInternal.annotations }}
-    {{ $key  }}: {{ $value  }}
-  {{- end }}
 spec:
   externalTrafficPolicy: Local
   ports:
@@ -470,7 +467,7 @@ spec:
     targetPort: 8443
   selector:
     app: envoy
-  type: LoadBalancer
+  type: ClusterIP
 
 ---
 kind: GatewayClass
@@ -547,6 +544,7 @@ spec:
         - --contour-cert-file=/certs/tls.crt
         - --contour-key-file=/certs/tls.key
         - --config-path=/config/contour.yaml
+        - --ingress-class-name=door-internal
         command: ["contour"]
         image: ghcr.io/projectcontour/contour:v1.23.0
         imagePullPolicy: IfNotPresent
