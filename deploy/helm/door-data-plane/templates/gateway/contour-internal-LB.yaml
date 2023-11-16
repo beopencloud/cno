@@ -467,7 +467,7 @@ spec:
     targetPort: 8443
   selector:
     app: envoy
-  type: ClusterIP
+  type: LoadBalancer
 
 ---
 kind: GatewayClass

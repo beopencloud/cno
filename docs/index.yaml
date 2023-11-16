@@ -103,9 +103,10 @@ entries:
     version: 1.0.0
   door-agent:
   door-agent:
+  door-agent:
   - apiVersion: v2
     appVersion: v2.2.1
-    created: "2023-11-16T23:39:40.376084Z"
+    created: "2023-11-16T23:52:00.805623Z"
     dependencies:
     - alias: metrics-server
       condition: doorAgent.metricServer
@@ -113,7 +114,7 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for DOOR agent
-    digest: 89ecf885973459c32f7b3a9343510aad4f200297b6e06964093fd2bc4dead7bf
+    digest: 41ce1a1342661c89905487ba43b1b0c1402d9f0200a07d095070fabfe989018f
     name: door-agent
     type: application
     urls:
