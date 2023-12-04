@@ -367,7 +367,7 @@ metadata:
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
 spec:
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
   ports:
   - port: 80
     name: http
@@ -606,6 +606,14 @@ spec:
         - containerPort: 8443
           name: https
           protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ready
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
         readinessProbe:
           httpGet:
             path: /ready
