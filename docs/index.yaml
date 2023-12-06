@@ -103,6 +103,22 @@ entries:
     version: 1.0.0
   door-agent:
   - apiVersion: v2
+    appVersion: v2.2.2
+    created: "2023-12-06T08:26:04.232334261+01:00"
+    dependencies:
+    - alias: metrics-server
+      condition: doorAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for DOOR agent
+    digest: 73bf92c3e1cfb2d1e6c99afff99f6841178024c7166fbdd0a4f75252af34ea6f
+    name: door-agent
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/door-agent-v2.2.2.tgz
+    version: v2.2.2
+  - apiVersion: v2
     appVersion: v2.2.1
     created: "2023-11-17T00:48:28.772988Z"
     dependencies:
@@ -183,6 +199,22 @@ entries:
     - https://beopencloud.github.io/cno/door-agent-v2.1.0.tgz
     version: v2.1.0
   cno-agent:
+  - apiVersion: v2
+    appVersion: v2.0.6
+    created: "2023-12-06T08:24:02.183930862+01:00"
+    dependencies:
+    - alias: metrics-server
+      condition: cnoAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for CNO agent
+    digest: 61263d93745f19e3347fca0e9d6c9b2613a38ac9c441cfc059d7aca3c1325e88
+    name: cno-agent
+    type: application
+    urls:
+    - https://beopencloud.github.io/cno/cno-agent-v2.0.6.tgz
+    version: v2.0.6
   - apiVersion: v2
     appVersion: v2.0.5
     created: "2023-10-26T14:28:18.732432Z"
