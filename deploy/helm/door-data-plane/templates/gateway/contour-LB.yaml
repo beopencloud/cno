@@ -370,7 +370,7 @@ metadata:
     {{ $key  }}: {{ $value  }}
   {{- end }}
 spec:
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
   ports:
   - port: 80
     name: http
@@ -600,6 +600,14 @@ spec:
           #hostPort: 8443
           name: https
           protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ready
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
         readinessProbe:
           httpGet:
             path: /ready
