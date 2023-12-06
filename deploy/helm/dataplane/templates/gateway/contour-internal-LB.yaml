@@ -39,14 +39,7 @@ metadata:
   name: envoy
   namespace: cno-apigateway-internal
 
----livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /ready
-            port: 8002
-            scheme: HTTP
-          initialDelaySeconds: 10
-          timeoutSeconds: 1
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
