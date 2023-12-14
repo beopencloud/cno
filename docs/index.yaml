@@ -102,7 +102,6 @@ entries:
     - https://beopencloud.github.io/cno/cno-1.0.0.tgz
     version: 1.0.0
   door-agent:
-  door-agent:
   - apiVersion: v2
     appVersion: v2.2.4
     created: "2023-12-14T18:02:47.186354Z"
