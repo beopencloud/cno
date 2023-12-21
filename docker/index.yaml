@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  angular:
+  - description: npm latest
+    url: https://raw.githubusercontent.com/beopencloud/cno/main/docker/angular/npm/Dockerfile.npm-node21
+  - description: npm node:21-alpine3.19 - nginx:stable-alpine
+    url: https://raw.githubusercontent.com/beopencloud/cno/main/docker/angular/npm/Dockerfile.npm-node21
+  golang:
+  - description: latest
+    url: https://raw.githubusercontent.com/beopencloud/cno/main/docker/golang/Dockerfile.1.21-alpine3.18.4
+  - description: golang:1.21 - alpine:3.18.4
+    url: https://raw.githubusercontent.com/beopencloud/cno/main/docker/golang/Dockerfile.1.21-alpine3.18.4

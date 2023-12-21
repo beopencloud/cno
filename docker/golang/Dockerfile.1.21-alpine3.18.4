@@ -1,0 +1,25 @@
+FROM  golang:1.21 as builder
+LABEL maintainer="BeOpenIT"
+ARG GIT_VERSION
+ARG GIT_COMMIT_ID
+ARG BUILD_DATE
+ENV GIT_VERSION $GIT_VERSION
+ENV GIT_COMMIT_ID $GIT_COMMIT_ID
+ENV BUILD_DATE $BUILD_DATE
+LABEL version=$GIT_VERSION
+ENV GO111MODULE=on
+RUN mkdir /go/src/app
+COPY . /go/src/app
+WORKDIR /go/src/app
+RUN go mod tidy
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.GitVersion=$GIT_VERSION -X main.GitCommitID=$GIT_COMMIT_ID -X main.BuildDate=$BUILD_DATE" -o app
+
+FROM alpine:3.18.4
+ARG GIT_COMMIT_ID
+ARG GIT_VERSION
+LABEL maintainer="BeOpenIT"
+LABEL git_commit=$GIT_COMMIT_ID
+LABEL version=$GIT_VERSION
+COPY --from=builder /go/src/app/app .
+EXPOSE 8080
+CMD ["./app"]
