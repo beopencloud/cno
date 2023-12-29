@@ -1,0 +1,12 @@
+FROM node:21-alpine3.19 AS build
+WORKDIR /usr/src/app
+COPY package*.json  ./
+RUN npm install
+RUN npm install -g @angular/cli
+COPY . .
+RUN npm run build
+ARG environment=production
+RUN npm run build -- --output-path=./dist/out --configuration $configuration
+
+FROM nginx:stable-alpine
+COPY --from=build /usr/src/app/dist/out/ /usr/share/nginx/html

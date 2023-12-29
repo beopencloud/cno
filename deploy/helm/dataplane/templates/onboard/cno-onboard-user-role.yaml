@@ -1,0 +1,1694 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  name: cno-admin-cluster-role
+rules:
+- apiGroups:
+  - cnocd.beopenit.com
+  resources:
+  - workloads
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addonoperators
+  verbs:
+  - '*'
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addons
+  verbs:
+  - '*'
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - subscriptions
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - clusterserviceversions
+  - catalogsources
+  - installplans
+  - subscriptions
+  verbs:
+  - delete
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - clusterserviceversions
+  - catalogsources
+  - installplans
+  - subscriptions
+  - operatorgroups
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  - packagemanifests/icon
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - clusterurlmonitors
+  verbs:
+  - '*'
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - customdomains
+  verbs:
+  - '*'
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addonoperators
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addons
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - clusterurlmonitors
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - customdomains
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - managednotifications
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - mustgathers
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - ocmagents
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - serviceaccounts
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreamimages
+  - imagestreammappings
+  - imagestreams
+  - imagestreams/secrets
+  - imagestreamtags
+  - imagetags
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreamimports
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/layers
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  - project.openshift.io
+  resources:
+  - projects
+  verbs:
+  - get
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - routemonitors
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - splunkforwarder.managed.openshift.io
+  resources:
+  - splunkforwarders
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - subjectpermissions
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/attach
+  - pods/exec
+  - pods/portforward
+  - pods/proxy
+  - secrets
+  - services/proxy
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - impersonate
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/attach
+  - pods/exec
+  - pods/portforward
+  - pods/proxy
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - events
+  - persistentvolumeclaims
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - secrets
+  - serviceaccounts
+  - services
+  - services/proxy
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  - deployments
+  - deployments/rollback
+  - deployments/scale
+  - replicasets
+  - replicasets/scale
+  - statefulsets
+  - statefulsets/scale
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - jobs
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - deployments
+  - deployments/rollback
+  - deployments/scale
+  - ingresses
+  - networkpolicies
+  - replicasets
+  - replicasets/scale
+  - replicationcontrollers/scale
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  - networkpolicies
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - pods
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - builds/details
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - builds
+  verbs:
+  - get
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+  - deletecollection
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildconfigs
+  - buildconfigs/webhooks
+  - builds
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - builds/log
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildconfigs/instantiate
+  - buildconfigs/instantiatebinary
+  - builds/clone
+  verbs:
+  - create
+- apiGroups:
+  - build.openshift.io
+  resources:
+  - jenkins
+  verbs:
+  - edit
+  - view
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  - deploymentconfigs/scale
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigrollbacks
+  - deploymentconfigs/instantiate
+  - deploymentconfigs/rollback
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs/log
+  - deploymentconfigs/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - quota.openshift.io
+  resources:
+  - appliedclusterresourcequotas
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes/custom-host
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - template.openshift.io
+  resources:
+  - processedtemplates
+  - templateconfigs
+  - templateinstances
+  - templates
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildlogs
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - resourcequotausages
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - upgrade.managed.openshift.io
+  resources:
+  - upgradeconfigs
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - veleroinstalls
+  verbs:
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - addonoperators.addons.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addonoperators
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - addons.addons.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addons
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - clusterurlmonitors.monitoring.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - clusterurlmonitors
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - customdomains.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - customdomains
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - managednotifications.ocmagent.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - managednotifications
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - mustgathers.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - mustgathers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - ocmagents.ocmagent.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - ocmagents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreamimages
+  - imagestreammappings
+  - imagestreams
+  - imagestreamtags
+  - imagetags
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/layers
+  verbs:
+  - get
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - routemonitors.monitoring.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - routemonitors
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - splunkforwarders.splunkforwarder.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - splunkforwarder.managed.openshift.io
+  resources:
+  - splunkforwarders
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - subjectpermissions.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - subjectpermissions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - persistentvolumeclaims
+  - persistentvolumeclaims/status
+  - pods
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - serviceaccounts
+  - services
+  - services/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - bindings
+  - events
+  - limitranges
+  - namespaces/status
+  - pods/log
+  - pods/status
+  - replicationcontrollers/status
+  - resourcequotas
+  - resourcequotas/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - controllerrevisions
+  - daemonsets
+  - daemonsets/status
+  - deployments
+  - deployments/scale
+  - deployments/status
+  - replicasets
+  - replicasets/scale
+  - replicasets/status
+  - statefulsets
+  - statefulsets/scale
+  - statefulsets/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  - horizontalpodautoscalers/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - cronjobs/status
+  - jobs
+  - jobs/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - daemonsets/status
+  - deployments
+  - deployments/scale
+  - deployments/status
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  - replicasets
+  - replicasets/scale
+  - replicasets/status
+  - replicationcontrollers/scale
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  - poddisruptionbudgets/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildconfigs
+  - buildconfigs/webhooks
+  - builds
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - build.openshift.io
+  resources:
+  - jenkins
+  verbs:
+  - view
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  - deploymentconfigs/scale
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - template.openshift.io
+  resources:
+  - processedtemplates
+  - templateconfigs
+  - templateinstances
+  - templates
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildlogs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - upgradeconfigs.upgrade.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - upgrade.managed.openshift.io
+  resources:
+  - upgradeconfigs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - veleroinstalls.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - veleroinstalls
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - managednotifications
+  verbs:
+  - '*'
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - mustgathers
+  verbs:
+  - '*'
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - ocmagents
+  verbs:
+  - '*'
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  - authorization.openshift.io
+  resources:
+  - rolebindings
+  - roles
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  - roles
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - authorization.openshift.io
+  resources:
+  - localresourceaccessreviews
+  - localsubjectaccessreviews
+  - subjectrulesreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - localsubjectaccessreviews
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  - project.openshift.io
+  resources:
+  - projects
+  verbs:
+  - delete
+  - get
+- apiGroups:
+  - ""
+  - authorization.openshift.io
+  resources:
+  - resourceaccessreviews
+  - subjectaccessreviews
+  verbs:
+  - create
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - routemonitors
+  verbs:
+  - '*'
+- apiGroups:
+  - splunkforwarder.managed.openshift.io
+  resources:
+  - splunkforwarders
+  verbs:
+  - '*'
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - subjectpermissions
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  - security.openshift.io
+  resources:
+  - podsecuritypolicyreviews
+  - podsecuritypolicyselfsubjectreviews
+  - podsecuritypolicysubjectreviews
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  - authorization.openshift.io
+  resources:
+  - rolebindingrestrictions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - build.openshift.io
+  resources:
+  - jenkins
+  verbs:
+  - admin
+  - edit
+  - view
+- apiGroups:
+  - ""
+  - project.openshift.io
+  resources:
+  - projects
+  verbs:
+  - delete
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes/status
+  verbs:
+  - update
+- apiGroups:
+  - upgrade.managed.openshift.io
+  resources:
+  - upgradeconfigs
+  verbs:
+  - '*'
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - veleroinstalls
+  verbs:
+  - '*'
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  name: cno-viewer-cluster-role
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - addonoperators.addons.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addonoperators
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - addons.addons.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - addons.managed.openshift.io
+  resources:
+  - addons
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - clusterserviceversions
+  - catalogsources
+  - installplans
+  - subscriptions
+  - operatorgroups
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  - packagemanifests/icon
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - clusterurlmonitors.monitoring.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - clusterurlmonitors
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - customdomains.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - customdomains
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - managednotifications.ocmagent.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - managednotifications
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - mustgathers.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - mustgathers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - ocmagents.ocmagent.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - ocmagent.managed.openshift.io
+  resources:
+  - ocmagents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreamimages
+  - imagestreammappings
+  - imagestreams
+  - imagestreamtags
+  - imagetags
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/layers
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  - project.openshift.io
+  resources:
+  - projects
+  verbs:
+  - get
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - routemonitors.monitoring.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - monitoring.openshift.io
+  resources:
+  - routemonitors
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - splunkforwarders.splunkforwarder.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - splunkforwarder.managed.openshift.io
+  resources:
+  - splunkforwarders
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - subjectpermissions.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - subjectpermissions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - persistentvolumeclaims
+  - persistentvolumeclaims/status
+  - pods
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - serviceaccounts
+  - services
+  - services/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - bindings
+  - events
+  - limitranges
+  - namespaces/status
+  - pods/log
+  - pods/status
+  - replicationcontrollers/status
+  - resourcequotas
+  - resourcequotas/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - controllerrevisions
+  - daemonsets
+  - daemonsets/status
+  - deployments
+  - deployments/scale
+  - deployments/status
+  - replicasets
+  - replicasets/scale
+  - replicasets/status
+  - statefulsets
+  - statefulsets/scale
+  - statefulsets/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  - horizontalpodautoscalers/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - cronjobs/status
+  - jobs
+  - jobs/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - daemonsets/status
+  - deployments
+  - deployments/scale
+  - deployments/status
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  - replicasets
+  - replicasets/scale
+  - replicasets/status
+  - replicationcontrollers/scale
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  - poddisruptionbudgets/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - pods
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildconfigs
+  - buildconfigs/webhooks
+  - builds
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - builds/log
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - build.openshift.io
+  resources:
+  - jenkins
+  verbs:
+  - view
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  - deploymentconfigs/scale
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs/log
+  - deploymentconfigs/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - quota.openshift.io
+  resources:
+  - appliedclusterresourcequotas
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - route.openshift.io
+  resources:
+  - routes/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - template.openshift.io
+  resources:
+  - processedtemplates
+  - templateconfigs
+  - templateinstances
+  - templates
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - buildlogs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - resourcequotausages
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - upgradeconfigs.upgrade.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - upgrade.managed.openshift.io
+  resources:
+  - upgradeconfigs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resourceNames:
+  - veleroinstalls.managed.openshift.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - veleroinstalls
+  verbs:
+  - get
+  - list
+  - watch
