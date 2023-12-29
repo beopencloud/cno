@@ -59,7 +59,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v0.0.6
+    version: v2.0.0-2023-12-28T19-38-01-f7e59ec5
   resources:
     requests:
       cpu: 100m
