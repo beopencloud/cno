@@ -59,7 +59,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v2.0.0-2023-12-28T19-38-01-f7e59ec5
+    version: v0.0.7
   resources:
     requests:
       cpu: 100m
@@ -74,7 +74,7 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.1.1-2023-12-14T17-05-51-7af7d3f4
+    version: v2.1.1
   # resources:
   #   requests:
   #     cpu: 100m
