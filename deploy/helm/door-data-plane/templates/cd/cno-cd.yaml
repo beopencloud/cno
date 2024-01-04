@@ -135,6 +135,7 @@ rules:
   - ""
   resources:
   - secrets
+  - secrets/finalizers
   verbs:
   - create
   - delete
@@ -229,6 +230,12 @@ rules:
   - projectcontour.io
   resources:
   - httpproxies
+  verbs:
+  - '*'
+- apiGroups:
+  - projectcontour.io
+  resources:
+  - tlscertificatedelegations
   verbs:
   - '*'
 - apiGroups:
