@@ -19,7 +19,7 @@ doorOnboarding:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v2.1.0-2023-08-24T16-46-45-4145d73b
+    version: v2.0.2
   # resources:
   #   requests:
   #     cpu: 100m
@@ -44,7 +44,7 @@ doorCD:
       value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.2.0-2023-12-12T09-56-21-ef02fc9b
+    version: v2.2.0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -59,7 +59,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v0.0.9
+    version: v2.2.0
   resources:
     requests:
       cpu: 100m
