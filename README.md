@@ -5,7 +5,7 @@
 
  ` bash
 
-    cd deploy/helm/data-plane
+    cd deploy/helm/door-data-plane
     helm dependencies update
     helm package .
     helm repo index --url https://beopencloud.github.io/cno --merge index.yaml .
