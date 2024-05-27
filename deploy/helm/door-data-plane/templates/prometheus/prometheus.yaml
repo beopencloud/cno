@@ -7,6 +7,15 @@ metadata:
   name: door-monitoring
 ---
 apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: door-quotas
+  namespace: door-monitoring
+spec:
+  hard:
+    pods: "50"
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: prometheus-service
