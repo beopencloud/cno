@@ -29,6 +29,7 @@ metadata:
 spec:
   hard:
     pods: "50"
+    
 ---
 
 apiVersion: v1
