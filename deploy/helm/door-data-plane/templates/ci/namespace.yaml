@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: door-ci
+---
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: door-quotas
+  namespace: door-ci
+spec:
+  hard:
+    pods: "1000"
+    
+---
