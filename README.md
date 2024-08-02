@@ -11,6 +11,7 @@
     helm repo index --url https://beopencloud.github.io/cno --merge index.yaml .
     mv door-agent-*.tgz ../../../docs
     cp new index content to ../../../docs
+    
  `
 
 CNO core components run on Kubernetes, with remote agents in each of the other Kubernetes clusters in its scope. All CNO features are exposed through a REST API, a command-line tool, and a web User Interface.
