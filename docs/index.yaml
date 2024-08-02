@@ -103,8 +103,8 @@ entries:
     version: 1.0.0
   door-agent:
   - apiVersion: v2
-    appVersion: v2.3.5
-    created: "2024-08-02T13:34:22.795971+02:00"
+    appVersion: v2.3.6
+    created: "2024-08-02T16:00:43.764785+02:00"
     dependencies:
     - alias: metrics-server
       condition: doorAgent.metricServer
@@ -112,12 +112,12 @@ entries:
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: 3.8.2
     description: Chart for DOOR agent
-    digest: c559de58500638885acda273b6531723ca5bc0da7f884418c9cb287bb5c1f6b4
+    digest: b022d033a3a9bdf622be175eb0c422e8b66224f9ea0faebacdfca7f382538954
     name: door-agent
     type: application
     urls:
-    - https://beopencloud.github.io/cno/door-agent-v2.3.5.tgz
-    version: v2.3.5
+    - https://beopencloud.github.io/cno/door-agent-v2.3.6.tgz
+    version: v2.3.6
   - apiVersion: v2
     appVersion: v2.3.5
     created: "2024-05-31T12:54:02.266502+02:00"
@@ -567,14 +567,13 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/cno-agent-1.0.0.tgz
     version: 1.0.0
-  metrics-server:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
           description: "Allow probes to be turned off completly (this is not advised unless you know what you're doing)."
     apiVersion: v2
     appVersion: 0.6.1
-    created: "2024-08-02T13:34:22.798064+02:00"
+    created: "2024-08-02T16:00:43.765916+02:00"
     description: Metrics Server is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines.
     digest: 4358fb2014c1e8311653d9495216555e4897db28464b95c96619b0be94b253ec
     home: https://github.com/kubernetes-sigs/metrics-server
@@ -597,4 +596,4 @@ entries:
     urls:
     - https://beopencloud.github.io/cno/charts/metrics-server-3.8.2.tgz
     version: 3.8.2
-generated: "2024-08-02T13:34:22.782793+02:00"
+generated: "2024-08-02T16:00:43.754267+02:00"
