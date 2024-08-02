@@ -44,7 +44,7 @@ doorCD:
       value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.2.0
+    version: v2.3.02
   # resources:
   #   requests:
   #     cpu: 100m
@@ -59,7 +59,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v2.2.0
+    version: v2.3.02
   resources:
     requests:
       cpu: 100m
@@ -74,7 +74,7 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.2.0
+    version: v2.3.02
   # resources:
   #   requests:
   #     cpu: 100m
