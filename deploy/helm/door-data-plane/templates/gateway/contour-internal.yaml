@@ -21,6 +21,17 @@ kind: Namespace
 metadata:
   name: door-apigateway-internal
 ---
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: door-quotas
+  namespace: door-apigateway-internal
+spec:
+  hard:
+    pods: "50"
+    
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
