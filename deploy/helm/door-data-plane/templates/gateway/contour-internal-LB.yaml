@@ -266,7 +266,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: contour-certgen-v1.23.0
-  namespace: door-apigateway
+  namespace: door-apigateway-internal
 spec:
   schedule: "0 0 1 2,9 *"
   jobTemplate:
