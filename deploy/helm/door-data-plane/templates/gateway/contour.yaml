@@ -297,6 +297,45 @@ spec:
       backoffLimit: 1
 
 ---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: contour-certgen-v1.23.0
+  namespace: cno-apigateway
+spec:
+  template:
+    metadata:
+      labels:
+        app: "contour-certgen"
+    spec:
+      containers:
+      - name: contour
+        image: ghcr.io/projectcontour/contour:v1.23.0
+        imagePullPolicy: IfNotPresent
+        command:
+        - contour
+        - certgen
+        - --kube
+        - --incluster
+        - --overwrite
+        - --secrets-format=compact
+        - --namespace=$(CONTOUR_NAMESPACE)
+        env:
+        - name: CONTOUR_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      restartPolicy: Never
+      serviceAccountName: contour-certgen
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+  parallelism: 1
+  completions: 1
+  backoffLimit: 1
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
