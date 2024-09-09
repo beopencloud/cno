@@ -302,7 +302,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: contour-certgen-v1.23.0
-  namespace: cno-apigateway
+  namespace: door-apigateway
 spec:
   template:
     metadata:
@@ -335,7 +335,7 @@ spec:
   parallelism: 1
   completions: 1
   backoffLimit: 1
-  
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

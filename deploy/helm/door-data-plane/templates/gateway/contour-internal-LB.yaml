@@ -309,7 +309,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: contour-certgen-v1.23.0
-  namespace: cno-apigateway-internal
+  namespace: door-apigateway-internal
 spec:
   template:
     metadata:
