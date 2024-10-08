@@ -55,11 +55,12 @@ data:
     #
     # server:
     #   determine which XDS Server implementation to utilize in Contour.
-    #   xds-server-type: contour
+    #   xds-server-type: envoy
     #
     # Specify the Gateway API configuration.
-    gateway:
-      controllerName: projectcontour.io/projectcontour/contour-internal
+    # gateway:
+    #   namespace: door-apigateway-internal
+    #   name: door
     #
     # should contour expect to be running inside a k8s cluster
     # incluster: true
@@ -142,6 +143,7 @@ data:
     #   - "user_agent"
     #   - "x_forwarded_for"
     #   - "grpc_status"
+    #   - "grpc_status_number"
     #
     # default-http-versions:
     # - "HTTP/2"
@@ -190,6 +192,9 @@ data:
     #   Limit Service is consulted for a request.
     #   ref. https://tools.ietf.org/id/draft-polli-ratelimit-headers-03.html
     #   enableXRateLimitHeaders: false
+    #   Defines whether to translate status code 429 to grpc code RESOURCE_EXHAUSTED
+    #   instead of the default UNAVAILABLE
+    #   enableResourceExhaustedCode: false
     #
     # Global Policy settings.
     # policy:
@@ -219,6 +224,12 @@ data:
     #    server-certificate-path: /path/to/server-cert.pem
     #    server-key-path: /path/to/server-private-key.pem
     #    ca-certificate-path: /path/to/root-ca-for-client-validation.pem
+    #
+    # listener:
+    #  connection-balancer: exact
+    #  socket-options:
+    #    tos: 64
+    #    traffic-class: 64
 
 
 ---
@@ -259,7 +270,7 @@ rules:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: contour-certgen-v1.23.0
+  name: contour-certgen-v1.30.0
   namespace: door-apigateway-internal
 spec:
   schedule: "0 0 1 2,9 *"
@@ -272,7 +283,7 @@ spec:
         spec:
           containers:
           - name: contour
-            image: ghcr.io/projectcontour/contour:v1.23.0
+            image: ghcr.io/projectcontour/contour:v1.30.0
             imagePullPolicy: IfNotPresent
             command:
             - contour
@@ -302,7 +313,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: contour-certgen-v1.23.0
+  name: contour-certgen-v1-30-0
   namespace: door-apigateway-internal
 spec:
   template:
@@ -312,7 +323,7 @@ spec:
     spec:
       containers:
       - name: contour
-        image: ghcr.io/projectcontour/contour:v1.23.0
+        image: ghcr.io/projectcontour/contour:v1.30.0
         imagePullPolicy: IfNotPresent
         command:
         - contour
@@ -336,6 +347,7 @@ spec:
   parallelism: 1
   completions: 1
   backoffLimit: 1
+
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -436,14 +448,14 @@ spec:
 
 ---
 kind: GatewayClass
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: door-gateway-internal
 spec:
   controllerName: projectcontour.io/projectcontour/contour-internal
 
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: door-internal
@@ -513,7 +525,7 @@ spec:
         - --config-path=/config/contour.yaml
         - --ingress-class-name=door-internal
         command: ["contour"]
-        image: ghcr.io/projectcontour/contour:v1.23.0
+        image: ghcr.io/projectcontour/contour:v1.30.0
         imagePullPolicy: IfNotPresent
         name: contour
         ports:
@@ -612,7 +624,7 @@ spec:
         args:
           - envoy
           - shutdown-manager
-        image: ghcr.io/projectcontour/contour:v1.23.0
+        image: ghcr.io/projectcontour/contour:v1.30.0
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
@@ -639,7 +651,7 @@ spec:
         - --log-level info
         command:
         - envoy
-        image: docker.io/envoyproxy/envoy:v1.24.0
+        image: docker.io/envoyproxy/envoy:v1.31.0
         imagePullPolicy: IfNotPresent
         name: envoy
         env:
@@ -702,7 +714,7 @@ spec:
         - --envoy-key-file=/certs/tls.key
         command:
         - contour
-        image: ghcr.io/projectcontour/contour:v1.23.0
+        image: ghcr.io/projectcontour/contour:v1.30.0
         imagePullPolicy: IfNotPresent
         name: envoy-initconfig
         volumeMounts:
