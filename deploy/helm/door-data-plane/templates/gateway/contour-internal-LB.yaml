@@ -424,7 +424,7 @@ spec:
     protocol: TCP
     targetPort: 8001
   selector:
-    app: contour-internal
+    app: contour
   type: ClusterIP
 
 ---
@@ -499,7 +499,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: contour-internal
+    app: contour
   name: contour
   namespace: door-apigateway-internal
 spec:
@@ -512,24 +512,16 @@ spec:
       maxSurge: 50%
   selector:
     matchLabels:
-      app: contour-internal
+      app: contour
   template:
     metadata:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8000"
       labels:
-        app: contour-internal
+        app: contour
     spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchLabels:
-                  app: contour-internal
-              topologyKey: kubernetes.io/hostname
-            weight: 100
+      
       containers:
       - args:
         - serve
