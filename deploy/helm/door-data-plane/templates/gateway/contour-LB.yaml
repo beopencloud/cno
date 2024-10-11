@@ -60,8 +60,8 @@ data:
     # Specify the Gateway API configuration.
     gateway:
       gatewayRef:
-        name: door-external
-        namespace: door-apigateway-external
+        name: door
+        namespace: door-apigateway
     #
     # should contour expect to be running inside a k8s cluster
     # incluster: true
