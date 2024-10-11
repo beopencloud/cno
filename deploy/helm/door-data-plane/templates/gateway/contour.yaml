@@ -58,9 +58,10 @@ data:
     #   xds-server-type: envoy
     #
     # Specify the Gateway API configuration.
-    # gateway:
-    #   namespace: door-apigateway
-    #   name: door
+    gateway:
+      gatewayRef:
+        name: door-external
+        namespace: door-apigateway-external
     #
     # should contour expect to be running inside a k8s cluster
     # incluster: true
