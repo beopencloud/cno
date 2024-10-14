@@ -14,12 +14,13 @@ global:
 # set defaultCluster=true if cluster content control plane
 defaultCluster: false
 defaultClusterType: gke
+
 doorOnboarding:
   labels:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v2.2.0
+    version: v2.4.00
   # resources:
   #   requests:
   #     cpu: 100m
@@ -44,7 +45,7 @@ doorCD:
       value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.3.02
+    version: v2.4.00
   # resources:
   #   requests:
   #     cpu: 100m
@@ -52,14 +53,13 @@ doorCD:
   #   limits:
   #     cpu: 2
   #     memory: 2Gi
-
 doorHelm:
   labels:
     # will be applied to pods and deployment
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v2.3.02
+    version: v2.4.00
   resources:
     requests:
       cpu: 100m
@@ -67,14 +67,13 @@ doorHelm:
     limits:
       cpu: 2
       memory: 2Gi
-
 doorAgent:
   labels:
     # will be applied to pods and deployment
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.3.02
+    version: v2.4.00
   # resources:
   #   requests:
   #     cpu: 100m
