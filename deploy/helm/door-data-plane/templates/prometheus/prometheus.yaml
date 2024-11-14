@@ -167,7 +167,6 @@ data:
           replacement: /api/v1/nodes/${1}/proxy/metrics     
       
       - job_name: 'kubernetes-pods'
-
         kubernetes_sd_configs:
         - role: pod
 
