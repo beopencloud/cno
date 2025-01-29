@@ -45,6 +45,17 @@ metadata:
   namespace: door-apigateway
 
 ---
+apiVersion: projectcontour.io/v1alpha1
+kind: ExtensionService
+metadata:
+  name: otel-collector
+  namespace: door-tracing
+spec:
+  protocol: h2c
+  services:
+    - name: tempo-simplest-distributor
+      port: 4317
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -52,6 +63,15 @@ metadata:
   namespace: door-apigateway
 data:
   contour.yaml: |
+    tracing:
+      includePodDetail: true
+      extensionService: door-tracing/otel-collector
+      serviceName: door-apigateway
+      customTags:
+      - tagName: scope
+        literal: external
+      - tagName: header-tag
+        requestHeaderName: X-Custom-Header 
     #
     # server:
     #   determine which XDS Server implementation to utilize in Contour.

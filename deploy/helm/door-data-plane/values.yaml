@@ -14,7 +14,6 @@ global:
 # set defaultCluster=true if cluster content control plane
 defaultCluster: false
 defaultClusterType: gke
-
 doorOnboarding:
   labels:
     # will be applied to pods and deployment

@@ -58,6 +58,15 @@ metadata:
   namespace: door-apigateway-internal
 data:
   contour.yaml: |
+    tracing:
+      includePodDetail: true
+      extensionService: door-tracing/otel-collector
+      serviceName: door-apigateway-internal
+      customTags:
+      - tagName: scope
+        literal: internal
+      - tagName: header-tag
+        requestHeaderName: X-Custom-Header 
     #
     # server:
     #   determine which XDS Server implementation to utilize in Contour.
