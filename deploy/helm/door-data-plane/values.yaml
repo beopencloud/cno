@@ -44,7 +44,7 @@ doorCD:
       value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.4.00
+    version: v2.4.01
   # resources:
   #   requests:
   #     cpu: 100m
@@ -52,7 +52,6 @@ doorCD:
   #   limits:
   #     cpu: 2
   #     memory: 2Gi
-
 doorAPIM:
   labels:
     # will be applied to pods and deployment
@@ -75,7 +74,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v2.4.00
+    version: v2.4.01
   resources:
     requests:
       cpu: 100m
@@ -89,7 +88,11 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.4.00
+    version: v2.4.04
+  rateLimit:
+    METRICS_SERVER_RATE_LIMIT_DURATION_MS: 10
+    METRICS_SERVER_RATE_LIMIT: 500
+    METRICS_SERVER_REQUEST_TIMEOUT_SECOND: 30
   # resources:
   #   requests:
   #     cpu: 100m
