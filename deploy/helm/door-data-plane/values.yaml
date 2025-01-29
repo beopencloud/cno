@@ -52,6 +52,23 @@ doorCD:
   #   limits:
   #     cpu: 2
   #     memory: 2Gi
+
+doorAPIM:
+  labels:
+    # will be applied to pods and deployment
+  envs:
+    - name: WATCH_NAMESPACE
+      value: ""
+  image:
+    name: docker.io/doorcloud/apim-operator
+    version: v2.0.2
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 256Mi
+  #   limits:
+  #     cpu: 2
+  #     memory: 2Gi
 doorHelm:
   labels:
     # will be applied to pods and deployment
