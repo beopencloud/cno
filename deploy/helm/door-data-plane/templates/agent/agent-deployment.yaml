@@ -56,11 +56,11 @@ spec:
           {{- end }}
           env:
             - name: METRICS_SERVER_RATE_LIMIT
-              value: {{ .Values.doorAgent.rateLimit.METRICS_SERVER_RATE_LIMIT }}
+              value: {{ .Values.doorAgent.rateLimit.METRICS_SERVER_RATE_LIMIT | quote }}
             - name: METRICS_SERVER_RATE_LIMIT_DURATION_MS
-              value: {{ .Values.doorAgent.rateLimit.METRICS_SERVER_RATE_LIMIT_DURATION_MS }}
+              value: {{ .Values.doorAgent.rateLimit.METRICS_SERVER_RATE_LIMIT_DURATION_MS | quote }}
             - name: METRICS_SERVER_REQUEST_TIMEOUT_SECOND
-              value: {{ .Values.doorAgent.rateLimit.METRICS_SERVER_REQUEST_TIMEOUT_SECOND }}
+              value: {{ .Values.doorAgent.rateLimit.METRICS_SERVER_REQUEST_TIMEOUT_SECOND | quote }}
             - name: IN_CLUSTER
               value: "true"
             - name: DOOR_NAMESPACE
