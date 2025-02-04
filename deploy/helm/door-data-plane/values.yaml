@@ -60,7 +60,7 @@ doorAPIM:
       value: ""
   image:
     name: docker.io/doorcloud/apim-operator
-    version: v2.0.2
+    version: v2.0.4
   # resources:
   #   requests:
   #     cpu: 100m
@@ -88,7 +88,7 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.4.04
+    version: v2.4.05
   rateLimit:
     METRICS_SERVER_RATE_LIMIT_DURATION_MS: 10
     METRICS_SERVER_RATE_LIMIT: 500
