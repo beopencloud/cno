@@ -1,0 +1,665 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ratelimit
+  name: ratelimit
+  namespace: door-apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ratelimit
+  template:
+    metadata:
+      labels:
+        app: ratelimit
+    spec:
+      containers:
+        - name: redis
+          image: redis:alpine
+          env:
+            - name: REDIS_SOCKET_TYPE
+              value: tcp
+            - name: REDIS_URL
+              value: redis:6379
+        - name: ratelimit
+          image: docker.io/envoyproxy/ratelimit:6f5de117
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 8081
+              name: grpc
+              protocol: TCP
+          volumeMounts:
+            - name: ratelimit-config
+              mountPath: /data/ratelimit/config
+              readOnly: true
+          env:
+            - name: USE_STATSD
+              value: "false"
+            - name: LOG_LEVEL
+              value: debug
+            - name: REDIS_SOCKET_TYPE
+              value: tcp
+            - name: REDIS_URL
+              value: localhost:6379
+            - name: RUNTIME_ROOT
+              value: /data
+            - name: RUNTIME_SUBDIRECTORY
+              value: ratelimit
+            - name: RUNTIME_WATCH_ROOT
+              value: "false"
+            # need to set RUNTIME_IGNOREDOTFILES to true to avoid issues with
+            # how Kubernetes mounts configmaps into pods.
+            - name: RUNTIME_IGNOREDOTFILES
+              value: "true"
+          command: ["/bin/ratelimit"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: ratelimit-config  
+          configMap:
+            name: ratelimit-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ratelimit
+  namespace: door-apigateway
+spec:
+  ports:
+  - port: 8081
+    name: grpc
+    protocol: TCP
+  selector:
+    app: ratelimit
+  type: ClusterIP
+---
+apiVersion: projectcontour.io/v1alpha1
+kind: ExtensionService
+metadata:
+  namespace: door-apigateway
+  name: ratelimit
+spec:
+  protocol: h2c
+  # The service name and port correspond to
+  # the service we created in the previous
+  # step.
+  services:
+    - name: ratelimit
+      port: 8081
+  timeoutPolicy:
+    response: 100ms 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ratelimit-config
+  namespace: door-apigateway
+data:
+  ratelimit-config.yaml: |
+    domain: contour
+    descriptors:
+      # Limitations par seconde
+      - key: vhost_second_1
+        rate_limit:
+          unit: second
+          requests_per_unit: 1
+      - key: vhost_second_2
+        rate_limit:
+          unit: second
+          requests_per_unit: 2
+      - key: vhost_second_3
+        rate_limit:
+          unit: second
+          requests_per_unit: 3
+      - key: vhost_second_4
+        rate_limit:
+          unit: second
+          requests_per_unit: 4
+      - key: vhost_second_5
+        rate_limit:
+          unit: second
+          requests_per_unit: 5
+      - key: vhost_second_6
+        rate_limit:
+          unit: second
+          requests_per_unit: 6
+      - key: vhost_second_7
+        rate_limit:
+          unit: second
+          requests_per_unit: 7
+      - key: vhost_second_8
+        rate_limit:
+          unit: second
+          requests_per_unit: 8
+      - key: vhost_second_9
+        rate_limit:
+          unit: second
+          requests_per_unit: 9
+      - key: vhost_second_10
+        rate_limit:
+          unit: second
+          requests_per_unit: 10
+      - key: vhost_second_20
+        rate_limit:
+          unit: second
+          requests_per_unit: 20
+      - key: vhost_second_30
+        rate_limit:
+          unit: second
+          requests_per_unit: 30
+      - key: vhost_second_40
+        rate_limit:
+          unit: second
+          requests_per_unit: 40
+      - key: vhost_second_50
+        rate_limit:
+          unit: second
+          requests_per_unit: 50
+      - key: vhost_second_60
+        rate_limit:
+          unit: second
+          requests_per_unit: 60
+      - key: vhost_second_70
+        rate_limit:
+          unit: second
+          requests_per_unit: 70
+      - key: vhost_second_80
+        rate_limit:
+          unit: second
+          requests_per_unit: 80
+      - key: vhost_second_90
+        rate_limit:
+          unit: second
+          requests_per_unit: 90
+      - key: vhost_second_100
+        rate_limit:
+          unit: second
+          requests_per_unit: 100
+      - key: vhost_second_200
+        rate_limit:
+          unit: second
+          requests_per_unit: 200
+      - key: vhost_second_300
+        rate_limit:
+          unit: second
+          requests_per_unit: 300
+      - key: vhost_second_400
+        rate_limit:
+          unit: second
+          requests_per_unit: 400
+      - key: vhost_second_500
+        rate_limit:
+          unit: second
+          requests_per_unit: 500
+      - key: vhost_second_600
+        rate_limit:
+          unit: second
+          requests_per_unit: 600
+      - key: vhost_second_700
+        rate_limit:
+          unit: second
+          requests_per_unit: 700
+      - key: vhost_second_800
+        rate_limit:
+          unit: second
+          requests_per_unit: 800
+      - key: vhost_second_900
+        rate_limit:
+          unit: second
+          requests_per_unit: 900
+      - key: vhost_second_1000
+        rate_limit:
+          unit: second
+          requests_per_unit: 1000
+      - key: vhost_second_2000
+        rate_limit:
+          unit: second
+          requests_per_unit: 2000
+      - key: vhost_second_3000
+        rate_limit:
+          unit: second
+          requests_per_unit: 3000
+      - key: vhost_second_4000
+        rate_limit:
+          unit: second
+          requests_per_unit: 4000
+      - key: vhost_second_5000
+        rate_limit:
+          unit: second
+          requests_per_unit: 5000
+      - key: vhost_second_6000
+        rate_limit:
+          unit: second
+          requests_per_unit: 6000
+      - key: vhost_second_7000
+        rate_limit:
+          unit: second
+          requests_per_unit: 7000
+      - key: vhost_second_8000
+        rate_limit:
+          unit: second
+          requests_per_unit: 8000
+      - key: vhost_second_9000
+        rate_limit:
+          unit: second
+          requests_per_unit: 9000
+      - key: vhost_second_10000
+        rate_limit:
+          unit: second
+          requests_per_unit: 10000
+      - key: vhost_second_20000
+        rate_limit:
+          unit: second
+          requests_per_unit: 20000
+      - key: vhost_second_30000
+        rate_limit:
+          unit: second
+          requests_per_unit: 30000
+      - key: vhost_second_40000
+        rate_limit:
+          unit: second
+          requests_per_unit: 40000
+      - key: vhost_second_50000
+        rate_limit:
+          unit: second
+          requests_per_unit: 50000
+      - key: vhost_second_60000
+        rate_limit:
+          unit: second
+          requests_per_unit: 60000
+      - key: vhost_second_70000
+        rate_limit:
+          unit: second
+          requests_per_unit: 70000
+      - key: vhost_second_80000
+        rate_limit:
+          unit: second
+          requests_per_unit: 80000
+      - key: vhost_second_90000
+        rate_limit:
+          unit: second
+          requests_per_unit: 90000
+      - key: vhost_second_100000
+        rate_limit:
+          unit: second
+          requests_per_unit: 100000
+
+      # Limitations par minute
+      - key: vhost_minute_1
+        rate_limit:
+          unit: minute
+          requests_per_unit: 1
+      - key: vhost_minute_2
+        rate_limit:
+          unit: minute
+          requests_per_unit: 2
+      - key: vhost_minute_3
+        rate_limit:
+          unit: minute
+          requests_per_unit: 3
+      - key: vhost_minute_4
+        rate_limit:
+          unit: minute
+          requests_per_unit: 4
+      - key: vhost_minute_5
+        rate_limit:
+          unit: minute
+          requests_per_unit: 5
+      - key: vhost_minute_6
+        rate_limit:
+          unit: minute
+          requests_per_unit: 6
+      - key: vhost_minute_7
+        rate_limit:
+          unit: minute
+          requests_per_unit: 7
+      - key: vhost_minute_8
+        rate_limit:
+          unit: minute
+          requests_per_unit: 8
+      - key: vhost_minute_9
+        rate_limit:
+          unit: minute
+          requests_per_unit: 9
+      - key: vhost_minute_10
+        rate_limit:
+          unit: minute
+          requests_per_unit: 10
+      - key: vhost_minute_20
+        rate_limit:
+          unit: minute
+          requests_per_unit: 20
+      - key: vhost_minute_30
+        rate_limit:
+          unit: minute
+          requests_per_unit: 30
+      - key: vhost_minute_40
+        rate_limit:
+          unit: minute
+          requests_per_unit: 40
+      - key: vhost_minute_50
+        rate_limit:
+          unit: minute
+          requests_per_unit: 50
+      - key: vhost_minute_60
+        rate_limit:
+          unit: minute
+          requests_per_unit: 60
+      - key: vhost_minute_70
+        rate_limit:
+          unit: minute
+          requests_per_unit: 70
+      - key: vhost_minute_80
+        rate_limit:
+          unit: minute
+          requests_per_unit: 80
+      - key: vhost_minute_90
+        rate_limit:
+          unit: minute
+          requests_per_unit: 90
+      - key: vhost_minute_100
+        rate_limit:
+          unit: minute
+          requests_per_unit: 100
+      - key: vhost_minute_200
+        rate_limit:
+          unit: minute
+          requests_per_unit: 200
+      - key: vhost_minute_300
+        rate_limit:
+          unit: minute
+          requests_per_unit: 300
+      - key: vhost_minute_400
+        rate_limit:
+          unit: minute
+          requests_per_unit: 400
+      - key: vhost_minute_500
+        rate_limit:
+          unit: minute
+          requests_per_unit: 500
+      - key: vhost_minute_600
+        rate_limit:
+          unit: minute
+          requests_per_unit: 600
+      - key: vhost_minute_700
+        rate_limit:
+          unit: minute
+          requests_per_unit: 700
+      - key: vhost_minute_800
+        rate_limit:
+          unit: minute
+          requests_per_unit: 800
+      - key: vhost_minute_900
+        rate_limit:
+          unit: minute
+          requests_per_unit: 900
+      - key: vhost_minute_1000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 1000
+      - key: vhost_minute_2000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 2000
+      - key: vhost_minute_3000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 3000
+      - key: vhost_minute_4000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 4000
+      - key: vhost_minute_5000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 5000
+      - key: vhost_minute_6000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 6000
+      - key: vhost_minute_7000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 7000
+      - key: vhost_minute_8000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 8000
+      - key: vhost_minute_9000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 9000
+      - key: vhost_minute_10000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 10000
+      - key: vhost_minute_20000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 20000
+      - key: vhost_minute_30000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 30000
+      - key: vhost_minute_40000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 40000
+      - key: vhost_minute_50000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 50000
+      - key: vhost_minute_60000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 60000
+      - key: vhost_minute_70000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 70000
+      - key: vhost_minute_80000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 80000
+      - key: vhost_minute_90000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 90000
+      - key: vhost_minute_100000
+        rate_limit:
+          unit: minute
+          requests_per_unit: 100000
+
+      # Limitations par heure
+      - key: vhost_hour_1
+        rate_limit:
+          unit: hour
+          requests_per_unit: 1
+      - key: vhost_hour_2
+        rate_limit:
+          unit: hour
+          requests_per_unit: 2
+      - key: vhost_hour_3
+        rate_limit:
+          unit: hour
+          requests_per_unit: 3
+      - key: vhost_hour_4
+        rate_limit:
+          unit: hour
+          requests_per_unit: 4
+      - key: vhost_hour_5
+        rate_limit:
+          unit: hour
+          requests_per_unit: 5
+      - key: vhost_hour_6
+        rate_limit:
+          unit: hour
+          requests_per_unit: 6
+      - key: vhost_hour_7
+        rate_limit:
+          unit: hour
+          requests_per_unit: 7
+      - key: vhost_hour_8
+        rate_limit:
+          unit: hour
+          requests_per_unit: 8
+      - key: vhost_hour_9
+        rate_limit:
+          unit: hour
+          requests_per_unit: 9
+      - key: vhost_hour_10
+        rate_limit:
+          unit: hour
+          requests_per_unit: 10
+      - key: vhost_hour_20
+        rate_limit:
+          unit: hour
+          requests_per_unit: 20
+      - key: vhost_hour_30
+        rate_limit:
+          unit: hour
+          requests_per_unit: 30
+      - key: vhost_hour_40
+        rate_limit:
+          unit: hour
+          requests_per_unit: 40
+      - key: vhost_hour_50
+        rate_limit:
+          unit: hour
+          requests_per_unit: 50
+      - key: vhost_hour_60
+        rate_limit:
+          unit: hour
+          requests_per_unit: 60
+      - key: vhost_hour_70
+        rate_limit:
+          unit: hour
+          requests_per_unit: 70
+      - key: vhost_hour_80
+        rate_limit:
+          unit: hour
+          requests_per_unit: 80
+      - key: vhost_hour_90
+        rate_limit:
+          unit: hour
+          requests_per_unit: 90
+      - key: vhost_hour_100
+        rate_limit:
+          unit: hour
+          requests_per_unit: 100
+      - key: vhost_hour_200
+        rate_limit:
+          unit: hour
+          requests_per_unit: 200
+      - key: vhost_hour_300
+        rate_limit:
+          unit: hour
+          requests_per_unit: 300
+      - key: vhost_hour_400
+        rate_limit:
+          unit: hour
+          requests_per_unit: 400
+      - key: vhost_hour_500
+        rate_limit:
+          unit: hour
+          requests_per_unit: 500
+      - key: vhost_hour_600
+        rate_limit:
+          unit: hour
+          requests_per_unit: 600
+      - key: vhost_hour_700
+        rate_limit:
+          unit: hour
+          requests_per_unit: 700
+      - key: vhost_hour_800
+        rate_limit:
+          unit: hour
+          requests_per_unit: 800
+      - key: vhost_hour_900
+        rate_limit:
+          unit: hour
+          requests_per_unit: 900
+      - key: vhost_hour_1000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 1000
+      - key: vhost_hour_2000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 2000
+      - key: vhost_hour_3000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 3000
+      - key: vhost_hour_4000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 4000
+      - key: vhost_hour_5000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 5000
+      - key: vhost_hour_6000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 6000
+      - key: vhost_hour_7000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 7000
+      - key: vhost_hour_8000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 8000
+      - key: vhost_hour_9000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 9000
+      - key: vhost_hour_10000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 10000
+      - key: vhost_hour_20000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 20000
+      - key: vhost_hour_30000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 30000
+      - key: vhost_hour_40000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 40000
+      - key: vhost_hour_50000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 50000
+      - key: vhost_hour_60000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 60000
+      - key: vhost_hour_70000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 70000
+      - key: vhost_hour_80000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 80000
+      - key: vhost_hour_90000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 90000
+      - key: vhost_hour_100000
+        rate_limit:
+          unit: hour
+          requests_per_unit: 100000
