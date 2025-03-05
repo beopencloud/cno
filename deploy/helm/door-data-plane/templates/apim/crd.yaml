@@ -35,6 +35,49 @@ spec:
           spec:
             description: EndpointSpec defines the desired state of Endpoint
             properties:
+              auth:
+                properties:
+                  authPolicies:
+                    items:
+                      properties:
+                        methods:
+                          items:
+                            type: string
+                          type: array
+                        paths:
+                          items:
+                            type: string
+                          type: array
+                        permisionType:
+                          enum:
+                          - roles
+                          - groups
+                          - required_roles
+                          - required_groups
+                          type: string
+                        permissions:
+                          items:
+                            type: string
+                          minItems: 1
+                          type: array
+                      required:
+                      - methods
+                      - paths
+                      - permisionType
+                      - permissions
+                      type: object
+                    type: array
+                  ref:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    - namespace
+                    type: object
+                type: object
               backends:
                 items:
                   properties:
@@ -50,6 +93,10 @@ spec:
                       type: string
                     environmentID:
                       type: string
+                    headers:
+                      additionalProperties:
+                        type: string
+                      type: object
                     id:
                       type: string
                     organizationID:
@@ -125,14 +172,87 @@ spec:
                 type: string
               ingressName:
                 type: string
+              ipFilterPolicy:
+                properties:
+                  ipAllowCIDR:
+                    items:
+                      type: string
+                    type: array
+                  ipDenyCIDR:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              jwtProvider:
+                properties:
+                  audiences:
+                    items:
+                      type: string
+                    type: array
+                  forwardJWT:
+                    type: boolean
+                  issuer:
+                    type: string
+                  name:
+                    type: string
+                  remoteJWKS:
+                    properties:
+                      cacheDuration:
+                        type: string
+                      timeout:
+                        type: string
+                      uri:
+                        type: string
+                    type: object
+                type: object
               path:
                 type: string
               port:
                 type: string
               protocol:
                 type: string
+              rateLimitPolicy:
+                items:
+                  properties:
+                    requests:
+                      type: integer
+                    unit:
+                      type: string
+                  required:
+                  - requests
+                  - unit
+                  type: object
+                type: array
               responseTimeout:
                 type: string
+              retryPolicy:
+                properties:
+                  numRetries:
+                    format: int64
+                    type: integer
+                  perTryTimeout:
+                    type: string
+                  retryOn:
+                    items:
+                      description: RetryOn is a string type alias with validation
+                        to ensure that the value is valid.
+                      enum:
+                      - 5xx
+                      - gateway-error
+                      - reset
+                      - connect-failure
+                      - retriable-4xx
+                      - refused-stream
+                      - retriable-status-codes
+                      - retriable-headers
+                      - cancelled
+                      - deadline-exceeded
+                      - internal
+                      - resource-exhausted
+                      - unavailable
+                      type: string
+                    type: array
+                type: object
               shared:
                 type: boolean
               strategy:
@@ -153,6 +273,156 @@ spec:
             type: object
           status:
             description: EndpointStatus defines the observed state of Endpoint
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: authservers.apim.cloudoor.com
+spec:
+  group: apim.cloudoor.com
+  names:
+    kind: AuthServer
+    listKind: AuthServerList
+    plural: authservers
+    singular: authserver
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.type
+      name: Type
+      type: string
+    - jsonPath: .spec.url
+      name: URL
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AuthServer is the Schema for the authservers API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AuthServerSpec defines the desired state of AuthServer
+            properties:
+              allowEmptyClientSecret:
+                default: false
+                description: 'Optional: Allow empty client secret for OAuth2/OIDC'
+                type: boolean
+              authorizedRedirectDomains:
+                default:
+                - '*'
+                description: 'Optional: Authorized redirect domains for OAuth2/OIDC'
+                items:
+                  type: string
+                type: array
+              clientId:
+                description: 'Required: ClientID for OAuth2/OIDC'
+                type: string
+              clientSecret:
+                description: 'Optional: ClientSecret for OAuth2/OIDC'
+                type: string
+              emailClaim:
+                default: email
+                description: 'Optional: Email claim for OAuth2/OIDC'
+                type: string
+              groupsClaim:
+                default: groups
+                description: 'Optional: Groups claim for OAuth2/OIDC'
+                type: string
+              image:
+                default: docker.io/beopenit/contour-authserver:latest
+                description: 'Optional: Image:version of the auth server'
+                pattern: ^[^:]+:[^:]+$
+                type: string
+              imagePullPolicy:
+                default: IfNotPresent
+                description: 'Optional: ImagePullPolicy of the auth server'
+                enum:
+                - Always
+                - Never
+                - IfNotPresent
+                type: string
+              issuerURL:
+                description: Issuer URL for OAuth2/OIDC
+                pattern: ^https?://[^/]+(/.*)?$
+                type: string
+              port:
+                default: 9443
+                description: 'Optional: Address of the auth server'
+                type: integer
+              redirectPath:
+                default: /callback
+                description: 'Optional: Redirect path for OAuth2/OIDC'
+                pattern: ^/[^/]+$
+                type: string
+              roleClaim:
+                default: realm_access.roles
+                description: 'Optional: Role claim for OAuth2/OIDC'
+                type: string
+              scopes:
+                default:
+                - openid
+                - profile
+                - email
+                - offline_access
+                description: 'Optional: Scopes for OAuth2/OIDC'
+                items:
+                  type: string
+                type: array
+              type:
+                default: oidc
+                description: Type of the auth server (e.g., "oauth2", "oidc", "basic")
+                enum:
+                - oidc
+                - basic
+                type: string
+              usernameClaim:
+                default: nickname
+                description: 'Optional: Username claim for OAuth2/OIDC'
+                type: string
+            required:
+            - clientId
+            - issuerURL
+            - type
+            type: object
+          status:
+            description: AuthServerStatus defines the observed state of AuthServer
+            properties:
+              error:
+                description: Error message if status is "Error"
+                type: string
+              lastChecked:
+                description: Last time the status was checked
+                format: date-time
+                type: string
+              status:
+                description: Status of the auth server (e.g., "Ready", "Error")
+                type: string
             type: object
         type: object
     served: true

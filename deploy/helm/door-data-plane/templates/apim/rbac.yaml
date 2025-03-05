@@ -42,6 +42,30 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
   - secrets
   - services
   verbs:
@@ -52,6 +76,44 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apim.cloudoor.com
+  resources:
+  - authservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apim.cloudoor.com
+  resources:
+  - authservers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - apim.cloudoor.com
+  resources:
+  - authservers/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - apim.cloudoor.com
   resources:
@@ -78,6 +140,30 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - projectcontour.io
+  resources:
+  - extensionservices
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - projectcontour.io
   resources:
