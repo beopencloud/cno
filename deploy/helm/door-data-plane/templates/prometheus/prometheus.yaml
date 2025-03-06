@@ -39,10 +39,11 @@ metadata:
   namespace: door-monitoring
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.monitoring.accessMode }}
   resources:
     requests:
       storage: {{ .Values.monitoring.pvcSize }}
+  storageClassName: {{ .Values.monitoring.storageClassName }}
 ---
 apiVersion: apps/v1
 kind: Deployment

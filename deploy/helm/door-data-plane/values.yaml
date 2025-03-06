@@ -117,6 +117,8 @@ doorAgent:
 monitoring:
   include: true
   pvcSize: 15Gi
+  storageClassName: gp2
+  accessMode: ReadWriteOne
 
 doorApiGateway:
   internal: 
