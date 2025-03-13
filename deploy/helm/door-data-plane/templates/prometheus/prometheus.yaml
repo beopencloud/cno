@@ -38,12 +38,16 @@ metadata:
   name: my-door-monitoring-pvc
   namespace: door-monitoring
 spec:
+  {{- if .Values.monitoring.accessMode }}
   accessModes:
     - {{ .Values.monitoring.accessMode }}
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.monitoring.pvcSize }}
+  {{- if .Values.monitoring.storageClassName }}
   storageClassName: {{ .Values.monitoring.storageClassName }}
+  {{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
