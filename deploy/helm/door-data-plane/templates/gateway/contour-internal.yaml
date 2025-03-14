@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.doorApiGateway.internal.type "hostPort" }}
+{{- if and .Values.doorApiGateway.internal.enabled (eq .Values.doorApiGateway.internal.type "hostPort") }}
 
 ---
 apiVersion: v1

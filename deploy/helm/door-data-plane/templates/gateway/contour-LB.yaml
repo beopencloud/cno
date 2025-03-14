@@ -13,7 +13,7 @@
 #       examples/contour/03-contour.yaml
 #       examples/contour/03-envoy.yaml
 
-{{- if eq .Values.doorApiGateway.external.type "loadBalancer" }}
+{{- if and .Values.doorApiGateway.external.enabled (eq .Values.doorApiGateway.external.type "loadBalancer") }}
 
 ---
 apiVersion: v1
@@ -546,6 +546,10 @@ metadata:
   {{- range $key, $value := .Values.doorApiGateway.external.annotations }}
     {{ $key  }}: {{ $value  }}
   {{- end }}
+  labels:
+  {{- range $key, $value := .Values.doorApiGateway.external.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}  
 spec:
   # externalTrafficPolicy: Local
   ports:
