@@ -122,24 +122,24 @@ monitoring:
 
 doorApiGateway:
   internal: 
-    enabled: true
+    enabled: false
     type: clusterIP
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
-    annotations:
-      service.beta.kubernetes.io/load-balancer-type: "Internal"
-      service.beta.kubernetes.io/external-traffic-policy: "Local"
-      service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
-    labels:
-      app: door-apigateway-internal
+    # annotations:
+    #   service.beta.kubernetes.io/load-balancer-type: "Internal"
+    #   service.beta.kubernetes.io/external-traffic-policy: "Local"
+    #   service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
+    # labels:
+    #   app: door-apigateway-internal
   external:
-    enabled: false
+    enabled: true
     type: loadBalancer
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
-    annotations:
-      service.beta.kubernetes.io/load-balancer-type: "Internal"
-      service.beta.kubernetes.io/external-traffic-policy: "Local"
-      service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
-    labels:
-      app: door-apigateway
+    # annotations:
+    #   service.beta.kubernetes.io/load-balancer-type: "Internal"
+    #   service.beta.kubernetes.io/external-traffic-policy: "Local"
+    #   service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
+    # labels:
+    #   app: door-apigateway
