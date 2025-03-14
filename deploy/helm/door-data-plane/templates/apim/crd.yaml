@@ -340,12 +340,51 @@ spec:
                 items:
                   type: string
                 type: array
+              basicRealm:
+                default: default
+                description: 'Optional: Basic realm for basic auth server'
+                type: string
               clientId:
                 description: 'Required: ClientID for OAuth2/OIDC'
                 type: string
               clientSecret:
                 description: 'Optional: ClientSecret for OAuth2/OIDC'
                 type: string
+              credentials:
+                description: 'Optional: Credentials for token auth server'
+                properties:
+                  basic:
+                    description: 'Optional: Username for token auth server'
+                    items:
+                      properties:
+                        password:
+                          description: 'Required: Password for basic auth server'
+                          type: string
+                        roles:
+                          description: 'Optional: Roles for basic auth server'
+                          items:
+                            type: string
+                          type: array
+                        username:
+                          description: 'Required: Username for basic auth server'
+                          type: string
+                      type: object
+                    type: array
+                  token:
+                    description: 'Optional: Token for token auth server'
+                    items:
+                      properties:
+                        roles:
+                          description: 'Optional: Roles for token auth server'
+                          items:
+                            type: string
+                          type: array
+                        token:
+                          description: 'Required: Token for token auth server'
+                          type: string
+                      type: object
+                    type: array
+                type: object
               emailClaim:
                 default: email
                 description: 'Optional: Email claim for OAuth2/OIDC'
@@ -400,6 +439,7 @@ spec:
                 enum:
                 - oidc
                 - basic
+                - token
                 type: string
               usernameClaim:
                 default: nickname
