@@ -99,6 +99,8 @@ spec:
                       type: object
                     id:
                       type: string
+                    online:
+                      type: boolean
                     organizationID:
                       type: string
                     port:
@@ -148,6 +150,8 @@ spec:
                 - ""
                 type: string
               enableWebsockets:
+                type: boolean
+              forceApimUsage:
                 type: boolean
               gatewayClass:
                 type: string
@@ -446,8 +450,6 @@ spec:
                 description: 'Optional: Username claim for OAuth2/OIDC'
                 type: string
             required:
-            - clientId
-            - issuerURL
             - type
             type: object
           status:
