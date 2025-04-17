@@ -621,8 +621,13 @@ metadata:
     # appear to be the internal address of the ELB. See docs/proxy-proto.md
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-spec:
+  {{- range $key, $value := .Values.doorApiGateway.external.annotations }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
+  labels:
+  {{- range $key, $value := .Values.doorApiGateway.external.labels }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}spec:
   ports:
   - port: 80
     name: http
@@ -650,6 +655,10 @@ kind: Gateway
 metadata:
   name: door
   namespace: door-apigateway
+  annotations:
+  {{- range $key, $value := .Values.doorApiGateway.external.annotations }}
+    {{ $key  }}: {{ $value  }}
+  {{- end }}
 spec:
   gatewayClassName: door-gateway
   listeners:
@@ -867,11 +876,11 @@ spec:
               fieldPath: metadata.name
         ports:
         - containerPort: 8080
-          hostPort: 8080
+          hostPort: 80
           name: http
           protocol: TCP
         - containerPort: 8443
-          hostPort: 8443
+          hostPort: 443
           name: https
           protocol: TCP
         livenessProbe:
