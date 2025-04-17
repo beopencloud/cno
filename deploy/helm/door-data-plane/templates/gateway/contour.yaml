@@ -707,6 +707,7 @@ spec:
       labels:
         app: contour
     spec:
+      {{- if and .Values.doorApiGateway.external.nodeSelector .Values.doorApiGateway.external.tolerationsKey }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -724,6 +725,7 @@ spec:
         - key: {{ .Values.doorApiGateway.external.tolerationsKey }}
           value: "reserved"
           effect: "NoExecute"
+      {{- end }}
       containers:
       - args:
         - serve
@@ -819,6 +821,7 @@ spec:
       labels:
         app: envoy
     spec:
+      {{- if and .Values.doorApiGateway.external.nodeSelector .Values.doorApiGateway.external.tolerationsKey }}
       nodeSelector:
         {{ .Values.doorApiGateway.external.nodeSelector }}: ""
       tolerations:
@@ -828,6 +831,7 @@ spec:
         - key: {{ .Values.doorApiGateway.external.tolerationsKey }}
           value: "reserved"
           effect: "NoExecute"
+      {{- end }}
       containers:
       - command:
         - /bin/contour
