@@ -627,7 +627,8 @@ metadata:
   labels:
   {{- range $key, $value := .Values.doorApiGateway.external.labels }}
     {{ $key  }}: {{ $value  }}
-  {{- end }}spec:
+  {{- end }}
+spec:
   ports:
   - port: 80
     name: http
