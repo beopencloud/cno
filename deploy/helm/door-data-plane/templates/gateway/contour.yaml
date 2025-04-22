@@ -251,6 +251,7 @@ data:
     #  socket-options:
     #    tos: 64
     #    traffic-class: 64
+    
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
