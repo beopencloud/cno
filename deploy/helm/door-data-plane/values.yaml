@@ -138,8 +138,8 @@ doorApiGateway:
     type: loadBalancer
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
-    unsecureHostPort: 80
-    secureHostPort: 443
+    unsecureHostPort: 8080
+    secureHostPort: 8443
     # annotations:
     #   service.beta.kubernetes.io/load-balancer-type: "Internal"
     #   service.beta.kubernetes.io/external-traffic-policy: "Local"
