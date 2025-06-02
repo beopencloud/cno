@@ -39,7 +39,7 @@ metadata:
   namespace: door-monitoring
 spec:
   accessModes:
-    - {{ .Values.monitoring.accessMode }}
+    - {{ .Values.monitoring.accessMode | default "ReadWriteOnce" }}
   resources:
     requests:
       storage: {{ .Values.monitoring.pvcSize }}

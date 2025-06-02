@@ -5,7 +5,7 @@ global:
       # will be applied to pods and deployment
     protocol: http
     # internalServiceName: door-api-svc
-    externalUrl: https://api.door.io
+    externalUrl: https://api.apps.gocno.io
     heathCheck:
       image:
         name: docker.io/nginxinc/nginx-unprivileged
@@ -19,7 +19,7 @@ doorOnboarding:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v2.4.00
+    version: v3.0.0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -44,7 +44,7 @@ doorCD:
       value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v2.4.3
+    version: v3.0.0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -60,7 +60,7 @@ doorAPIM:
       value: ""
   image:
     name: docker.io/doorcloud/apim-operator
-    version: v2.0.7
+    version: v3.0.0
   # resources:
   #   requests:
   #     cpu: 100m
@@ -74,7 +74,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v2.4.01
+    version: v3.0.0
   resources:
     requests:
       cpu: 100m
@@ -88,7 +88,7 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v2.4.10
+    version: v3.0.0
   rateLimit:
     METRICS_SERVER_RATE_LIMIT_DURATION_MS: 10
     METRICS_SERVER_RATE_LIMIT: 500
@@ -123,7 +123,7 @@ monitoring:
 
 doorApiGateway:
   internal: 
-    enabled: false
+    enabled: false     # specify if you want to use internal gateway
     type: clusterIP
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
@@ -134,7 +134,6 @@ doorApiGateway:
     # labels:
     #   app: door-apigateway-internal
   external:
-    enabled: true
     type: loadBalancer
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
