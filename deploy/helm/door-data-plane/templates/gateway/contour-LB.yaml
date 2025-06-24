@@ -561,6 +561,10 @@ spec:
     name: https
     protocol: TCP
     targetPort: 8443
+  - port: 8002
+    name: https-readiness
+    protocol: TCP
+    targetPort: 8002
   selector:
     app: envoy
   type: LoadBalancer
@@ -790,6 +794,10 @@ spec:
           #hostPort: 8443
           name: https
           protocol: TCP
+        - containerPort: 8002
+          # hostPort: 8002
+          name: https-readiness
+          protocol: TCP  
         livenessProbe:
           failureThreshold: 3
           httpGet:

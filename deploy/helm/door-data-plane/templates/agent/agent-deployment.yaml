@@ -79,6 +79,18 @@ spec:
               value: /kafka/user/user.crt
             - name: KAFKA_CLIENT_KEY
               value: /kafka/user/user.key
+            - name: PIPELINE_CPU_LIMIT
+              value: {{ .Values.doorAgent.pipeline.cpuLimit }}
+            - name: PIPELINE_MEMORY_LIMIT
+              value: {{ .Values.doorAgent.pipeline.memoryLimit }}
+            - name: PIPELINE_CPU_REQUEST
+              value: {{ .Values.doorAgent.pipeline.cpuRequest }}
+            - name: PIPELINE_MEMORY_REQUEST
+              value: {{ .Values.doorAgent.pipeline.memoryRequest }}
+            - name: PIPELINE_STORAGE_LIMIT
+              value: {{ .Values.doorAgent.pipeline.storageLimit }}
+            - name: PIPELINE_STORAGE_REQUEST
+              value: {{ .Values.doorAgent.pipeline.storageRequest }}
             - name: LICENCE
               valueFrom:
                 secretKeyRef:

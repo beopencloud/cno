@@ -812,6 +812,10 @@ spec:
           hostPort: {{ .Values.doorApiGateway.external.secureHostPort | default 8443 }}
           name: https
           protocol: TCP
+        - containerPort: 8002
+          hostPort: 8002
+          name: https-readiness
+          protocol: TCP  
         livenessProbe:
           failureThreshold: 3
           httpGet:
