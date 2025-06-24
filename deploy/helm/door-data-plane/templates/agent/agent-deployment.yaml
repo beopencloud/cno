@@ -80,17 +80,17 @@ spec:
             - name: KAFKA_CLIENT_KEY
               value: /kafka/user/user.key
             - name: PIPELINE_CPU_LIMIT
-              value: {{ .Values.doorAgent.pipeline.cpuLimit }}
+              value: {{ .Values.doorAgent.pipeline.cpuLimit | quote}}
             - name: PIPELINE_MEMORY_LIMIT
-              value: {{ .Values.doorAgent.pipeline.memoryLimit }}
+              value: {{ .Values.doorAgent.pipeline.memoryLimit | quote}}
             - name: PIPELINE_CPU_REQUEST
-              value: {{ .Values.doorAgent.pipeline.cpuRequest }}
+              value: {{ .Values.doorAgent.pipeline.cpuRequest | quote}}
             - name: PIPELINE_MEMORY_REQUEST
-              value: {{ .Values.doorAgent.pipeline.memoryRequest }}
+              value: {{ .Values.doorAgent.pipeline.memoryRequest | quote}}
             - name: PIPELINE_STORAGE_LIMIT
-              value: {{ .Values.doorAgent.pipeline.storageLimit }}
+              value: {{ .Values.doorAgent.pipeline.storageLimit | quote}}
             - name: PIPELINE_STORAGE_REQUEST
-              value: {{ .Values.doorAgent.pipeline.storageRequest }}
+              value: {{ .Values.doorAgent.pipeline.storageRequest | quote }}
             - name: LICENCE
               valueFrom:
                 secretKeyRef:

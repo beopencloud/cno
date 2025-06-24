@@ -626,9 +626,11 @@ spec:
       labels:
         app: envoy
     spec:
-      {{- if and .Values.doorApiGateway.internal.nodeSelector .Values.doorApiGateway.internal.tolerationsKey }}
+      {{- if .Values.doorApiGateway.internal.nodeSelector }}
       nodeSelector:
         {{ .Values.doorApiGateway.internal.nodeSelector }}: ""
+      {{- end }}
+      {{- if .Values.doorApiGateway.external.tolerationsKey }}
       tolerations:
         - key: {{ .Values.doorApiGateway.internal.tolerationsKey }}
           value: "reserved"
