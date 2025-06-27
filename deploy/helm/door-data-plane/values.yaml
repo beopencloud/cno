@@ -100,7 +100,7 @@ doorAgent:
     memoryRequest: "300Mi"
     storageLimit: "25Gi"
     storageRequest: "25Gi"
-    
+
   # resources:
   #   requests:
   #     cpu: 100m
