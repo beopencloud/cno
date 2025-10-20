@@ -19,7 +19,7 @@ doorOnboarding:
     # will be applied to pods and deployment
   image:
     name: docker.io/beopenit/onboarding-operator-kubernetes
-    version: v3.0.0
+    version: v3.0.2
   # resources:
   #   requests:
   #     cpu: 100m
@@ -44,7 +44,7 @@ doorCD:
       value: 30s
   image:
     name: docker.io/beopenit/door-cd-operator
-    version: v3.0.0
+    version: v3.0.4
   # resources:
   #   requests:
   #     cpu: 100m
@@ -60,7 +60,7 @@ doorAPIM:
       value: ""
   image:
     name: docker.io/doorcloud/apim-operator
-    version: v3.0.0
+    version: v3.0.2
   # resources:
   #   requests:
   #     cpu: 100m
@@ -74,7 +74,7 @@ doorHelm:
   # maxStagingReplicas: -22
   image:
     name: beopenit/door-helm
-    version: v3.0.0
+    version: v3.0.1
   resources:
     requests:
       cpu: 100m
@@ -83,12 +83,19 @@ doorHelm:
       cpu: 2
       memory: 2Gi
 doorAgent:
+  # hostAliases:
+  # - ip: xxx.xx.xx.xx
+  #   hostnames:
+  #     - endpoint.app.door.africa
+  #     - endpoint-0.app.door.africa
+  #     - endpoint-1.app.door.africa
+  #     - endpoint-2.app.door.africa
   labels:
     # will be applied to pods and deployment
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v3.0.0
+    version: v3.0.3
   rateLimit:
     METRICS_SERVER_RATE_LIMIT_DURATION_MS: 10
     METRICS_SERVER_RATE_LIMIT: 500
@@ -146,6 +153,9 @@ doorApiGateway:
     #   app: door-apigateway-internal
   external:
     type: loadBalancer
+    # loadBalancerIP: "xx.xx.xx.xx"
+    # externalIPs:
+    #   - "xx.xx.xx.xx"
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
     unsecureHostPort: 8080

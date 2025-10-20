@@ -568,6 +568,15 @@ spec:
   selector:
     app: envoy
   type: LoadBalancer
+  {{- if .Values.doorApiGateway.external.externalIPs }}
+  externalIPs:
+    {{- range .Values.doorApiGateway.external.externalIPs }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.doorApiGateway.external.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.doorApiGateway.external.loadBalancerIP | quote }}
+  {{- end }}
 
 ---
 kind: GatewayClass

@@ -46,6 +46,10 @@ spec:
               done
               echo Successed: `date`
     {{- end }}
+      {{- if .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.hostAliases | nindent 8 }}
+      {{- end }}
       containers:
         - image: {{ .Values.doorAgent.image.name }}:{{ .Values.doorAgent.image.version }}
           imagePullPolicy: Always
