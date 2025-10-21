@@ -544,11 +544,11 @@ metadata:
     # the original remote IP address.
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
   {{- range $key, $value := .Values.doorApiGateway.external.annotations }}
-    {{ $key  }}: {{ $value  }}
+    {{ $key  }}: {{ $value | quote }}
   {{- end }}
   labels:
   {{- range $key, $value := .Values.doorApiGateway.external.labels }}
-    {{ $key  }}: {{ $value  }}
+    {{ $key  }}: {{ $value | quote }}
   {{- end }}  
 spec:
   # externalTrafficPolicy: Local
@@ -594,7 +594,7 @@ metadata:
   namespace: door-apigateway
   annotations:
   {{- range $key, $value := .Values.doorApiGateway.external.annotations }}
-    {{ $key  }}: {{ $value  }}
+    {{ $key  }}: {{ $value | quote }}
   {{- end }}
 spec:
   gatewayClassName: door-external

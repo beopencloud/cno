@@ -442,11 +442,11 @@ metadata:
     # for information about enabling the PROXY protocol on the ELB to recover
     # the original remote IP address.
   {{- range $key, $value := .Values.doorApiGateway.external.annotations }}
-    {{ $key  }}: {{ $value  }}
+    {{ $key  }}: {{ $value | quote }}
   {{- end }}
   labels:
   {{- range $key, $value := .Values.doorApiGateway.external.labels }}
-    {{ $key  }}: {{ $value  }}
+    {{ $key  }}: {{ $value | quote }}
   {{- end }}
 spec:
   ports:
