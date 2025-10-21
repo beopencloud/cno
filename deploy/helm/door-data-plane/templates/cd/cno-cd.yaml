@@ -45,6 +45,9 @@ spec:
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
+
+
+            
               path: /healthz
               port: 8081
             initialDelaySeconds: 15

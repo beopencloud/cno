@@ -73,7 +73,7 @@ doorHelm:
     # will be applied to pods and deployment
   # maxStagingReplicas: -22
   image:
-    name: beopenit/door-helm
+    name: docker.io/beopenit/door-helm
     version: v3.0.1
   resources:
     requests:
