@@ -101,7 +101,7 @@ doorAgent:
     METRICS_SERVER_RATE_LIMIT: 500
     METRICS_SERVER_REQUEST_TIMEOUT_SECOND: 30
   pipeline:
-    cpuLimit: "1OOOm"
+    cpuLimit: "1000m"
     memoryLimit: "2500Mi" 
     cpuRequest: "100m"
     memoryRequest: "300Mi"
