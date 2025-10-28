@@ -95,7 +95,7 @@ doorAgent:
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
-    version: v3.0.3
+    version: v3.0.4
   rateLimit:
     METRICS_SERVER_RATE_LIMIT_DURATION_MS: 10
     METRICS_SERVER_RATE_LIMIT: 500
