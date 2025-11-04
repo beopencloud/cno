@@ -145,6 +145,7 @@ doorApiGateway:
     type: clusterIP
     nodeSelector: node-role.kubernetes.io/ingress-door
     tolerationsKey: ingress-door
+    replicas: 2
     # annotations:
     #   service.beta.kubernetes.io/load-balancer-type: "Internal"
     #   service.beta.kubernetes.io/external-traffic-policy: "Local"
@@ -160,6 +161,8 @@ doorApiGateway:
     tolerationsKey: ingress-door
     unsecureHostPort: 8080
     secureHostPort: 8443
+    replicas: 2
+
     # annotations:
     #   service.beta.kubernetes.io/load-balancer-type: "Internal"
     #   service.beta.kubernetes.io/external-traffic-policy: "Local"
