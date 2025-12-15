@@ -615,54 +615,64 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   labels:
     app: envoy
   name: envoy
   namespace: door-apigateway-internal
 spec:
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 10%
+  replicas: {{ .Values.doorApiGateway.internal.replicas }}
   selector:
     matchLabels:
       app: envoy
   template:
     metadata:
       annotations:
-        prometheus.io/scrape: "true"
+        prometheus.io/path: /stats/prometheus
         prometheus.io/port: "8002"
-        prometheus.io/path: "/stats/prometheus"
+        prometheus.io/scrape: "true"
       labels:
         app: envoy
     spec:
+      automountServiceAccountToken: false
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - envoy
+            topologyKey: "kubernetes.io/hostname"
       containers:
-      - command:
+      - args:
+        - envoy
+        - shutdown-manager
+        command:
         - /bin/contour
-        args:
-          - envoy
-          - shutdown-manager
-        image: ghcr.io/projectcontour/contour:v1.33.0
+        image: ghcr.io/projectcontour/contour:v1.30.0
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
             exec:
               command:
-                - /bin/contour
-                - envoy
-                - shutdown
+              - /bin/contour
+              - envoy
+              - shutdown
         livenessProbe:
           httpGet:
             path: /healthz
             port: 8090
+            scheme: HTTP
           initialDelaySeconds: 3
           periodSeconds: 10
+          timeoutSeconds: 1
         name: shutdown-manager
         volumeMounts:
-          - name: envoy-admin
-            mountPath: /admin
+        - mountPath: /admin
+          name: envoy-admin
       - args:
         - -c
         - /config/envoy.json
@@ -671,20 +681,40 @@ spec:
         - --log-level info
         command:
         - envoy
-        image: docker.io/envoyproxy/envoy:distroless-v1.35.2
-        imagePullPolicy: IfNotPresent
-        name: envoy
         env:
         - name: CONTOUR_NAMESPACE
           valueFrom:
             fieldRef:
-              apiVersion: v1
               fieldPath: metadata.namespace
         - name: ENVOY_POD_NAME
           valueFrom:
             fieldRef:
-              apiVersion: v1
               fieldPath: metadata.name
+        image: docker.io/envoyproxy/envoy:v1.31.0
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            httpGet:
+              path: /shutdown
+              port: 8090
+              scheme: HTTP
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 4
+          timeoutSeconds: 1
+        name: envoy
         ports:
         - containerPort: 8080
           name: http
@@ -693,38 +723,17 @@ spec:
           name: https
           protocol: TCP
         - containerPort: 8002
-          hostPort: 8002
           name: https-readiness
-          protocol: TCP  
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /ready
-            port: 8002
-            scheme: HTTP
-          initialDelaySeconds: 10
-          timeoutSeconds: 1
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8002
-          initialDelaySeconds: 3
-          periodSeconds: 4
+          protocol: TCP
         volumeMounts:
-          - name: envoy-config
-            mountPath: /config
-            readOnly: true
-          - name: envoycert
-            mountPath: /certs
-            readOnly: true
-          - name: envoy-admin
-            mountPath: /admin
-        lifecycle:
-          preStop:
-            httpGet:
-              path: /shutdown
-              port: 8090
-              scheme: HTTP
+        - mountPath: /config
+          name: envoy-config
+          readOnly: true
+        - mountPath: /certs
+          name: envoycert
+          readOnly: true
+        - mountPath: /admin
+          name: envoy-admin
       initContainers:
       - args:
         - bootstrap
@@ -738,34 +747,33 @@ spec:
         - --envoy-key-file=/certs/tls.key
         command:
         - contour
-        image: ghcr.io/projectcontour/contour:v1.33.0
-        imagePullPolicy: IfNotPresent
-        name: envoy-initconfig
-        volumeMounts:
-        - name: envoy-config
-          mountPath: /config
-        - name: envoycert
-          mountPath: /certs
-          readOnly: true
         env:
         - name: CONTOUR_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-      automountServiceAccountToken: false
+        image: ghcr.io/projectcontour/contour:v1.30.0
+        imagePullPolicy: IfNotPresent
+        name: envoy-initconfig
+        volumeMounts:
+        - mountPath: /config
+          name: envoy-config
+        - mountPath: /certs
+          name: envoycert
+          readOnly: true
+      restartPolicy: Always
+      securityContext:
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
       serviceAccountName: envoy
       terminationGracePeriodSeconds: 300
       volumes:
-        - name: envoy-admin
-          emptyDir: {}
-        - name: envoy-config
-          emptyDir: {}
-        - name: envoycert
-          secret:
-            secretName: envoycert
-      restartPolicy: Always
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
+      - emptyDir: {}
+        name: envoy-admin
+      - emptyDir: {}
+        name: envoy-config
+      - name: envoycert
+        secret:
+          secretName: envoycert
 {{- end -}}
