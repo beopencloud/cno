@@ -113,6 +113,43 @@ spec:
                       - tls
                       - unsecure
                       type: string
+                    requestHeadersPolicy:
+                      description: HeadersPolicy defines how headers are managed during
+                        forwarding. The `Host` header is treated specially and if
+                        set in a HTTP request will be used as the SNI server name
+                        when forwarding over TLS. It is an error to attempt to set
+                        the `Host` header in a HTTP response.
+                      properties:
+                        remove:
+                          description: Remove specifies a list of HTTP header names
+                            to remove.
+                          items:
+                            type: string
+                          type: array
+                        set:
+                          description: Set specifies a list of HTTP header values
+                            that will be set in the HTTP header. If the header does
+                            not exist it will be added, otherwise it will be overwritten
+                            with the new value.
+                          items:
+                            description: HeaderValue represents a header name/value
+                              pair
+                            properties:
+                              name:
+                                description: Name represents a key of a header
+                                minLength: 1
+                                type: string
+                              value:
+                                description: Value represents the value of a header
+                                  specified by a key
+                                minLength: 1
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
+                      type: object
                     serviceName:
                       type: string
                     status:
@@ -211,6 +248,33 @@ spec:
                 type: object
               path:
                 type: string
+              pathFilterPolicy:
+                properties:
+                  delete:
+                    items:
+                      type: string
+                    type: array
+                  get:
+                    items:
+                      type: string
+                    type: array
+                  head:
+                    items:
+                      type: string
+                    type: array
+                  patch:
+                    items:
+                      type: string
+                    type: array
+                  post:
+                    items:
+                      type: string
+                    type: array
+                  put:
+                    items:
+                      type: string
+                    type: array
+                type: object
               port:
                 type: string
               protocol:
@@ -414,6 +478,34 @@ spec:
                 description: Issuer URL for OAuth2/OIDC
                 pattern: ^https?://[^/]+(/.*)?$
                 type: string
+              pathFilterPolicy:
+                description: 'Optional: Allowed paths for OAuth2/OIDC'
+                properties:
+                  delete:
+                    items:
+                      type: string
+                    type: array
+                  get:
+                    items:
+                      type: string
+                    type: array
+                  head:
+                    items:
+                      type: string
+                    type: array
+                  patch:
+                    items:
+                      type: string
+                    type: array
+                  post:
+                    items:
+                      type: string
+                    type: array
+                  put:
+                    items:
+                      type: string
+                    type: array
+                type: object
               port:
                 default: 9443
                 description: 'Optional: Address of the auth server'
