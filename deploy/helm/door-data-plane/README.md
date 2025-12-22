@@ -9,7 +9,7 @@
 ## Get Repo Info
 
 ```
-helm repo add door-repo https://beopencloud.github.io/door
+helm repo add door-repo https://beopencloud.github.io/cno
 helm repo update 
 ```
 
