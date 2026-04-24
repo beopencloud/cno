@@ -1,0 +1,31 @@
+{{- if .Values.ciDockerEngine.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-engine-prune-script
+  namespace: door-ci
+data:
+  prune.sh: |
+    #!/bin/sh
+    set -eu
+
+    export DOCKER_HOST="tcp://docker-engine:{{ .Values.ciDockerEngine.service.port | default 2375 }}"
+
+    echo "==> Prune build cache"
+    docker builder prune -af || true
+
+    echo "==> Prune stopped containers"
+    docker container prune -f || true
+
+    echo "==> Prune dangling and unused images"
+    docker image prune -af || true
+
+    echo "==> Prune unused volumes"
+    docker volume prune -f || true
+
+    echo "==> Prune unused networks"
+    docker network prune -f || true
+
+    echo "==> Docker system usage after prune"
+    docker system df || true
+{{- end }}

@@ -1,0 +1,17 @@
+{{- if .Values.ciDockerEngine.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-engine
+  namespace: door-ci
+  labels:
+    app: docker-engine
+spec:
+  type: ClusterIP
+  selector:
+    app: docker-engine
+  ports:
+    - name: docker
+      port: {{ .Values.ciDockerEngine.service.port | default 2375 }}
+      targetPort: docker
+{{- end }}

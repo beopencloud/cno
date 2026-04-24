@@ -169,3 +169,20 @@ doorApiGateway:
     #   service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
     # labels:
     #   app: door-apigateway
+
+ciDockerEngine:
+  enabled: true
+  image:
+    dind: docker:27-dind
+    cli: docker:27-cli
+  service:
+    port: 2375
+  storage:
+    size: 50Gi
+    accessMode: ReadWriteOnce
+    # storageClassName: gp2
+  prune:
+    schedule: "0 2 * * *"
+    ttlSecondsAfterFinished: 600
+  networkPolicy:
+    enabled: false

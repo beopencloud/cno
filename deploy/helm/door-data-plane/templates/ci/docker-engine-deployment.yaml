@@ -1,0 +1,38 @@
+{{- if .Values.ciDockerEngine.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-engine
+  namespace: door-ci
+  labels:
+    app: docker-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-engine
+  template:
+    metadata:
+      labels:
+        app: docker-engine
+    spec:
+      containers:
+        - name: docker-engine
+          image: {{ .Values.ciDockerEngine.image.dind | default "docker:27-dind" }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          securityContext:
+            privileged: true
+          ports:
+            - name: docker
+              containerPort: {{ .Values.ciDockerEngine.service.port | default 2375 }}
+          volumeMounts:
+            - name: docker-data
+              mountPath: /var/lib/docker
+      volumes:
+        - name: docker-data
+          persistentVolumeClaim:
+            claimName: docker-engine-data
+{{- end }}

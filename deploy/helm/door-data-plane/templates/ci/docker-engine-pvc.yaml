@@ -1,0 +1,16 @@
+{{- if .Values.ciDockerEngine.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docker-engine-data
+  namespace: door-ci
+spec:
+  accessModes:
+    - {{ .Values.ciDockerEngine.storage.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.ciDockerEngine.storage.size | default "50Gi" }}
+  {{- with .Values.ciDockerEngine.storage.storageClassName }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}

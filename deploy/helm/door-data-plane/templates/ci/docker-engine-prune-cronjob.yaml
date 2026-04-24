@@ -1,0 +1,33 @@
+{{- if .Values.ciDockerEngine.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: docker-engine-prune
+  namespace: door-ci
+spec:
+  schedule: {{ .Values.ciDockerEngine.prune.schedule | default "0 2 * * *" | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.ciDockerEngine.prune.ttlSecondsAfterFinished | default 600 }}
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: docker-prune
+              image: {{ .Values.ciDockerEngine.image.cli | default "docker:27-cli" }}
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - /scripts/prune.sh
+              volumeMounts:
+                - name: prune-script
+                  mountPath: /scripts
+          volumes:
+            - name: prune-script
+              configMap:
+                name: docker-engine-prune-script
+                defaultMode: 0755
+{{- end }}
