@@ -178,7 +178,7 @@ doorApiGateway:
     image:
       repository: docker.io/doorcloud/door-apim-default-backend
       # Pin via values / HelmChartProxy; never deploy :latest on workloads.
-      tag: "v.0.0.0"
+      tag: "v.0.0.a548fce"
       pullPolicy: IfNotPresent
     resources:
       requests:
