@@ -1,0 +1,65 @@
+{{- if and .Values.doorApiGateway.defaultBackend.enabled (or (eq .Values.doorApiGateway.external.type "loadBalancer") (eq .Values.doorApiGateway.external.type "hostPort")) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: door-apim-default-backend
+  namespace: door-apigateway
+  labels:
+    app: door-apim-default-backend
+    app.kubernetes.io/name: door-apim-default-backend
+    app.kubernetes.io/part-of: door-apigateway
+spec:
+  replicas: {{ .Values.doorApiGateway.defaultBackend.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: door-apim-default-backend
+  template:
+    metadata:
+      labels:
+        app: door-apim-default-backend
+    spec:
+      containers:
+        - name: door-apim-default-backend
+          image: "{{ .Values.doorApiGateway.defaultBackend.image.repository }}:{{ .Values.doorApiGateway.defaultBackend.image.tag }}"
+          imagePullPolicy: {{ .Values.doorApiGateway.defaultBackend.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.doorApiGateway.defaultBackend.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 101
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: run
+              mountPath: /var/run
+            - name: cache
+              mountPath: /var/cache/nginx
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: run
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+{{- end }}

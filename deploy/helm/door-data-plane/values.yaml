@@ -170,6 +170,24 @@ doorApiGateway:
     # labels:
     #   app: door-apigateway
 
+  # Branded catch-all for unmatched gateway traffic + attaches a route to the
+  # HTTPS listener so Contour programs Envoy :8443 (fixes TCP-refused on 443).
+  defaultBackend:
+    enabled: true
+    replicas: 1
+    image:
+      repository: docker.io/doorcloud/door-apim-default-backend
+      # Pin via values / HelmChartProxy; never deploy :latest on workloads.
+      tag: "v.0.0.0"
+      pullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 64Mi
+
 ciDockerEngine:
   enabled: true
   image:

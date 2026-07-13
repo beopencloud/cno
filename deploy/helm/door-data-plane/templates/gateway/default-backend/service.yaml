@@ -1,0 +1,20 @@
+{{- if and .Values.doorApiGateway.defaultBackend.enabled (or (eq .Values.doorApiGateway.external.type "loadBalancer") (eq .Values.doorApiGateway.external.type "hostPort")) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: door-apim-default-backend
+  namespace: door-apigateway
+  labels:
+    app: door-apim-default-backend
+    app.kubernetes.io/name: door-apim-default-backend
+    app.kubernetes.io/part-of: door-apigateway
+spec:
+  type: ClusterIP
+  selector:
+    app: door-apim-default-backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+      protocol: TCP
+{{- end }}
