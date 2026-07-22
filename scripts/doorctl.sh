@@ -1,5 +1,52 @@
 #!/bin/bash
 
+NEW_SCRIPT_URL="https://raw.githubusercontent.com/doorcloud/door/main/scripts/doorctl.sh"
+
+warn() {
+    echo >&2 ""
+    echo >&2 "============================================================"
+    echo >&2 "  DEPRECATION NOTICE"
+    echo >&2 ""
+    echo >&2 "  This installer is deprecated."
+    echo >&2 "  New doorctl releases are published from doorcloud/door."
+    echo >&2 ""
+    echo >&2 "  Switch to the new installer:"
+    echo >&2 "    curl -sSL https://raw.githubusercontent.com/doorcloud/door/main/scripts/doorctl.sh | sh -s"
+    echo >&2 ""
+    echo >&2 "  Alternative install channels:"
+    echo >&2 "    Homebrew:  brew install doorcloud/door/doorctl"
+    echo >&2 "    Releases:  https://github.com/doorcloud/door/releases"
+    echo >&2 "    Helm repo: https://doorcloud.github.io/door"
+    echo >&2 "============================================================"
+    echo >&2 ""
+}
+
+warn
+
+# Try to delegate to the new installer. If the download fails, fall back
+# to the legacy logic so the script keeps working on offline/filtered networks.
+tmp_script=""
+if command -v curl >/dev/null 2>&1 && command -v mktemp >/dev/null 2>&1; then
+    tmp_script=$(mktemp /tmp/doorctl-install.XXXXXX 2>/dev/null || true)
+    if [ -n "$tmp_script" ] && curl -fsSL --max-time 30 "$NEW_SCRIPT_URL" -o "$tmp_script" 2>/dev/null; then
+        if head -n 1 "$tmp_script" | grep -q '^#!.*sh'; then
+            chmod +x "$tmp_script"
+            exec "$tmp_script" "$@"
+        fi
+    fi
+fi
+
+# Cleanup and fall back to the legacy path
+if [ -n "$tmp_script" ] && [ -f "$tmp_script" ]; then
+    rm -f "$tmp_script" 2>/dev/null || true
+fi
+
+echo >&2 ""
+echo >&2 "Warning: could not fetch the new installer from $NEW_SCRIPT_URL."
+echo >&2 "Falling back to the legacy install path. Consider migrating to:"
+echo >&2 "  https://github.com/doorcloud/door"
+echo >&2 ""
+
 export VERIFY_CHECKSUM=0
 export ALIAS=""
 export OWNER=beopencloud

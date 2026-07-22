@@ -1,5 +1,18 @@
  # CNO<br/>Cloud Native Onboarding
 
+> **Deprecation notice**
+>
+> This repository's distribution role has moved to [doorcloud/door](https://github.com/doorcloud/door).
+> Releases here stop at doorctl v2.5.x. New doorctl releases (including v2.6.0) are published from the new channel.
+>
+> New install channels:
+> - GitHub releases: https://github.com/doorcloud/door/releases
+> - Homebrew: `brew install doorcloud/door/doorctl`
+> - curl: `curl -sSL https://raw.githubusercontent.com/doorcloud/door/main/scripts/doorctl.sh | sh -s`
+> - Helm repo: https://doorcloud.github.io/door
+>
+> Please update your scripts and automation to use the new URLs.
+
 **CNO is your Operations Center for Kubernetes &ndash; a single management platform for Admins in a hybrid / multi-cloud ecosystem; a common experience for multiple Ops & Dev teams.**
  # Build commande
 
