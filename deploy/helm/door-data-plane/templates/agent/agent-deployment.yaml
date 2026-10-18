@@ -32,7 +32,7 @@ spec:
         {{ $key  }}: {{ $value  }}
       {{- end }}
     spec:
-    {{- if .Values.defaultCluster }}
+    {{- if and .Values.defaultCluster (ne (toString .Values.doorAgent.waitForDoorApi) "false") }}
       initContainers:
         - name: door-api-check
           image: {{ .Values.global.doorAPI.heathCheck.image.name }}:{{ .Values.global.doorAPI.heathCheck.image.version }}
@@ -113,16 +113,28 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       serviceAccountName: door-agent
+      {{- with .Values.doorAgent.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.doorAgent.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.doorAgent.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: kafka-user
           secret:
             {{- if .Values.defaultCluster }}
-            secretName: door-kafka-superadmin
+            secretName: {{ .Values.doorAgent.kafka.userSecret | default "door-kafka-superadmin" }}
             {{- else }}
-            secretName: {{ include "door-agent.licenceSecret" . }}
+            secretName: {{ .Values.doorAgent.kafka.userSecret | default (include "door-agent.licenceSecret" .) }}
             {{- end }}
         {{- if .Values.defaultCluster }}
         - name: kafka-ca
           secret:
-            secretName: door-kafka-cluster-cluster-ca-cert
+            secretName: {{ .Values.doorAgent.kafka.caSecret | default "door-kafka-cluster-cluster-ca-cert" }}
         {{- end }}

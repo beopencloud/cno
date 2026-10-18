@@ -64,3 +64,25 @@ doorAgent:
     secret:
       name: my-licence
 ```
+
+- __Optional door-agent settings (v3.0.16)__
+
+All of them default to the previous rendering.
+
+```yaml
+doorAgent:
+  # defaultCluster=true only: set to false to drop the door-api-check initContainer
+  # (door-api not deployed in this cluster).
+  waitForDoorApi: true
+  # Scheduling of the door-agent Deployment, rendered only when set.
+  nodeSelector:
+    workload-tier: heavy
+  tolerations: []
+  affinity: {}
+  kafka:
+    # Secrets of the kafka-user and kafka-ca volumes. Empty keeps the historical names
+    # (door-kafka-superadmin / the licence Secret when defaultCluster=false, and
+    # door-kafka-cluster-cluster-ca-cert).
+    userSecret: door-agent-do-kafka-user
+    caSecret: door-agent-do-kafka-ca
+```
