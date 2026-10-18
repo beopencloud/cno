@@ -92,6 +92,14 @@ doorAgent:
   #     - endpoint-2.app.door.africa
   labels:
     # will be applied to pods and deployment
+  # With defaultCluster=true the agent waits for door-api (initContainer door-api-check)
+  # before starting. Set to false when door-api is not (or no longer) deployed.
+  waitForDoorApi: true
+  # Pod scheduling of the door-agent Deployment (rendered only when set).
+  # nodeSelector:
+  #   workload-tier: heavy
+  # tolerations: []
+  # affinity: {}
   metricServer: true
   image:
     name: docker.io/beopenit/door-agent
@@ -117,6 +125,11 @@ doorAgent:
   #     memory: 1Gi
   kafka:
     brokers: door-kafka-cluster-kafka-external-bootstrap:9094
+    # Names of the Secrets mounted as the kafka-user (/kafka/user) and kafka-ca (/kafka/ca) volumes.
+    # Empty = historical defaults: userSecret door-kafka-superadmin (defaultCluster=true) or the
+    # licence Secret (defaultCluster=false); caSecret door-kafka-cluster-cluster-ca-cert.
+    userSecret: ""
+    caSecret: ""
   licence:
     uuid: aa
     key: |
